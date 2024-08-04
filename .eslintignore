@@ -1,0 +1,5 @@
+vite.config.ts
+src/vite-env.d.ts
+dist
+commitlint.config.js
+public/model-viewer.min.js

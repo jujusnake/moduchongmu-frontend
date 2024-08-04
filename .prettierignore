@@ -1,0 +1,14 @@
+# prettier-vscode
+.vscode-test/
+out/
+dist/
+test-fixtures/
+node_modules/
+
+# custom
+.yarn/
+yarn.lock
+.eslintignore
+.gitignore
+.prettierignore
+.pnp.*
