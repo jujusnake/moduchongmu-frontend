@@ -5,12 +5,12 @@ module.exports = {
   prefix: '',
   theme: {
     fontSize: {
-      xs: ['0.688rem', '125%'],
-      sm: ['0.75rem', '125%'],
-      base: ['0.875rem', '125%'],
-      lg: ['1rem', '125%'],
-      xl: ['1.125rem', '125%'],
-      '2xl': ['1.25rem', '125%'],
+      xs: ['0.688rem', '125%'], // 11px
+      sm: ['0.75rem', '125%'], // 12px
+      base: ['0.875rem', '125%'], // 14px
+      lg: ['1rem', '125%'], // 16px
+      xl: ['1.125rem', '125%'], // 18px
+      '2xl': ['1.25rem', '125%'], // 20px
     },
     container: {
       center: true,
@@ -28,6 +28,7 @@ module.exports = {
           aside: '#999999',
           disabled: '#E0E0E0',
           placeholder: '#D0D0D0',
+          contrast: '#ffffff',
         },
         brand: {
           primary: {
@@ -40,54 +41,51 @@ module.exports = {
             contrastText: '#FFFFFF',
           },
         },
-
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))',
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
-        primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
+        functional: {
+          success: {
+            bg: '#F5FBF4',
+            lighter: '#C1E5BC',
+            light: '#6BC461',
+            main: '#00AB00',
+            dark: '#008B00',
+            darker: '#005B00',
+            contrastText: '#000000',
+          },
+          warning: {
+            bg: '#FEF9F2',
+            lighter: '#FBDBB1',
+            light: '#F7C47F',
+            main: '#F4AC4D',
+            dark: '#EF8A0B',
+            darker: '#E56F0B',
+            contrastText: '#000000',
+          },
+          error: {
+            bg: '#FFF6F8',
+            lighter: '#FEC8CF',
+            light: '#E3666B',
+            main: '#F0212A',
+            dark: '#D00024',
+            darker: '#B40011',
+            contrastText: '#FFFFFF',
+          },
         },
-        secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))',
+        border: {
+          light: '#E0E0E0',
+          main: '#C0C0C0',
+          dark: '#ADADAD',
         },
-        destructive: {
-          DEFAULT: 'hsl(var(--destructive))',
-          foreground: 'hsl(var(--destructive-foreground))',
-        },
-        muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))',
-        },
-        accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
-        },
-        popover: {
-          DEFAULT: 'hsl(var(--popover))',
-          foreground: 'hsl(var(--popover-foreground))',
+        bg: {
+          base: '#F9F9F9',
+          back: '#FFFFFF',
+          front: '#F3F3F3',
         },
         card: {
-          DEFAULT: 'hsl(var(--card))',
-          foreground: 'hsl(var(--card-foreground))',
+          main: '#F8FBFF',
+          mono: '#F0F0F0',
         },
-      },
-      borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
-      },
-      keyframes: {
-        'accordion-down': {
-          from: { height: '0' },
-          to: { height: 'var(--radix-accordion-content-height)' },
-        },
-        'accordion-up': {
-          from: { height: 'var(--radix-accordion-content-height)' },
-          to: { height: '0' },
+        element: {
+          disabled: '#BABABA',
         },
       },
       animation: {

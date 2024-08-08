@@ -487,6 +487,13 @@
   dependencies:
     "@radix-ui/react-use-layout-effect" "1.1.0"
 
+"@radix-ui/react-label@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-label/-/react-label-2.1.0.tgz#3aa2418d70bb242be37c51ff5e51a2adcbc372e3"
+  integrity sha512-peLblDlFw/ngk3UWq0VnYaOLy6agTZZ+MUO/WhVfm14vJGML+xH4FAl2XQGLqdefjNb7ApRg6Yn7U42ZhmYXdw==
+  dependencies:
+    "@radix-ui/react-primitive" "2.0.0"
+
 "@radix-ui/react-portal@1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@radix-ui/react-portal/-/react-portal-1.1.1.tgz#1957f1eb2e1aedfb4a5475bd6867d67b50b1d15f"
@@ -798,10 +805,10 @@ acorn@^8.9.0:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.12.1.tgz#71616bdccbe25e27a54439e0046e89ca76df2248"
   integrity sha512-tcpGyI9zbizT9JbV6oYE477V6mTlXvvi0T0G3SNIYE2apm/G5huBa1+K89VGeovbg+jycCrfhl3ADxErOuO6Jg==
 
-advanced-cropper@~0.17.1:
-  version "0.17.1"
-  resolved "https://registry.yarnpkg.com/advanced-cropper/-/advanced-cropper-0.17.1.tgz#fedb73d9f48a3eae53a3a80de575a4e5c1febade"
-  integrity sha512-Z1P0sYOXa2tqZjeY742QtNERofXh1AuOa27LEurO9rbx3IfzLrGQlzy7sWEc5VN9hRg+J/qCiMmnB6tUDLb1TA==
+advanced-cropper@~0.18.0:
+  version "0.18.0"
+  resolved "https://registry.yarnpkg.com/advanced-cropper/-/advanced-cropper-0.18.0.tgz#dc09a572ac719ee6f149a73ffd4ef094b7b7e1a1"
+  integrity sha512-Bo0fiW8F+kI4f8zEm8YXIDkGNi+aXaQPxqDijU7hY+1ETACbvFnNCxssspgAwHBy9RpFlcXMmjcq+LImUOhaqQ==
   dependencies:
     tslib "^2.4.0"
 
@@ -1929,12 +1936,12 @@ queue-microtask@^1.2.2:
   resolved "https://registry.yarnpkg.com/queue-microtask/-/queue-microtask-1.2.3.tgz#4929228bbc724dfac43e0efb058caf7b6cfb6243"
   integrity sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==
 
-react-advanced-cropper@^0.20.0:
-  version "0.20.0"
-  resolved "https://registry.yarnpkg.com/react-advanced-cropper/-/react-advanced-cropper-0.20.0.tgz#be998018f1506b9216d239e36c17fc151a3dc9c6"
-  integrity sha512-9X5B+1IwFRzNb92xl58iMgrcdDSsQN/hw7048L0tnmL3CdpRXEo4vs+ahmoCM1OtFYf2IT8PE6fTPXTuADsQmg==
+react-advanced-cropper@~0.19.3:
+  version "0.19.6"
+  resolved "https://registry.yarnpkg.com/react-advanced-cropper/-/react-advanced-cropper-0.19.6.tgz#33a9e25a13f7f6de7f2284187b424b7f481703a5"
+  integrity sha512-Qm690UgsrvUb2QGuJd2qP4x81B3OQo00wPncXyNGNnOQ/gGviCNZzQFa+FLWM9PetTahL53qjHZzTT21r0W3FA==
   dependencies:
-    advanced-cropper "~0.17.1"
+    advanced-cropper "~0.18.0"
     classnames "^2.2.6"
     tslib "^2.4.0"
 
@@ -1945,6 +1952,15 @@ react-dom@^18.3.1:
   dependencies:
     loose-envify "^1.1.0"
     scheduler "^0.23.2"
+
+react-mobile-cropper@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/react-mobile-cropper/-/react-mobile-cropper-0.10.0.tgz#084f26aae848a4fc9da617f6c82dcc3098f74863"
+  integrity sha512-4/7YIpVtcphJyWguIrYITbodKZ3IkWzrY9F01m4EufmrYnVE594t7F1iR9dxUaVcAfL9W1TBtktUJq3PLSz8/Q==
+  dependencies:
+    classnames "^2.2.6"
+    react-advanced-cropper "~0.19.3"
+    tslib "^2.4.0"
 
 react-refresh@^0.14.2:
   version "0.14.2"
