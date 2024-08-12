@@ -5,8 +5,13 @@ import TripsCurrentCarousel from '@/components/organism/TripsCurrentCarousel';
 import { Button, ButtonIcon } from '@/components/ui/buttons';
 import { Plane, PlaneTakeoff } from 'lucide-react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Trips = () => {
+  // Hooks
+  const navigate = useNavigate();
+
+  // States
   const [activeTab, setActiveTab] = useState<string>('all');
 
   return (
@@ -38,7 +43,7 @@ const Trips = () => {
       {/* New Trip */}
       <aside className="-translate-y-1/2 mx-6 px-4 py-3 bg-brand-primary-bg rounded-[4px] font-semibold text-text-primary text-base flex items-center justify-between shadow-[2px_4px_4px_0px_rgba(0,0,0,0.15)]">
         새로운 곳으로 떠나볼까요?
-        <Button size="small" className="px-2.5 rounded-full">
+        <Button size="small" className="px-2.5 rounded-full" onClick={() => navigate('/createtrip')}>
           <ButtonIcon name="plus" />
           여행 만들기
         </Button>

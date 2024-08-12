@@ -1,13 +1,14 @@
 import { cn } from '@/lib/utils';
 import { LucideIconName, MemoizedLucideIcon } from '../atoms/LucideIcon';
-import { InputHTMLAttributes, forwardRef } from 'react';
+import { InputHTMLAttributes, ReactNode, forwardRef, memo } from 'react';
 import { Label } from './label';
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   icon?: LucideIconName;
+  customIcon?: ReactNode;
 }
 
-const Input = forwardRef<HTMLInputElement, InputProps>(({ icon, className, type, ...props }, ref) => {
+const Input = forwardRef<HTMLInputElement, InputProps>(({ icon, customIcon, className, type, ...props }, ref) => {
   return (
     <div className="relative">
       {icon && (
@@ -20,6 +21,15 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({ icon, className, type,
         />
       )}
 
+      {customIcon && (
+        <div
+          className="absolute top-1/2 -translate-y-1/2 left-3 text-text-secondary aria-disabled:text-text-aside"
+          aria-disabled={props.disabled}
+        >
+          {customIcon}
+        </div>
+      )}
+
       <input
         type={type}
         className={cn(
@@ -27,7 +37,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({ icon, className, type,
           className,
         )}
         ref={ref}
-        data-with-icon={icon !== undefined}
+        data-with-icon={icon !== undefined || customIcon !== undefined}
         {...props}
       />
     </div>

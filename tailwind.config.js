@@ -26,6 +26,7 @@ module.exports = {
     extend: {
       maxWidth: {
         moduchongmu: '500px',
+        'moduchongmu-padding': '452px',
       },
       colors: {
         text: {
@@ -42,7 +43,7 @@ module.exports = {
             bg: '#F8FBFF',
             lighter: '#C0DEFC',
             light: '#74B5F8',
-            main: '#74B5F8',
+            main: '#5CA8F5',
             dark: '#4475D2',
             darker: '#36459F',
             contrastText: '#FFFFFF',

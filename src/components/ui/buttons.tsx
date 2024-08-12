@@ -24,8 +24,27 @@ const buttonVariants = cva(
           'disabled:bg-element-disabled',
         ],
         secondary: [''],
+        outline: [
+          'text-text-primary',
+          'shadow-border-main shadow-[0px_0px_0px_1px_inset]',
+          'hover:bg-bg-front',
+          'active:bg-bg-front',
+          'active:shadow-border-dark',
+          'disabled:shadow-border-light',
+          'disabled:text-text-disabled',
+        ],
+        ghost: ['text-text-primary', 'hover:bg-[#EDEDED]', 'active:bg-[#DCDCDC]', 'disabled:text-text-disabled'],
+        destructive: [
+          'text-functional-error-contrastText',
+          'bg-functional-error-main',
+          'hover:bg-functional-error-dark',
+          'active:bg-functional-error-darker',
+          'disabled:text-text-disabled',
+          'disabled:bg-element-disabled',
+        ],
       },
       size: {
+        xsmall: ['px-3 py-1.5', 'rounded-[4px]', 'text-xs'],
         small: ['px-4 py-2', 'rounded-[4px]', 'text-sm'],
         medium: ['px-4 py-2.5', 'rounded-[6px]', 'text-base'],
         large: ['px-5 py-3', 'rounded-[6px]', 'text-lg'],
@@ -77,4 +96,4 @@ const ButtonIcon = forwardRef<HTMLButtonElement, ButtonIconProps>(({ className, 
   return <MemoizedLucideIcon {...props} size={size ? iconSize[size] : 24} />;
 });
 
-export { Button, ButtonIcon };
+export { Button, ButtonIcon, buttonVariants };
