@@ -1,9 +1,9 @@
 import { cn } from '@/lib/utils';
-import { LucideIcon, LucideIconName } from '../atoms/LucideIcon';
-import { forwardRef } from 'react';
+import { LucideIconName, MemoizedLucideIcon } from '../atoms/LucideIcon';
+import { InputHTMLAttributes, forwardRef } from 'react';
 import { Label } from './label';
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   icon?: LucideIconName;
 }
 
@@ -11,7 +11,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({ icon, className, type,
   return (
     <div className="relative">
       {icon && (
-        <LucideIcon
+        <MemoizedLucideIcon
           ref={ref}
           name={icon}
           size={16}
@@ -23,11 +23,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({ icon, className, type,
       <input
         type={type}
         className={cn(
-          'font-medium flex p-[11px] gap-2.5 w-full rounded-md border border-[#ECECEC] text-base text-text-primary placeholder:text-text-placeholder focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-border-dark disabled:bg-[#F7F7F7] disabled:cursor-not-allowed data-[withIcon="true"]:pl-[38px]',
+          'font-medium flex p-[11px] gap-2.5 w-full rounded-md border border-[#ECECEC] text-base text-text-primary placeholder:text-text-placeholder focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-border-dark disabled:bg-[#F7F7F7] disabled:cursor-not-allowed data-[with-icon="true"]:pl-[38px]',
           className,
         )}
         ref={ref}
-        data-withIcon={icon !== undefined}
+        data-with-icon={icon !== undefined}
         {...props}
       />
     </div>

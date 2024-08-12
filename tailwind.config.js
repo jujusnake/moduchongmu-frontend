@@ -3,8 +3,12 @@ module.exports = {
   darkMode: ['class'],
   content: ['./pages/**/*.{ts,tsx}', './components/**/*.{ts,tsx}', './app/**/*.{ts,tsx}', './src/**/*.{ts,tsx}'],
   prefix: '',
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
   theme: {
     fontSize: {
+      '2xs': ['0.625rem', '125%'], // 10px
       xs: ['0.688rem', '125%'], // 11px
       sm: ['0.75rem', '125%'], // 12px
       base: ['0.875rem', '125%'], // 14px
@@ -20,6 +24,9 @@ module.exports = {
       },
     },
     extend: {
+      maxWidth: {
+        moduchongmu: '500px',
+      },
       colors: {
         text: {
           primary: '#292929',
@@ -94,5 +101,17 @@ module.exports = {
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [
+    require('tailwindcss-animate'),
+    ({ addUtilities }) => {
+      addUtilities({
+        '.absolute-center': {
+          '@apply top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2': '',
+        },
+        '.text-ellipsis-oneline': {
+          '@apply overflow-hidden whitespace-nowrap text-ellipsis': '',
+        },
+      });
+    },
+  ],
 };

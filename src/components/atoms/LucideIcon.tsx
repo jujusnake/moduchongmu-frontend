@@ -1,4 +1,4 @@
-import { forwardRef, lazy, Suspense } from 'react';
+import { forwardRef, lazy, Suspense, memo } from 'react';
 import { LucideProps } from 'lucide-react';
 import dynamicIconImports from 'lucide-react/dynamicIconImports';
 
@@ -6,11 +6,11 @@ const fallback = <div />;
 
 type LucideIconName = keyof typeof dynamicIconImports;
 
-interface IconProps extends Omit<LucideProps, 'ref'> {
+interface LucideIconProps extends Omit<LucideProps, 'ref'> {
   name: LucideIconName;
 }
 
-const LucideIcon = forwardRef<any, IconProps>(({ name, ...props }, ref) => {
+const LucideIcon = forwardRef<any, LucideIconProps>(({ name, ...props }, ref) => {
   const LucideIcon = lazy(dynamicIconImports[name]);
 
   return (
@@ -20,4 +20,6 @@ const LucideIcon = forwardRef<any, IconProps>(({ name, ...props }, ref) => {
   );
 });
 
-export { LucideIcon, type LucideIconName };
+const MemoizedLucideIcon = memo(LucideIcon);
+
+export { LucideIcon, MemoizedLucideIcon, type LucideIconName, type LucideIconProps };

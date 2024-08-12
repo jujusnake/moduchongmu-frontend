@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import { Check } from 'lucide-react';
-import { HTMLAttributes, LabelHTMLAttributes, forwardRef } from 'react';
+import { HTMLAttributes, InputHTMLAttributes, LabelHTMLAttributes, forwardRef } from 'react';
 
 interface CheckboxLabelProps extends LabelHTMLAttributes<HTMLLabelElement> {}
 
@@ -16,7 +16,7 @@ const CheckboxLabelDesc = forwardRef<HTMLParagraphElement, CheckboxLabelDescProp
   return <p className={cn('text-xs text-text-tertiary font-normal', className)} ref={ref} {...props} />;
 });
 
-interface CheckboxProps extends HTMLAttributes<HTMLInputElement> {}
+interface CheckboxProps extends InputHTMLAttributes<HTMLInputElement> {}
 
 const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(({ className, ...props }, ref) => {
   return (
