@@ -1,11 +1,11 @@
-import { ReactNode, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { ReactNode, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const AuthLayout = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate("/signin", { replace: true });
+    // navigate("/signin", { replace: true });
   }, []);
 
   return <>{children}</>;
