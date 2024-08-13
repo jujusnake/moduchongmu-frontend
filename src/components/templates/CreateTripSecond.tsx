@@ -14,7 +14,7 @@ const CreateTripSecond = ({ date, onChangeDate }: Props) => {
   }, [date?.from]);
 
   const toDate = useMemo(() => {
-    if (!date?.to) return undefined;
+    if (!date?.to) return '-';
     const year = date.to.getFullYear();
     const month = date.to.getMonth() + 1;
     const day = date.to.getDate();
@@ -26,7 +26,7 @@ const CreateTripSecond = ({ date, onChangeDate }: Props) => {
   }, [date?.to]);
 
   return (
-    <main className="px-6 pb-[92px]">
+    <main className="px-6">
       <h1 className="text-lg font-semibold text-text-primary mb-4">여행 일정을 알려주세요</h1>
       <Calendar
         id="create-trip-calendar"
