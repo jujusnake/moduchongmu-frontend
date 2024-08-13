@@ -42,7 +42,7 @@ const CreateTripFirst = ({ location, onSelectLocation, thumbnail, onThumbnailCha
 
   return (
     <>
-      <main className="text-text-primary px-6 pb-[92px]">
+      <main className="text-text-primary px-6">
         <section>
           <h1 className="text-lg font-semibold mb-3">이번 여행지는 어디인가요?</h1>
           <div className="relative">

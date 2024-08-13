@@ -1,9 +1,11 @@
 import CreateTripFirst from '@/components/templates/CreateTripFirst';
+import CreateTripFourth from '@/components/templates/CreateTripFourth';
 import CreateTripSecond from '@/components/templates/CreateTripSecond';
+import CreateTripThird from '@/components/templates/CreateTripThird';
 import { Button } from '@/components/ui/buttons';
 import { Dialog, DialogTrigger, DialogContent, DialogFooter, DialogClose, DialogHeader } from '@/components/ui/dialog';
 import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,13 +14,34 @@ const CreateTrip = () => {
   const navigate = useNavigate();
 
   // States
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(0);
   const [location, setLocation] = useState('');
   const [thumbnailImg, setThumbnailImg] = useState<File | null>(null);
   const [date, setDate] = useState<DateRange | undefined>({
     from: undefined,
     to: undefined,
   });
+  const [nickname, setNickname] = useState('');
+
+  // Values
+  const isButtonDisabled = useMemo(() => {
+    if (currentStep === 0) {
+      return location.length < 1;
+    }
+    if (currentStep === 1) {
+      return !date?.from;
+    }
+
+    return false;
+  }, [currentStep, location, date?.from, nickname]);
+
+  const buttonLabel = useMemo(() => {
+    if (currentStep === 2 && nickname.length < 1) {
+      return '건너뛰기';
+    } else if (currentStep > 2) {
+      return '여행 만들기';
+    } else return '다음 단계로';
+  }, [currentStep, nickname]);
 
   return (
     <>
@@ -67,7 +90,7 @@ const CreateTrip = () => {
         )}
       </header>
 
-      <div className="w-full flex overflow-hidden">
+      <div className="w-full flex overflow-hidden pb-[92px]">
         <div
           className="flex transition-transform w-full duration-500 ease-in-out"
           style={{ transform: `translateX(-${currentStep * 100}%)` }}
@@ -76,49 +99,45 @@ const CreateTrip = () => {
             className="w-full flex-shrink-0 invisible opacity-0 transition-[opacity,_visibility] duration-300 data-[show=true]:visible data-[show=true]:opacity-100"
             data-show={currentStep === 0}
           >
-            <CreateTripFirst
-              location={location}
-              onSelectLocation={setLocation}
-              thumbnail={thumbnailImg}
-              onThumbnailChange={setThumbnailImg}
-            />
+            {currentStep === 0 && (
+              <CreateTripFirst
+                location={location}
+                onSelectLocation={setLocation}
+                thumbnail={thumbnailImg}
+                onThumbnailChange={setThumbnailImg}
+              />
+            )}
           </div>
           <div
             className="w-full flex-shrink-0 invisible opacity-0 transition-[opacity,_visibility] duration-300 data-[show=true]:visible data-[show=true]:opacity-100"
             data-show={currentStep === 1}
           >
-            <CreateTripSecond date={date} onChangeDate={setDate} />
+            {currentStep === 1 && <CreateTripSecond date={date} onChangeDate={setDate} />}
           </div>
           <div
             className="w-full flex-shrink-0 invisible opacity-0 transition-[opacity,_visibility] duration-300 data-[show=true]:visible data-[show=true]:opacity-100"
             data-show={currentStep === 2}
           >
-            <CreateTripFirst
-              location={location}
-              onSelectLocation={setLocation}
-              thumbnail={thumbnailImg}
-              onThumbnailChange={setThumbnailImg}
-            />
+            {currentStep === 2 && (
+              <CreateTripThird nickname={nickname} onNicknameChange={setNickname} location={location} />
+            )}
           </div>
           <div
             className="w-full flex-shrink-0 invisible opacity-0 transition-[opacity,_visibility] duration-300 data-[show=true]:visible data-[show=true]:opacity-100"
             data-show={currentStep === 3}
           >
-            <CreateTripFirst
-              location={location}
-              onSelectLocation={setLocation}
-              thumbnail={thumbnailImg}
-              onThumbnailChange={setThumbnailImg}
-            />
+            {currentStep === 3 && (
+              <CreateTripFourth location={location} thumbnail={thumbnailImg} date={date} nickname={nickname} />
+            )}
           </div>
         </div>
         <Button
           size="large"
           className="fixed left-1/2 -translate-x-1/2 bottom-6 w-[calc(100vw-48px)] max-w-moduchongmu-padding"
-          disabled={location.length < 1}
+          disabled={isButtonDisabled}
           onClick={() => setCurrentStep?.((prev) => prev + 1)}
         >
-          다음 단계로
+          {buttonLabel}
         </Button>
       </div>
     </>
