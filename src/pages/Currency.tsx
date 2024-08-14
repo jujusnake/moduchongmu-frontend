@@ -1,70 +1,68 @@
+import { CurrencySelectButton, CurrencySuggestionButton, CurrencySwitch } from '@/components/atoms/currency';
+import { CurrencySelectDrawer } from '@/components/organism/currency';
 import { useState } from 'react';
 
 const Currency = () => {
-  const [isTransitioning, setIsTransitioning] = useState(true);
-  const [arrowPos, setArrowPos] = useState<number>(0);
-  const [isSwitched, setIsSwitched] = useState(false);
-  console.log(arrowPos);
+  const [openCurrencyDrawer, setOpenCurrencyDrawer] = useState(false);
+  const [topCurrency, setTopCurrency] = useState('KRW(원)');
+  const [topValue, setTopValue] = useState(10000);
+  const [bottomCurrency, setBottomCurrency] = useState('VND(동)');
+  const [bottomValue, setBottomValue] = useState(182796.81);
 
   const handleSwitch = () => {
-    setArrowPos(100);
     setTimeout(() => {
-      setIsTransitioning(false);
-      setArrowPos(-100);
-      setIsSwitched((prev) => !prev);
+      const tempCurrency = topCurrency;
+      const tempValue = topValue;
 
-      setTimeout(() => {
-        setIsTransitioning(true);
-        setArrowPos(0);
-      }, 100);
-    }, 200);
+      setTopCurrency(bottomCurrency);
+      setTopValue(bottomValue);
+      setBottomCurrency(tempCurrency);
+      setBottomValue(tempValue);
+    }, 150);
   };
 
   return (
-    <main className="min-h-[calc(100dvh-80px)] grid grid-cols-1 grid-rows-2 overflow-hidden relative">
-      <div className="bg-brand-primary-dark px-6 shadow-[0px_4px_6px_rgba(0,0,0,0.1)] z-10 pt-10 pb-[56px]">
-        <h1 className="text-brand-primary-contrastText font-semibold text-2xl">환율 계산기</h1>
-      </div>
-      <button
-        className="absolute z-20 absolute-center bg-bg-back p-[18px] rounded-full shadow-md"
-        onClick={handleSwitch}
-      >
-        <div className="w-6 h-6">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="lucide lucide-arrow-down-up"
-          >
-            <g
-              style={{
-                transition: isTransitioning ? 'transform 200ms ease-in-out' : '',
-                transform: `translate(${isSwitched ? 10 : 0}px, ${arrowPos}%)`,
-              }}
+    <>
+      <main className="min-h-[calc(100dvh-80px)] grid grid-cols-1 grid-rows-2 overflow-hidden relative">
+        <div className="bg-brand-primary-dark px-6 shadow-[0px_4px_6px_rgba(0,0,0,0.1)] z-10 pt-10 pb-[56px] overflow-hidden flex flex-col justify-between">
+          <h1 className="text-brand-primary-contrastText font-semibold text-2xl mb-10">환율 계산기</h1>
+          <div className="flex items-end justify-between">
+            <div className="space-y-2.5">
+              <div className="flex items-center gap-2.5">
+                <CurrencySuggestionButton>{'USD(달러)'}</CurrencySuggestionButton>
+                <CurrencySuggestionButton>{'JYP(엔)'}</CurrencySuggestionButton>
+              </div>
+              <CurrencySelectButton onClick={() => setOpenCurrencyDrawer(true)}>{topCurrency}</CurrencySelectButton>
+            </div>
+            <strong
+              className="text-[24px]/[125%] font-semibold text-brand-primary-contrastText"
+              style={{ textShadow: '0px 2px 2px rgba(0,0,0,0.15)' }}
             >
-              <path d="m3 16 4 4 4-4" />
-              <path d="M7 20V4" />
-            </g>
-            <g
-              style={{
-                transition: isTransitioning ? 'transform 200ms ease-in-out' : '',
-                transform: `translate(${isSwitched ? -10 : 0}px, ${-arrowPos}%)`,
-              }}
-            >
-              <path d="m21 8-4-4-4 4" />
-              <path d="M17 4v16" />
-            </g>
-          </svg>
+              ₩ {topValue}
+            </strong>
+          </div>
         </div>
-      </button>
-      <div className="bg-bg-back px-6">asdf</div>
-    </main>
+        <CurrencySwitch onClick={handleSwitch} />
+        <div className="bg-bg-back px-6 pb-10 pt-[56px] overflow-hidden">
+          <div className="flex items-start justify-between">
+            <div className="space-y-2.5">
+              <CurrencySelectButton onClick={() => setOpenCurrencyDrawer(true)}>{bottomCurrency}</CurrencySelectButton>
+              <div className="flex items-center gap-2.5">
+                <CurrencySuggestionButton variant="gray">{'KRW(원)'}</CurrencySuggestionButton>
+                <CurrencySuggestionButton variant="gray">{'JYP(엔)'}</CurrencySuggestionButton>
+              </div>
+            </div>
+            <strong
+              className="text-[24px]/[125%] font-semibold text-text-primary"
+              // style={{ textShadow: '0px 2px 2px rgba(0,0,0,0.15)' }}
+            >
+              ₫ {bottomValue}
+            </strong>
+          </div>
+        </div>
+      </main>
+      <CurrencySelectDrawer open={openCurrencyDrawer} onOpenChange={setOpenCurrencyDrawer} />
+    </>
   );
 };
 
