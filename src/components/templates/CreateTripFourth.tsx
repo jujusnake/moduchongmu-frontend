@@ -31,7 +31,7 @@ const CreateTripFourth = ({ location, thumbnail, date, nickname }: Props) => {
   }, [date?.to]);
 
   return (
-    <main className="px-6 min-h-[calc(100dvh-194px)] flex flex-col justify-center font-semibold text-text-primary">
+    <main className="px-6 min-h-[calc(100dvh-218px)] flex flex-col justify-center font-semibold text-text-primary">
       <div className="mb-[18px] text-lg">
         아름다운 <span className="text-2xl text-brand-primary-dark">{location}</span>
         {hasBatchim(location) ? '으로' : '로'}

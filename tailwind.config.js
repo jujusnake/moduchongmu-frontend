@@ -24,6 +24,12 @@ module.exports = {
       },
     },
     extend: {
+      height: {
+        vvh: 'var(--vvh, 100vh)',
+      },
+      minHeight: {
+        vvh: 'var(--vvh, 100vh)',
+      },
       maxWidth: {
         moduchongmu: '500px',
         'moduchongmu-padding': '452px',

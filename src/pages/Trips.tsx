@@ -43,7 +43,11 @@ const Trips = () => {
       {/* New Trip */}
       <aside className="-translate-y-1/2 mx-6 px-4 py-3 bg-brand-primary-bg rounded-[4px] font-semibold text-text-primary text-base flex items-center justify-between shadow-[2px_4px_4px_0px_rgba(0,0,0,0.15)]">
         새로운 곳으로 떠나볼까요?
-        <Button size="small" className="px-2.5 rounded-full" onClick={() => navigate('/createtrip')}>
+        <Button
+          size="small"
+          className="px-2.5 rounded-full"
+          onClick={() => navigate('/createtrip', { state: { from: '/trips' } })}
+        >
           <ButtonIcon name="plus" />
           여행 만들기
         </Button>

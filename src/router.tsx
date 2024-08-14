@@ -5,6 +5,8 @@ import Signup from './pages/Signup';
 import Home from './pages/Home';
 import Trips from './pages/Trips';
 import CreateTrip from './pages/CreateTrip';
+import Now from './pages/Now';
+import Currency from './pages/Currency';
 
 const router = createBrowserRouter([
   {
@@ -17,7 +19,11 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <Home />,
-        children: [{ path: 'trips', element: <Trips /> }],
+        children: [
+          { path: 'trips', element: <Trips /> },
+          { path: 'now', element: <Now /> },
+          { path: 'currency', element: <Currency /> },
+        ],
       },
     ],
   },
