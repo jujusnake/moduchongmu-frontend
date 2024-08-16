@@ -10,4 +10,6 @@ const getCleanPathname = (path: string) => {
   return path.replace(/\/+$/, '');
 };
 
-export { cn, getCleanPathname };
+const addCommas = (number: number) => number.toLocaleString();
+
+export { cn, getCleanPathname, addCommas };
