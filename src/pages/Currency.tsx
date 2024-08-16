@@ -1,5 +1,6 @@
 import { CurrencySelectButton, CurrencySuggestionButton, CurrencySwitch } from '@/components/atoms/currency';
 import { CurrencySelectDrawer } from '@/components/organism/currency';
+import { addCommas } from '@/lib/utils';
 import { useState } from 'react';
 
 const Currency = () => {
@@ -25,7 +26,7 @@ const Currency = () => {
     <>
       <main className="min-h-[calc(100dvh-80px)] grid grid-cols-1 grid-rows-2 overflow-hidden relative">
         <div className="bg-brand-primary-dark px-6 shadow-[0px_4px_6px_rgba(0,0,0,0.1)] z-10 pt-10 pb-[56px] overflow-hidden flex flex-col justify-between">
-          <h1 className="text-brand-primary-contrastText font-semibold text-2xl mb-10">환율 계산기</h1>
+          <h1 className="mb-10 text-2xl font-semibold text-brand-primary-contrastText">환율 계산기</h1>
           <div className="flex items-end justify-between">
             <div className="space-y-2.5">
               <div className="flex items-center gap-2.5">
@@ -38,7 +39,7 @@ const Currency = () => {
               className="text-[24px]/[125%] font-semibold text-brand-primary-contrastText"
               style={{ textShadow: '0px 2px 2px rgba(0,0,0,0.15)' }}
             >
-              ₩ {topValue}
+              ₩ {addCommas(topValue)}
             </strong>
           </div>
         </div>
@@ -56,7 +57,7 @@ const Currency = () => {
               className="text-[24px]/[125%] font-semibold text-text-primary"
               // style={{ textShadow: '0px 2px 2px rgba(0,0,0,0.15)' }}
             >
-              ₫ {bottomValue}
+              ₫ {addCommas(bottomValue)}
             </strong>
           </div>
         </div>
