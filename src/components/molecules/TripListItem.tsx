@@ -24,8 +24,8 @@ const TripListItem = ({ imgSrc, title, location, members, date, className, ...pr
         />
       </div>
       <div className="space-y-2 text-start">
-        <h1 className="text-base font-semibold text-text-primary text-ellipsis-oneline">{title}</h1>
-        <div className="space-y-0.5 text-sm text-text-tertiary text-ellipsis-oneline">
+        <h1 className="text-base font-semibold text-text-primary ellipsis-text-oneline">{title}</h1>
+        <div className="space-y-0.5 text-sm text-text-tertiary ellipsis-text-oneline">
           <div className="flex gap-3">
             <div>{location}</div>
             {members && <div>{members}명의 메이트</div>}
@@ -52,8 +52,8 @@ const TripListItemFloat = ({ imgSrc, title, location, members, date, className, 
         />
       </div>
       <div className="space-y-2 text-start">
-        <h1 className="text-base font-semibold text-brand-primary-contrastText text-ellipsis-oneline">{title}</h1>
-        <div className="space-y-0.5 text-sm text-brand-primary-contrastText text-ellipsis-oneline">
+        <h1 className="text-base font-semibold text-brand-primary-contrastText ellipsis-text-oneline">{title}</h1>
+        <div className="space-y-0.5 text-sm text-brand-primary-contrastText ellipsis-text-oneline">
           <div className="flex gap-3">
             <div>{location}</div>
             {members && <div>{members}명의 메이트</div>}
@@ -61,7 +61,7 @@ const TripListItemFloat = ({ imgSrc, title, location, members, date, className, 
           <div>{date}</div>
         </div>
       </div>
-      <aside className="absolute top-2 right-2 text-sm font-semibold">D-3</aside>
+      <aside className="absolute text-sm font-semibold top-2 right-2">D-3</aside>
     </button>
   );
 };

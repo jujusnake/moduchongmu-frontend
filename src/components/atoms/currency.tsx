@@ -30,7 +30,7 @@ const CurrencySwitch = ({ onClick, ...props }: CurrencySwitchProps) => {
 
   return (
     <button
-      className="absolute z-20 absolute-center bg-bg-back p-[18px] rounded-full shadow-md hover:bg-bg-base active:bg-[#f3f3f3] transition-[colors] duration-[200ms]"
+      className="absolute z-20 absolute-center bg-bg-back p-[18px] rounded-full shadow-md hover:bg-bg-base active:bg-[#f3f3f3] transition-[colors] duration-200"
       data-clicked={arrowPos !== 0}
       onClick={handleSwitch}
       {...props}
