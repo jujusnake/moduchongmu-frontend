@@ -8,9 +8,10 @@ import 'react-mobile-cropper/dist/style.css';
 interface ProfileImgButtonProps extends HTMLAttributes<HTMLDivElement> {
   selectedImg: File | null;
   onChangeImg?: (img: File | null) => void;
+  disabled?: boolean;
 }
 
-const ProfileImgButton = ({ className, selectedImg, onChangeImg, ...props }: ProfileImgButtonProps) => {
+const ProfileImgButton = ({ className, selectedImg, onChangeImg, disabled, ...props }: ProfileImgButtonProps) => {
   // Refs
   const imgInputRef = useRef<HTMLInputElement>(null);
   const imgCropperRef = useRef<CropperRef>(null);
@@ -68,6 +69,7 @@ const ProfileImgButton = ({ className, selectedImg, onChangeImg, ...props }: Pro
         <label
           htmlFor="upload-profile-picture"
           className="relative rounded-full w-[100px] h-[100px] border border-white bg-brand-primary-bg shadow-md flex items-center justify-center overflow-hidden isolate"
+          aria-disabled={disabled}
         >
           <input
             id="upload-profile-picture"
@@ -77,6 +79,7 @@ const ProfileImgButton = ({ className, selectedImg, onChangeImg, ...props }: Pro
             onChange={handlePhotoChange}
             accept="image/*"
             multiple={false}
+            disabled={disabled}
           />
 
           {/* z-index : 0 */}
@@ -91,41 +94,45 @@ const ProfileImgButton = ({ className, selectedImg, onChangeImg, ...props }: Pro
         </label>
 
         {/* Remove Button */}
-        <div className="pb-2.5 data-[empty='true']:invisible text-white" data-empty={selectedImg === null}>
-          <button className="-translate-y-1/2" onClick={handleRemovePhoto}>
-            <X />
-          </button>
-        </div>
+        {disabled !== true && (
+          <div className="pb-2.5 data-[empty='true']:invisible text-white" data-empty={selectedImg === null}>
+            <button className="-translate-y-1/2" onClick={handleRemovePhoto}>
+              <X />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Cropper Modal */}
-      <div
-        className="fixed top-0 left-1/2 -translate-x-1/2 h-[100dvh] w-full max-w-moduchongmu z-[100] data-[open='true']:visible invisible"
-        data-open={tempProfileImg !== null}
-      >
-        <Cropper
-          ref={imgCropperRef}
-          className="w-full h-full"
-          src={tempProfileImg ? URL.createObjectURL(tempProfileImg) : undefined}
-          stencilComponent={CircleStencil}
-        />
-        <div className="absolute top-6 right-6 flex items-center gap-4">
-          <Button
-            size="large"
-            onClick={() => {
-              setTempProfileImg(null);
-              if (imgInputRef.current) {
-                imgInputRef.current.value = '';
-              }
-            }}
-          >
-            취소
-          </Button>
-          <Button size="large" onClick={handleCrop}>
-            확인
-          </Button>
+      {disabled !== true && (
+        <div
+          className="fixed top-0 left-1/2 -translate-x-1/2 h-[100dvh] w-full max-w-moduchongmu z-[100] data-[open='true']:visible invisible"
+          data-open={tempProfileImg !== null}
+        >
+          <Cropper
+            ref={imgCropperRef}
+            className="w-full h-full"
+            src={tempProfileImg ? URL.createObjectURL(tempProfileImg) : undefined}
+            stencilComponent={CircleStencil}
+          />
+          <div className="absolute top-6 right-6 flex items-center gap-4">
+            <Button
+              size="large"
+              onClick={() => {
+                setTempProfileImg(null);
+                if (imgInputRef.current) {
+                  imgInputRef.current.value = '';
+                }
+              }}
+            >
+              취소
+            </Button>
+            <Button size="large" onClick={handleCrop}>
+              확인
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 };
