@@ -7,6 +7,7 @@ import Trips from './pages/Trips';
 import CreateTrip from './pages/CreateTrip';
 import Now from './pages/Now';
 import Currency from './pages/Currency';
+import My from './pages/My';
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,7 @@ const router = createBrowserRouter([
           { path: 'trips', element: <Trips /> },
           { path: 'now', element: <Now /> },
           { path: 'currency', element: <Currency /> },
+          { path: 'my', element: <My /> },
         ],
       },
     ],

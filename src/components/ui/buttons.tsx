@@ -23,7 +23,14 @@ const buttonVariants = cva(
           'disabled:text-text-disabled',
           'disabled:bg-element-disabled',
         ],
-        secondary: [''],
+        secondary: [
+          'text-text-primary',
+          'bg-[#EEF2F8]',
+          'hover:bg-[#DFE8F4]',
+          'active:bg-[#C9D7E9]',
+          'disabled:text-text-disabled',
+          'disabled:bg-element-disabled',
+        ],
         outline: [
           'text-text-primary',
           'shadow-border-main shadow-[0px_0px_0px_1px_inset]',
@@ -44,21 +51,27 @@ const buttonVariants = cva(
         ],
       },
       size: {
-        xsmall: ['px-3 py-1.5', 'rounded-[4px]', 'text-xs'],
-        small: ['px-4 py-2', 'rounded-[4px]', 'text-sm'],
-        medium: ['px-4 py-2.5', 'rounded-[6px]', 'text-base'],
-        large: ['px-5 py-3', 'rounded-[6px]', 'text-lg'],
+        xsmall: ['px-3 py-1.5', 'text-xs'],
+        small: ['px-4 py-2', 'text-sm'],
+        medium: ['px-4 py-2.5', 'text-base'],
+        large: ['px-5 py-3', 'text-lg'],
+      },
+      shape: {
+        rectangle: ['rounded-[6px]'],
+        round: ['rounded-full'],
       },
     },
     compoundVariants: [
       {
         variant: 'primary',
         size: 'medium',
+        shape: 'rectangle',
       },
     ],
     defaultVariants: {
       variant: 'primary',
       size: 'medium',
+      shape: 'rectangle',
     },
   },
 );
@@ -68,12 +81,12 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>, VariantPr
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ size = 'medium', variant, className, asChild, ...props }, ref) => {
+  ({ size = 'medium', shape = 'rectangle', variant, className, asChild, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';
 
     return (
       <ButtonContext.Provider value={{ size }}>
-        <Comp ref={ref} className={cn(buttonVariants({ variant, size }), className)} {...props} />
+        <Comp ref={ref} className={cn(buttonVariants({ variant, size, shape }), className)} {...props} />
       </ButtonContext.Provider>
     );
   },
@@ -93,7 +106,7 @@ const ButtonIcon = forwardRef<HTMLButtonElement, ButtonIconProps>(({ className, 
     large: 20,
   };
 
-  return <MemoizedLucideIcon {...props} size={size ? iconSize[size] : 24} />;
+  return <MemoizedLucideIcon size={size ? iconSize[size] : 24} {...props} />;
 });
 
 export { Button, ButtonIcon, buttonVariants };
