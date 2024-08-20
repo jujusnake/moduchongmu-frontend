@@ -1,6 +1,6 @@
 import { addCommas, cn } from '@/lib/utils';
 import { Plus } from 'lucide-react';
-import { ButtonHTMLAttributes, HTMLAttributes, forwardRef } from 'react';
+import { ButtonHTMLAttributes, HTMLAttributes, PointerEvent, forwardRef, useState } from 'react';
 
 interface ExpenseItemProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   title?: string;
@@ -11,11 +11,48 @@ interface ExpenseItemProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const ExpenseItem = forwardRef<HTMLButtonElement, ExpenseItemProps>(
-  ({ title, amount, currency, category, mates, className, ...props }, ref) => {
+  ({ title, amount, currency, category, mates, className, onPointerDown, ...props }, ref) => {
+    // States
+    const [rippleWidth, setRippleWidth] = useState(0);
+    const [clickPos, setClickPos] = useState({ x: 0, y: 0 });
+
+    // Handlers
+    const handlePointerDown = (e: PointerEvent<HTMLButtonElement>) => {
+      const rect = e.currentTarget.getBoundingClientRect();
+
+      const x = e.clientX - rect.left;
+      const xfromEnd = rect.width - x;
+      const y = e.clientY - rect.top;
+
+      setClickPos({ x, y });
+      setRippleWidth(Math.max(x, xfromEnd) * 2.5);
+      onPointerDown?.(e);
+    };
+
+    const handlePointerUp = () => {
+      setRippleWidth(0);
+    };
+
     return (
       <button
         ref={ref}
-        className={cn('w-full flex gap-2 justify-between py-4 border-b border-[#ECECEC] last:border-none', className)}
+        className={cn(
+          'group/expense-item relative overflow-hidden w-full flex gap-2 justify-between py-4 border-b border-[#ECECEC] last:border-none',
+          className,
+        )}
+        onPointerDown={handlePointerDown}
+        onPointerUp={(e) => {
+          handlePointerUp();
+          props.onPointerUp?.(e);
+        }}
+        onPointerLeave={(e) => {
+          handlePointerUp();
+          props.onPointerLeave?.(e);
+        }}
+        onPointerOut={(e) => {
+          handlePointerUp();
+          props.onPointerOut?.(e);
+        }}
         {...props}
       >
         {props.children ?? (
@@ -35,6 +72,14 @@ const ExpenseItem = forwardRef<HTMLButtonElement, ExpenseItemProps>(
             </div>
           </>
         )}
+
+        <div className="absolute top-0 left-0" style={{ transform: `translate(${clickPos.x}px, ${clickPos.y}px)` }}>
+          <div
+            data-transition={rippleWidth > 0}
+            className="data-[transition=true]:transition-all -translate-x-1/2 duration-500 -translate-y-1/2 rounded-full bg-black/10"
+            style={{ width: rippleWidth, height: rippleWidth }}
+          />
+        </div>
       </button>
     );
   },
