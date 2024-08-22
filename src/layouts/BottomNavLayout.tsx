@@ -2,7 +2,7 @@ import { BottomNavigation } from '@/components/organism/navigation';
 import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
-const Home = () => {
+const BottomNavLayout = () => {
   const navigate = useNavigate();
 
   // useEffect(() => {
@@ -24,4 +24,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default BottomNavLayout;

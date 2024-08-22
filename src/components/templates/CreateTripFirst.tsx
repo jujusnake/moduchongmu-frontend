@@ -68,10 +68,10 @@ const CreateTripFirst = ({ location, onSelectLocation, thumbnail, onThumbnailCha
                         className="py-4 px-2 flex items-center justify-between font-medium border-b border-[#F0F0F0] last:border-0 gap-2 hover:bg-bg-base cursor-pointer"
                         onClick={() => handleSelectLocation('호치민, 베트남')}
                       >
-                        <span className="text-base text-text-primary shrink-0 max-w-full text-ellipsis-oneline">
+                        <span className="text-base text-text-primary shrink-0 max-w-full ellipsis-text-oneline">
                           호치민, 베트남
                         </span>
-                        <span className="text-sm text-text-aside shrink-[3] text-ellipsis-oneline">
+                        <span className="text-sm text-text-aside shrink-[3] ellipsis-text-oneline">
                           HO CHI MIHN CITY, VIETNAM
                         </span>
                       </li>
