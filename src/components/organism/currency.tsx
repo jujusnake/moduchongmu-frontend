@@ -64,22 +64,38 @@ const CurrencySelectDrawer = ({
           <Input placeholder="통화 검색" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
         </DrawerHeader>
         <ul className="px-4 pt-2 pb-10 overflow-auto">
-          <CurrencyListItem onClick={() => onCurrencySelect?.('KRW(원)')}>KRW(원)</CurrencyListItem>
-          <CurrencyListItem>KRW(원)</CurrencyListItem>
-          <CurrencyListItem>KRW(원)</CurrencyListItem>
-          <CurrencyListItem>KRW(원)</CurrencyListItem>
-          <CurrencyListItem>KRW(원)</CurrencyListItem>
-          <CurrencyListItem>KRW(원)</CurrencyListItem>
-          <CurrencyListItem>KRW(원)</CurrencyListItem>
-          <CurrencyListItem>MIDDLE</CurrencyListItem>
-          <CurrencyListItem>KRW(원)</CurrencyListItem>
-          <CurrencyListItem>KRW(원)</CurrencyListItem>
-          <CurrencyListItem>KRW(원)</CurrencyListItem>
-          <CurrencyListItem>KRW(원)</CurrencyListItem>
-          <CurrencyListItem>KRW(원)</CurrencyListItem>
-          <CurrencyListItem>KRW(원)</CurrencyListItem>
-          <CurrencyListItem>KRW(원)</CurrencyListItem>
-          <CurrencyListItem>LAST</CurrencyListItem>
+          <CurrencyListItem
+            onClick={() => {
+              props.onOpenChange?.(false);
+              onCurrencySelect?.('KRW');
+            }}
+          >
+            KRW(원)
+          </CurrencyListItem>
+          <CurrencyListItem
+            onClick={() => {
+              props.onOpenChange?.(false);
+              onCurrencySelect?.('CNY');
+            }}
+          >
+            CNY(위안)
+          </CurrencyListItem>
+          <CurrencyListItem
+            onClick={() => {
+              props.onOpenChange?.(false);
+              onCurrencySelect?.('USD');
+            }}
+          >
+            USD(달러)
+          </CurrencyListItem>
+          <CurrencyListItem
+            onClick={() => {
+              props.onOpenChange?.(false);
+              onCurrencySelect?.('JOD');
+            }}
+          >
+            JOD(요르단 디나르)
+          </CurrencyListItem>
         </ul>
       </DrawerContent>
     </Drawer>

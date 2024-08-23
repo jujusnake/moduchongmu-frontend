@@ -57,7 +57,7 @@ const DailyExpenseBlock = forwardRef<HTMLElement, DailyExpenseBlockProps>(({ cla
   return (
     <section
       ref={ref}
-      className={cn('px-5 py-4 group/expense rounded-md odd:bg-bg-base even:bg-white', className)}
+      className={cn('px-5 py-4 group/expense rounded-md odd:bg-brand-primary-bg even:bg-white', className)}
       {...props}
     />
   );
