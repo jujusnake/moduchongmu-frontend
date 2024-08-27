@@ -2,6 +2,15 @@ import SocialSigninButton from '@/components/atoms/SocialSigninButton';
 import TextRotation from '@/components/atoms/TextRotation';
 
 const Signin = () => {
+  window.initContent = (parameter) => {
+    window.webkit.messageHandlers.moChong.postMessage(JSON.stringify({ action: 'log', type: 'initContent' }));
+    console.log('initContent parameter', parameter);
+  };
+
+  const loginOAuth = (type: 'naver' | 'kakao' | 'google' | 'apple') => {
+    window.webkit.messageHandlers.moChong.postMessage(JSON.stringify({ action: 'login', type }));
+  };
+
   return (
     <div className="flex flex-col min-h-svh">
       <h1 className="bg-brand-primary-dark relative flex items-end justify-center flex-1 py-12">
@@ -32,10 +41,10 @@ const Signin = () => {
               <hr className="flex-grow" />
             </div>
             <div className="flex gap-4 items-center justify-center">
-              <SocialSigninButton type="naver" />
-              <SocialSigninButton type="kakao" />
-              <SocialSigninButton type="google" />
-              <SocialSigninButton type="apple" />
+              <SocialSigninButton type="naver" onClick={() => loginOAuth('naver')} />
+              <SocialSigninButton type="kakao" onClick={() => loginOAuth('kakao')} />
+              <SocialSigninButton type="google" onClick={() => loginOAuth('google')} />
+              <SocialSigninButton type="apple" onClick={() => loginOAuth('apple')} />
             </div>
           </div>
         </div>
