@@ -4,7 +4,7 @@ import TextRotation from '@/components/atoms/TextRotation';
 const Signin = () => {
   return (
     <div className="flex flex-col min-h-svh">
-      <h1 className="bg-brand-primary-dark relative flex items-end justify-center flex-1 py-12">
+      <h1 className="relative flex items-end justify-center flex-1 py-12 bg-brand-primary-dark">
         <div className="w-[50%] aspect-square bg-black/30"></div>
         <img
           aria-disabled
@@ -14,8 +14,8 @@ const Signin = () => {
         />
       </h1>
 
-      <section className="px-4 pb-4 pt-12 flex flex-col items-center justify-end gap-10 flex-1">
-        <div className="flex-grow flex flex-col items-center justify-center">
+      <section className="flex flex-col items-center justify-end flex-1 gap-10 px-4 pt-12 pb-4">
+        <div className="flex flex-col items-center justify-center flex-grow">
           <TextRotation
             className="text-xl font-semibold mb-10 h-[22.5px]"
             textArr={[
@@ -26,23 +26,30 @@ const Signin = () => {
             ]}
           />
           <div>
-            <div className="flex gap-2 items-center mb-4">
+            <div className="flex items-center gap-2 mb-4">
               <hr className="flex-grow" />
               <span className="text-base font-medium">로그인</span>
               <hr className="flex-grow" />
             </div>
-            <div className="flex gap-4 items-center justify-center">
-              <SocialSigninButton type="naver" />
-              <SocialSigninButton type="kakao" />
-              <SocialSigninButton type="google" />
-              <SocialSigninButton type="apple" />
+            <div className="flex items-center justify-center gap-4">
+              {(['naver', 'kakao', 'google', 'apple'] as const).map((carrier) => (
+                <SocialSigninButton
+                  key={carrier}
+                  carrier={carrier}
+                  onClick={() => {
+                    if (window.Android) {
+                      window.Android.onSocialSignin(carrier);
+                    }
+                  }}
+                />
+              ))}
             </div>
           </div>
         </div>
 
-        <aside className="text-text-aside text-xs">
-          로그인함으로써 <a className="text-text-primary underline">이용약관</a> 및{' '}
-          <a className="text-text-primary underline">개인정보취급방침</a>에 동의합니다
+        <aside className="text-xs text-text-aside">
+          로그인함으로써 <a className="underline text-text-primary">이용약관</a> 및{' '}
+          <a className="underline text-text-primary">개인정보취급방침</a>에 동의합니다
         </aside>
       </section>
     </div>

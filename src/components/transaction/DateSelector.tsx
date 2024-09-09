@@ -1,23 +1,21 @@
-import { useEffect, useRef, useState } from 'react';
-import { TransactionLabel } from './transaction-ui';
+import { useState } from 'react';
+import { TransactionLabel } from '@/components/ui/transaction';
 import { Calendar } from '@/components/ui/calendar';
 import { Button } from '@/components/ui/buttons';
 import { CalendarIcon, ChevronDown } from 'lucide-react';
-import useHideTransition from '@/hooks/useHideTransition';
-import { cn } from '@/lib/utils';
 import { SwitchTransitionContainer, SwitchTransitionOff, SwitchTransitionOn } from '@/components/ui/transitions';
 
-type DateSelectorButtonProps = {
+type DateSelectorProps = {
   date?: Date;
   onDateChange?: (date?: Date) => void;
 };
 
-const DateSelectorButton = ({ date, onDateChange }: DateSelectorButtonProps) => {
-  const [isEdit, setIsEdit] = useState(false);
+const DateSelector = ({ date, onDateChange }: DateSelectorProps) => {
+  const [isEdit, setIsEdit] = useState(true);
 
   return (
     <div className="flex flex-col items-start gap-2">
-      <TransactionLabel className="w-full">{isEdit ? '언제 결제하셨나요?' : '날짜'}</TransactionLabel>
+      <TransactionLabel className="w-full">날짜</TransactionLabel>
 
       <SwitchTransitionContainer on={isEdit}>
         <SwitchTransitionOff>
@@ -56,4 +54,4 @@ const DateSelectorButton = ({ date, onDateChange }: DateSelectorButtonProps) => 
   );
 };
 
-export default DateSelectorButton;
+export default DateSelector;
