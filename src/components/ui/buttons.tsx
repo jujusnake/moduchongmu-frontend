@@ -49,6 +49,15 @@ const buttonVariants = cva(
           'disabled:text-text-disabled',
           'disabled:bg-element-disabled',
         ],
+        contrast: [
+          'text-brand-primary-contrastText',
+          // 'bg-brand-primary-main',
+          // 'hover:bg-brand-primary-dark',
+          'hover:text-brand-primary-lighter',
+          'active:text-brand-primary-contrastText',
+          'active:bg-brand-primary-light',
+          'disabled:text-text-disabled',
+        ],
       },
       size: {
         xsmall: ['px-3 py-1.5', 'text-xs'],

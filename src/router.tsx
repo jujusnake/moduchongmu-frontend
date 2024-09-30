@@ -9,6 +9,8 @@ import Now from './pages/Now';
 import Currency from './pages/Currency';
 import My from './pages/My';
 import Trip from './pages/Trip';
+import TripSettlement from './pages/TripSettlement';
+import CreateTransaction from './pages/CreateTransaction';
 
 const router = createBrowserRouter([
   {
@@ -18,7 +20,9 @@ const router = createBrowserRouter([
       { path: '/signin', element: <Signin /> },
       { path: '/signup', element: <Signup /> },
       { path: '/createtrip', element: <CreateTrip /> },
-      { path: '/trip/:id', element: <Trip /> },
+      { path: '/createtransaction', element: <CreateTransaction /> },
+      { path: '/trip/:travelUid', element: <Trip /> },
+      { path: '/trip/:travelUid/settlement', element: <TripSettlement /> },
       {
         path: '/',
         element: <Home />,
