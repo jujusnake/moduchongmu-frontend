@@ -8,6 +8,14 @@ const AuthLayout = ({ children }: { children: ReactNode }) => {
     // navigate("/signin", { replace: true });
   }, []);
 
+  useEffect(() => {
+    // @ts-ignore
+    if (Kakao.isInitialized() === false) {
+      // @ts-ignore
+      Kakao.init(import.meta.env.VITE_KAKAO_CLIENT_ID);
+    }
+  });
+
   return <>{children}</>;
 };
 
