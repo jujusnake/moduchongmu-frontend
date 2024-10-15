@@ -1,9 +1,7 @@
 import SocialSigninButton from '@/components/atoms/SocialSigninButton';
 import TextRotation from '@/components/atoms/TextRotation';
+import { SOCIAL_SIGNIN, SocialSigninType } from '@/types/signin';
 import { useEffect } from 'react';
-
-const SOCIAL_SIGNIN = ['naver', 'kakao', 'google', 'apple'] as const;
-type SocialSigninType = (typeof SOCIAL_SIGNIN)[number];
 
 const Signin = () => {
   window.initContent = (parameter) => {

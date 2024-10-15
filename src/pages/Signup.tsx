@@ -1,21 +1,49 @@
+import { useUser } from '@/APIs/user/get';
+import { usePutUser } from '@/APIs/user/put';
 import ProfileImgButton from '@/components/ProfileImgButton';
 import { Button } from '@/components/ui/buttons';
 import { Checkbox, CheckboxLabel, CheckboxLabelDesc } from '@/components/ui/checkbox';
 import { Input, InputLabel } from '@/components/ui/input';
 import { PartyPopper } from 'lucide-react';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
+  // Hooks
+  const navigate = useNavigate();
+
+  // API Calls
+  const { data: userData } = useUser();
+  const { mutate: putUser } = usePutUser();
+
   // State
   const [profileImg, setProfileImg] = useState<File | null>(null);
-  const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');
   const [marketingAgreement, setMarketingAgreement] = useState<boolean>(false);
-  const goodToGo = nickname.length > 0 && email.length > 0;
+  const goodToGo = userData && nickname.length > 0 && userData?.data.user.userEmail.length > 0;
+
+  const handleSignup = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    putUser(
+      {
+        userName: nickname,
+        marketingAgreed: marketingAgreement,
+        statusMessage: '',
+        profileIamge: false,
+      },
+      {
+        onSuccess: (data) => {
+          console.log('User Put Success! : ', data);
+          navigate('/');
+        },
+      },
+    );
+  };
 
   return (
     <>
-      <section className="bg-brand-primary-dark text-brand-primary-contrastText space-y-2 px-6 pt-10 pb-20">
+      <section className="px-6 pt-10 pb-20 space-y-2 bg-brand-primary-dark text-brand-primary-contrastText">
         <h1 className="flex items-center gap-1.5 text-2xl font-semibold">
           <PartyPopper size={24} />
           환영합니다!
@@ -28,21 +56,20 @@ const Signup = () => {
         <ProfileImgButton
           selectedImg={profileImg}
           onChangeImg={setProfileImg}
-          className="absolute top-0 -translate-y-1/2 left-6 z-20"
+          className="absolute top-0 z-20 -translate-y-1/2 left-6"
         />
 
         {/* Form */}
-        <form className="pt-[74px] px-6 pb-6 flex-grow flex flex-col justify-between gap-10">
+        <form className="pt-[74px] px-6 pb-6 flex-grow flex flex-col justify-between gap-10" onSubmit={handleSignup}>
           <div>
             <div className="mb-6">
               <InputLabel htmlFor="signup-form-email">이메일</InputLabel>
               <Input
                 placeholder="이메일을 입력해주세요"
                 id="signup-form-email"
-                disabled={false}
+                disabled={true}
                 icon="mail"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={userData?.data.user.userEmail ?? ''}
               />
             </div>
             <div>
@@ -58,7 +85,7 @@ const Signup = () => {
             </div>
           </div>
           <div>
-            <div className="flex gap-3 items-center w-full justify-between mb-6">
+            <div className="flex items-center justify-between w-full gap-3 mb-6">
               <CheckboxLabel className="flex flex-col gap-1 cursor-pointer select-none" htmlFor="signup-form-marketing">
                 광고성 정보 수신동의 (선택)
                 <CheckboxLabelDesc>저희 서비스와 여행에 대한 소식을 보내드릴게요!</CheckboxLabelDesc>
@@ -69,7 +96,7 @@ const Signup = () => {
                 onChange={(e) => setMarketingAgreement(e.target.checked)}
               />
             </div>
-            <Button size="large" className="w-full" disabled={goodToGo === false}>
+            <Button type="submit" size="large" className="w-full" disabled={goodToGo === false}>
               회원가입 완료
             </Button>
           </div>
