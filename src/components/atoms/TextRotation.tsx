@@ -40,7 +40,7 @@ const TextRotation = ({ textArr, timing = 2000, className, ...props }: Props) =>
         }}
       >
         {textArr.map((text, idx) => (
-          <div>{text}</div>
+          <div key={text}>{text}</div>
         ))}
         <div>{textArr[0]}</div>
       </div>

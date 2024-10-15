@@ -11,6 +11,7 @@ import My from './pages/My';
 import Trip from './pages/Trip';
 import TripSettlement from './pages/TripSettlement';
 import CreateTransaction from './pages/CreateTransaction';
+import SigninRedirect from './pages/auth/SigninRedirect';
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,7 @@ const router = createBrowserRouter([
     element: <Layouts />,
     children: [
       { path: '/signin', element: <Signin /> },
+      { path: '/signin/redirect', element: <SigninRedirect /> },
       { path: '/signup', element: <Signup /> },
       { path: '/createtrip', element: <CreateTrip /> },
       { path: '/createtransaction', element: <CreateTransaction /> },
