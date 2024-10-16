@@ -4,15 +4,21 @@ import TripListTabs from '@/components/molecules/TripListTabs';
 import TripsCurrentCarousel from '@/components/organism/TripsCurrentCarousel';
 import { Button, ButtonIcon } from '@/components/ui/buttons';
 import { Plane, PlaneTakeoff } from 'lucide-react';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Trips = () => {
   // Hooks
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   // States
   const [activeTab, setActiveTab] = useState<string>('all');
+
+  // Lifecycle
+  useEffect(() => {
+    if (!pathname.includes('/trips')) navigate('/trips');
+  }, []);
 
   return (
     <>
@@ -20,7 +26,7 @@ const Trips = () => {
       <div className="pt-6 pb-[50px] bg-brand-primary-dark text-brand-primary-contrastText">
         <header className="flex items-center gap-1.5 px-6">
           <Plane />
-          <span className="font-semibold text-2xl">여행</span>
+          <span className="text-2xl font-semibold">여행</span>
         </header>
 
         <div className="mt-6">
@@ -31,7 +37,7 @@ const Trips = () => {
       {/* Empty */}
       {/* <main className="flex flex-col justify-center items-center px-6 min-h-[calc(100svh-200px)]">
         <PlaneTakeoff size={100} strokeWidth={1.3} className="mb-6" />
-        <div className="text-text-primary space-y-4 text-center mb-6">
+        <div className="mb-6 space-y-4 text-center text-text-primary">
           <h1 className="text-2xl font-semibold">여행을 시작해볼까요?</h1>
           <p className="text-base">함께 하는 여행, 비용에 대한 스트레스 없이 떠나보세요!</p>
         </div>
@@ -62,9 +68,9 @@ const Trips = () => {
       </main>
 
       {/* Main List Empty */}
-      {/* <aside className="px-6 py-10 text-text-tertiary flex flex-col items-center justify-center">
+      {/* <aside className="flex flex-col items-center justify-center px-6 py-10 text-text-tertiary">
         <EmptyIcon width={40} height={40} className="mb-5" />
-        <p className="font-semibold text-lg">여행을 찾지 못했어요!</p>
+        <p className="text-lg font-semibold">여행을 찾지 못했어요!</p>
       </aside> */}
     </>
   );
