@@ -5,9 +5,7 @@ import { ErrorResponse } from '@/types/axios';
 import { PutUserParams, PutUserRes } from '@/types/user';
 
 const putUser = async (params: PutUserParams) => {
-  const res = await axiosPrivateInstance.put(`/user`, {
-    ...params,
-  });
+  const res = await axiosPrivateInstance.put(`/user`, params);
 
   return res as AxiosResponse<PutUserRes>;
 };

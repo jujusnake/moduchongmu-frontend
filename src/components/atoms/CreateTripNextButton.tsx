@@ -5,12 +5,12 @@ import { DateRange } from 'react-day-picker';
 
 type Props = {
   step: number;
-  location: string;
+  location: string[];
   date: DateRange | undefined;
   nickname: string;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
-const CreateTripNextButton = ({ step, location, date, nickname, className, ...props }: Props) => {
+const CreateTripNextButton = ({ step, location, date, nickname, className, disabled, ...props }: Props) => {
   // Values
   const isButtonDisabled = useMemo(() => {
     if (step === 0) {
@@ -20,16 +20,18 @@ const CreateTripNextButton = ({ step, location, date, nickname, className, ...pr
       return !date?.from;
     }
 
-    return false;
-  }, [step, location, date?.from, nickname]);
+    return disabled;
+  }, [step, location, date?.from, nickname, disabled]);
 
   const buttonLabel = useMemo(() => {
-    if (step === 2 && nickname.length < 1) {
+    if (disabled) {
+      return '여행 만드는 중';
+    } else if (step === 2 && nickname.length < 1) {
       return '건너뛰기';
     } else if (step > 2) {
       return '여행 만들기';
     } else return '다음 단계로';
-  }, [step, nickname]);
+  }, [step, nickname, disabled]);
 
   return (
     <Button
