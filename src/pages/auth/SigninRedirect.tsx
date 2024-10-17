@@ -3,7 +3,7 @@ import useUnstrictEffect from '@/hooks/useUnstrictEffect';
 import { usePostSignin } from '@/APIs/signin/post';
 import { SocialSigninType } from '@/types/signin';
 import { Loader2 } from 'lucide-react';
-import { setToken } from '@/lib/auth';
+import { setTokens } from '@/lib/auth';
 import { Dialog } from '@/components/ui/dialog';
 
 const SigninRedirect = () => {
@@ -27,7 +27,7 @@ const SigninRedirect = () => {
       { type, code },
       {
         onSuccess: (data) => {
-          setToken({ oauthType: type, accessToken: data.data.accessToken, refreshToken: data.data.refreshToken });
+          setTokens({ oauthType: type, accessToken: data.data.accessToken, refreshToken: data.data.refreshToken });
 
           if (data.data.processType === 'signin') {
             navigate('/');
