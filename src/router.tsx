@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import Signin from './pages/Signin';
 import Layouts from './layouts/Layouts';
 import Signup from './pages/Signup';
-import Home from './layouts/BottomNavLayout';
+import BottomNavLayout from './layouts/BottomNavLayout';
 import Trips from './pages/Trips';
 import CreateTrip from './pages/CreateTrip';
 import Now from './pages/Now';
@@ -27,9 +27,9 @@ const router = createBrowserRouter([
       { path: '/trip/:travelUid/settlement', element: <TripSettlement /> },
       {
         path: '/',
-        element: <Home />,
+        element: <BottomNavLayout />,
         children: [
-          { index: true, element: <Trips /> },
+          { index: true, element: <Now /> },
           { path: 'trips', element: <Trips /> },
           { path: 'now', element: <Now /> },
           { path: 'currency', element: <Currency /> },

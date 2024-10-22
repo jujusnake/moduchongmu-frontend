@@ -1,10 +1,13 @@
-import EmptyIcon from '@/components/atoms/EmptyIcon';
-import { TripListItem, TripListItemFloat } from '@/components/molecules/TripListItem';
+import { useTravelList } from '@/APIs/travel/list/get';
+import { TripListItem } from '@/components/molecules/TripListItem';
 import TripListTabs from '@/components/molecules/TripListTabs';
+import TripsEmpty from '@/components/organism/trips/TripsEmpty';
 import TripsCurrentCarousel from '@/components/organism/TripsCurrentCarousel';
 import { Button, ButtonIcon } from '@/components/ui/buttons';
-import { Plane, PlaneTakeoff } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { parseDateRange } from '@/lib/datetime';
+import { getDestinationName } from '@/lib/geonames';
+import { ChevronDown, Plane } from 'lucide-react';
+import { useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Trips = () => {
@@ -15,39 +18,47 @@ const Trips = () => {
   // States
   const [activeTab, setActiveTab] = useState<string>('all');
 
-  // Lifecycle
-  useEffect(() => {
-    if (!pathname.includes('/trips')) navigate('/trips');
-  }, []);
+  // API Calls
+  const { data: travelList, fetchNextPage, hasNextPage } = useTravelList();
+
+  // Values
+  const hasNoTravels = useMemo(() => {
+    return travelList && travelList?.pages.length < 1;
+  }, [travelList]);
+
+  const currentTravel = useMemo(() => {
+    return travelList?.pages[0].currentTravel;
+  }, [travelList]);
+
+  const flatTravelList = useMemo(() => {
+    return travelList?.pages.flatMap((page) => page.travelList);
+  }, [travelList]);
 
   return (
     <>
       {/* Header */}
-      <div className="pt-6 pb-[50px] bg-brand-primary-dark text-brand-primary-contrastText">
+      <div
+        className="pt-6 pb-[50px] data-[empty=true]:pb-6 bg-brand-primary-dark text-brand-primary-contrastText"
+        data-empty={hasNoTravels}
+      >
         <header className="flex items-center gap-1.5 px-6">
           <Plane />
           <span className="text-2xl font-semibold">여행</span>
         </header>
 
-        <div className="mt-6">
-          <TripsCurrentCarousel />
+        <div className="mt-6 data-[hide=true]:hidden" data-hide={hasNoTravels || currentTravel === undefined}>
+          <TripsCurrentCarousel currentTravel={currentTravel} />
         </div>
       </div>
 
       {/* Empty */}
-      {/* <main className="flex flex-col justify-center items-center px-6 min-h-[calc(100svh-200px)]">
-        <PlaneTakeoff size={100} strokeWidth={1.3} className="mb-6" />
-        <div className="mb-6 space-y-4 text-center text-text-primary">
-          <h1 className="text-2xl font-semibold">여행을 시작해볼까요?</h1>
-          <p className="text-base">함께 하는 여행, 비용에 대한 스트레스 없이 떠나보세요!</p>
-        </div>
-        <Button className="rounded-full w-full max-w-[200px] py-2">
-          <ButtonIcon name="plus" />새 여행 만들기
-        </Button>
-      </main> */}
+      {hasNoTravels === true && <TripsEmpty />}
 
       {/* New Trip */}
-      <aside className="-translate-y-1/2 mx-6 px-4 py-3 bg-brand-primary-bg rounded-[4px] font-semibold text-text-primary text-base flex items-center justify-between shadow-[2px_4px_4px_0px_rgba(0,0,0,0.15)]">
+      <aside
+        className="-translate-y-1/2 mx-6 px-4 py-3 bg-brand-primary-bg rounded-[4px] font-semibold text-text-primary text-base flex items-center justify-between shadow-[2px_4px_4px_0px_rgba(0,0,0,0.15)] data-[hide=true]:hidden"
+        data-hide={hasNoTravels}
+      >
         새로운 곳으로 떠나볼까요?
         <Button
           size="small"
@@ -60,11 +71,25 @@ const Trips = () => {
       </aside>
 
       {/* List Filter */}
-      <TripListTabs value={activeTab} onValueChange={setActiveTab} />
+      {/* <TripListTabs value={activeTab} onValueChange={setActiveTab} /> */}
 
       {/* Main List */}
-      <main>
-        <TripListItem title="효짱 남쥬 여행~" location="도쿄, 일본" members={2} date="언제나~ 함께!" />
+      <main data-hide={hasNoTravels} className="data-[hide=true]:hidden">
+        {flatTravelList?.map((travel) => (
+          <TripListItem
+            key={`trips-list-item-${travel.uid}`}
+            title={travel.travelName}
+            location={getDestinationName(travel.city, travel.country)}
+            members={travel.memberArray.length}
+            date={parseDateRange(travel.startDate, travel.endDate)}
+            imgSrc={travel.coverImgUrl}
+          />
+        ))}
+        {!hasNextPage && (
+          <button onClick={() => fetchNextPage()} className="flex justify-center w-full px-6">
+            더 보기 <ChevronDown />
+          </button>
+        )}
       </main>
 
       {/* Main List Empty */}
