@@ -4,24 +4,26 @@ import ProfileImgButton from '@/components/ProfileImgButton';
 import { Button } from '@/components/ui/buttons';
 import { Checkbox, CheckboxLabel, CheckboxLabelDesc } from '@/components/ui/checkbox';
 import { Input, InputLabel } from '@/components/ui/input';
+import { useUserStore } from '@/stores/userStore';
 import { PartyPopper } from 'lucide-react';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
   // Hooks
   const navigate = useNavigate();
+  const { user: userData } = useUserStore();
 
   // API Calls
-  const { data: userData } = useUser();
   const { mutate: putUser } = usePutUser();
 
   // State
   const [profileImg, setProfileImg] = useState<File | null>(null);
   const [nickname, setNickname] = useState('');
   const [marketingAgreement, setMarketingAgreement] = useState<boolean>(false);
-  const goodToGo = userData && nickname.length > 0 && userData?.data.user.userEmail.length > 0;
+  const goodToGo = userData && nickname.length > 0 && userData?.userEmail.length > 0;
 
+  // Handlers
   const handleSignup = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -69,7 +71,7 @@ const Signup = () => {
                 id="signup-form-email"
                 disabled={true}
                 icon="mail"
-                value={userData?.data.user.userEmail ?? ''}
+                value={userData?.userEmail ?? ''}
               />
             </div>
             <div>
