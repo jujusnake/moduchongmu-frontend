@@ -45,7 +45,7 @@ const CreateTrip = () => {
     if (currentStep === 3) {
       createTrip(
         {
-          travelName: nickname.length > 0 ? nickname : `${location} 여행`,
+          travelName: nickname.length > 0 ? nickname : `${location.join(', ')} 여행`,
           city: location[0],
           country: location[1],
           startDate: date?.from?.toISOString() ?? '',

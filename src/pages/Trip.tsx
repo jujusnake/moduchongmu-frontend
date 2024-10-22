@@ -2,12 +2,16 @@ import { DailyExpenseAdd, DailyExpenseBlock, DailyExpenseTitle, ExpenseItem } fr
 import { Button, ButtonIcon } from '@/components/ui/buttons';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ChevronLeft, Ellipsis, MapPin, UserPlus, UsersRound } from 'lucide-react';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useMemo, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const Trip = () => {
+const Trip = ({ tripUid }: { tripUid?: string }) => {
   // Hooks
   const navigate = useNavigate();
+  const { travelUid } = useParams();
+
+  // Values
+  const TripUID = useMemo(() => tripUid ?? travelUid, []);
 
   // States
   const [currentTab, setCurrentTab] = useState('all');

@@ -68,6 +68,26 @@ type PutTravelRes = {
 
 type PutTravelErrorCodes = GetTravelErrorCodes;
 
+type GetTravelListRes = {
+  currentTravel: {
+    uid: string;
+    host: string;
+    travelName: string;
+    country: string;
+    city: string;
+    memberArray: string[];
+    startDate: string;
+    endDate: string;
+    currency: string;
+    memo: string;
+    settlementDone: boolean;
+    coverImgUrl: string;
+    createdDate: string;
+  };
+  travelList: Travel[];
+  totalCount: number;
+};
+
 type GetTravelCityRes = {
   result:
     | {
@@ -89,6 +109,7 @@ export {
   type PutTravelParams,
   type PutTravelRes,
   type PutTravelErrorCodes,
+  type GetTravelListRes,
   type GetTravelCityRes,
   type GetTravelCityErrorCodes,
 };
