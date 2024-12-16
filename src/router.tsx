@@ -7,7 +7,7 @@ import Trips from './pages/Trips';
 import CreateTrip from './pages/CreateTrip';
 import Now from './pages/Now';
 import Currency from './pages/Currency';
-import My from './pages/My';
+import My from './pages/my-page/My';
 import Trip from './pages/Trip';
 import TripSettlement from './pages/TripSettlement';
 import CreateTransaction from './pages/CreateTransaction';

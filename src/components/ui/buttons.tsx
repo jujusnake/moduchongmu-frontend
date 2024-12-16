@@ -49,6 +49,12 @@ const buttonVariants = cva(
           'disabled:text-text-disabled',
           'disabled:bg-element-disabled',
         ],
+        'ghost-destructive': [
+          'text-functional-error-main',
+          'hover:bg-functional-error-bg',
+          'active:bg-functional-error-bg',
+          'disabled:text-text-disabled',
+        ],
         contrast: [
           'text-brand-primary-contrastText',
           // 'bg-brand-primary-main',

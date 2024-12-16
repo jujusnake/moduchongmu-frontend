@@ -6,7 +6,7 @@ import { Camera, X } from 'lucide-react';
 import 'react-mobile-cropper/dist/style.css';
 
 interface ProfileImgButtonProps extends HTMLAttributes<HTMLDivElement> {
-  selectedImg: File | null;
+  selectedImg?: string | File | null;
   onChangeImg?: (img: File | null) => void;
   disabled?: boolean;
 }
@@ -19,6 +19,7 @@ const ProfileImgButton = ({ className, selectedImg, onChangeImg, disabled, ...pr
   // States
   const [tempProfileImg, setTempProfileImg] = useState<File | null>(null);
   const profileImgUrl = useMemo(() => {
+    if (typeof selectedImg === 'string') return selectedImg;
     if (!selectedImg) return null;
     return URL.createObjectURL(selectedImg);
   }, [selectedImg]);
@@ -83,7 +84,7 @@ const ProfileImgButton = ({ className, selectedImg, onChangeImg, disabled, ...pr
           />
 
           {/* z-index : 0 */}
-          <Camera size={36} className="text-text-secondary absolute absolute-center pointer-events-none" />
+          <Camera size={36} className="absolute pointer-events-none text-text-secondary absolute-center" />
 
           {/* z-index : 10 */}
           <img
@@ -115,7 +116,7 @@ const ProfileImgButton = ({ className, selectedImg, onChangeImg, disabled, ...pr
             src={tempProfileImg ? URL.createObjectURL(tempProfileImg) : undefined}
             stencilComponent={CircleStencil}
           />
-          <div className="absolute top-6 right-6 flex items-center gap-4">
+          <div className="absolute flex items-center gap-4 top-6 right-6">
             <Button
               size="large"
               onClick={() => {

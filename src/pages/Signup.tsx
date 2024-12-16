@@ -1,27 +1,28 @@
+import { queryClient } from '@/APIs/react-query';
 import { useUser } from '@/APIs/user/get';
 import { usePutUser } from '@/APIs/user/put';
 import ProfileImgButton from '@/components/ProfileImgButton';
 import { Button } from '@/components/ui/buttons';
 import { Checkbox, CheckboxLabel, CheckboxLabelDesc } from '@/components/ui/checkbox';
 import { Input, InputLabel } from '@/components/ui/input';
-import { useUserStore } from '@/stores/userStore';
+import axios from 'axios';
 import { PartyPopper } from 'lucide-react';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
   // Hooks
   const navigate = useNavigate();
-  const { user: userData } = useUserStore();
 
   // API Calls
+  const { data: userData } = useUser();
   const { mutate: putUser } = usePutUser();
 
   // State
   const [profileImg, setProfileImg] = useState<File | null>(null);
   const [nickname, setNickname] = useState('');
   const [marketingAgreement, setMarketingAgreement] = useState<boolean>(false);
-  const goodToGo = userData && nickname.length > 0 && userData?.userEmail.length > 0;
+  const goodToGo = userData && nickname.length > 0 && userData.data.user.userEmail.length > 0;
 
   // Handlers
   const handleSignup = (e: FormEvent<HTMLFormElement>) => {
@@ -32,11 +33,14 @@ const Signup = () => {
         userName: nickname,
         marketingAgreed: marketingAgreement,
         statusMessage: '',
-        profileIamge: false,
+        profileImage: profileImg !== null,
       },
       {
-        onSuccess: (data) => {
-          console.log('User Put Success! : ', data);
+        onSuccess: async (data) => {
+          queryClient.invalidateQueries({ queryKey: ['user'] });
+          if (data.data.profileImageUrl) {
+            await axios.put(data.data.profileImageUrl, profileImg);
+          }
           navigate('/');
         },
       },
@@ -60,6 +64,10 @@ const Signup = () => {
           onChangeImg={setProfileImg}
           className="absolute top-0 z-20 -translate-y-1/2 left-6"
         />
+        <div className="absolute top-0 z-30 -translate-y-1/2 left-[132px]">
+          <div></div>
+          <div className="px-3 py-2 text-base rounded shadow bg-bg-back">asdf</div>
+        </div>
 
         {/* Form */}
         <form className="pt-[74px] px-6 pb-6 flex-grow flex flex-col justify-between gap-10" onSubmit={handleSignup}>
@@ -71,7 +79,7 @@ const Signup = () => {
                 id="signup-form-email"
                 disabled={true}
                 icon="mail"
-                value={userData?.userEmail ?? ''}
+                value={userData?.data.user.userEmail ?? ''}
               />
             </div>
             <div>

@@ -8,7 +8,8 @@ import Trip from './Trip';
 const Now = () => {
   const { data: travelList, isFetching } = useTravelList();
 
-  const empty = travelList && travelList.pages[0].currentTravel === undefined;
+  const empty =
+    travelList && (travelList.pages[0].currentTravel === undefined || travelList.pages[0].currentTravel === null);
 
   if (isFetching) {
     return <></>;

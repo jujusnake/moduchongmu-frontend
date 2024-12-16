@@ -14,6 +14,8 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/buttons';
 import { DialogClose } from '@radix-ui/react-dialog';
+import { useUser } from '@/APIs/user/get';
+import { useUserStore } from '@/stores/userStore';
 
 const SigninRedirect = () => {
   // hooks

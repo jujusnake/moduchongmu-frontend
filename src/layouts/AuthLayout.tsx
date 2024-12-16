@@ -63,7 +63,11 @@ const AuthLayout = ({ children }: { children: ReactNode }) => {
       getUserData({ throwOnError: true })
         .then((res) => {
           setUser(res.data?.data.user ?? null);
-          if (cleanPathname === '/signup') navigate('/now');
+          if (res.data?.data.user.userName === null) {
+            console.log('Landing on private, but no username, move to signup');
+            navigate('/signup');
+            return;
+          } else if (cleanPathname === '/signup') navigate('/now');
           else console.log('Landing on private, and got user data, stay');
         })
         .catch(() => {

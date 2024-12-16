@@ -14,12 +14,16 @@ type User = {
 type PutUserParams = {
   userName: string;
   marketingAgreed: boolean;
-  statusMessage: string;
-  profileIamge: boolean;
+  statusMessage?: string;
+  profileImage: boolean;
 };
 
 type PutUserRes = User & {
   profileImageUrl: string | null;
 };
 
-export { type User, type PutUserParams, type PutUserRes };
+type DeleteUserRes = {
+  userEmail: string;
+};
+
+export { type User, type PutUserParams, type PutUserRes, type DeleteUserRes };

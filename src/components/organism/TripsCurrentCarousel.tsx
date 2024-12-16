@@ -29,12 +29,12 @@ const TripsCurrentCarousel = ({ currentTravel }: { currentTravel?: GetTravelList
   //   });
   // }, [api]);
 
-  if (currentTravel === undefined) return <></>;
+  if (currentTravel === undefined || currentTravel === null) return <></>;
 
   return (
     <div className="px-6">
       <TripListItemFloat
-        imgSrc={currentTravel.coverImgUrl}
+        imgSrc={currentTravel?.coverImgUrl}
         title={currentTravel.travelName}
         location={getDestinationName(currentTravel.city, currentTravel.country)}
         members={currentTravel.memberArray.length}
