@@ -8,7 +8,7 @@ import CreateTripThird from '@/components/templates/CreateTripThird';
 import { Button } from '@/components/ui/buttons';
 import { Dialog, DialogTrigger, DialogContent, DialogFooter, DialogClose, DialogHeader } from '@/components/ui/dialog';
 import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
-import { error } from 'console';
+import axios from 'axios';
 import { useMemo, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -53,7 +53,10 @@ const CreateTrip = () => {
           // memo: '',
         },
         {
-          onSuccess: (data) => {
+          onSuccess: async (data) => {
+            if (data.data.postingImageUrl) {
+              await axios.put(data.data.postingImageUrl, thumbnailImg);
+            }
             navigate(`/trips`);
             toast.success('여행이 성공적으로 생성되었습니다');
           },

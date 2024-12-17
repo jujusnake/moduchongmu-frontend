@@ -30,6 +30,7 @@ type PostTravelParams = {
 };
 
 type PostTravelRes = {
+  postingImageUrl?: string | null;
   travel: {
     uid: string;
     host: string;
