@@ -7,6 +7,7 @@ type TripListItemProps = {
   location?: string;
   members?: number;
   date?: string;
+  dday?: number;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 const TripListItem = ({ imgSrc, title, location, members, date, className, ...props }: TripListItemProps) => {
@@ -37,7 +38,16 @@ const TripListItem = ({ imgSrc, title, location, members, date, className, ...pr
   );
 };
 
-const TripListItemFloat = ({ imgSrc, title, location, members, date, className, ...props }: TripListItemProps) => {
+const TripListItemFloat = ({
+  imgSrc,
+  title,
+  location,
+  members,
+  date,
+  className,
+  dday,
+  ...props
+}: TripListItemProps) => {
   const [imgLoaded, setImgLoaded] = useState(false);
 
   return (
@@ -61,7 +71,9 @@ const TripListItemFloat = ({ imgSrc, title, location, members, date, className, 
           <div>{date}</div>
         </div>
       </div>
-      <aside className="absolute text-sm font-semibold top-2 right-2">D-3</aside>
+      {dday !== undefined && (
+        <aside className="absolute text-sm font-semibold top-2 right-2">D{dday > 0 ? `+${dday}` : dday}</aside>
+      )}
     </button>
   );
 };

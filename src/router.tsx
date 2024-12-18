@@ -2,15 +2,16 @@ import { createBrowserRouter } from 'react-router-dom';
 import Signin from './pages/Signin';
 import Layouts from './layouts/Layouts';
 import Signup from './pages/Signup';
-import Home from './layouts/BottomNavLayout';
+import BottomNavLayout from './layouts/BottomNavLayout';
 import Trips from './pages/Trips';
 import CreateTrip from './pages/CreateTrip';
 import Now from './pages/Now';
 import Currency from './pages/Currency';
-import My from './pages/My';
+import My from './pages/my-page/My';
 import Trip from './pages/Trip';
 import TripSettlement from './pages/TripSettlement';
 import CreateTransaction from './pages/CreateTransaction';
+import SigninRedirect from './pages/auth/SigninRedirect';
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,7 @@ const router = createBrowserRouter([
     element: <Layouts />,
     children: [
       { path: '/signin', element: <Signin /> },
+      { path: '/signin/redirect', element: <SigninRedirect /> },
       { path: '/signup', element: <Signup /> },
       { path: '/createtrip', element: <CreateTrip /> },
       { path: '/createtransaction', element: <CreateTransaction /> },
@@ -25,8 +27,9 @@ const router = createBrowserRouter([
       { path: '/trip/:travelUid/settlement', element: <TripSettlement /> },
       {
         path: '/',
-        element: <Home />,
+        element: <BottomNavLayout />,
         children: [
+          { index: true, element: <Now /> },
           { path: 'trips', element: <Trips /> },
           { path: 'now', element: <Now /> },
           { path: 'currency', element: <Currency /> },

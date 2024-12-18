@@ -1,7 +1,40 @@
 import SocialSigninButton from '@/components/atoms/SocialSigninButton';
 import TextRotation from '@/components/atoms/TextRotation';
+import { SOCIAL_SIGNIN, SocialSigninType } from '@/types/signin';
+import { useEffect } from 'react';
 
 const Signin = () => {
+  window.initContent = (parameter) => {
+    window.webkit.messageHandlers.moChong.postMessage(JSON.stringify({ action: 'log', type: 'initContent' }));
+    console.log('initContent parameter', parameter);
+  };
+
+  const loginOAuth = (type: SocialSigninType) => {
+    // @ts-ignore
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+    // iOS Swift WebView
+    // @ts-ignore
+    if (/iPhone|iPad|iPod/.test(userAgent) && !window.MSStream) {
+      if (window.webkit && window.webkit.messageHandlers) {
+        window.webkit.messageHandlers.moChong.postMessage(JSON.stringify({ action: 'login', type }));
+        return;
+      }
+    }
+
+    // Android Kotlin WebView
+    if (/Android/.test(userAgent)) {
+      // @ts-ignore
+      if (typeof window.AndroidInterface !== 'undefined' || userAgent.includes('wv')) {
+        console.log('Android Kotlin WebView');
+        return;
+      }
+    }
+
+    // Web Browser
+    webSignin(type);
+  };
+
   return (
     <div className="flex flex-col min-h-svh">
       <h1 className="relative flex items-end justify-center flex-1 py-12 bg-brand-primary-dark">
@@ -32,16 +65,8 @@ const Signin = () => {
               <hr className="flex-grow" />
             </div>
             <div className="flex items-center justify-center gap-4">
-              {(['naver', 'kakao', 'google', 'apple'] as const).map((carrier) => (
-                <SocialSigninButton
-                  key={carrier}
-                  carrier={carrier}
-                  onClick={() => {
-                    if (window.Android) {
-                      window.Android.onSocialSignin(carrier);
-                    }
-                  }}
-                />
+              {SOCIAL_SIGNIN.map((type) => (
+                <SocialSigninButton key={`social-signin-btn-${type}`} type={type} onClick={() => loginOAuth(type)} />
               ))}
             </div>
           </div>
@@ -57,3 +82,33 @@ const Signin = () => {
 };
 
 export default Signin;
+
+const webSignin = (type: SocialSigninType) => {
+  switch (type) {
+    case 'naver': {
+      const clientID = import.meta.env.VITE_NAVER_CLIENT_ID;
+      const callbackUrl = location.protocol + '//' + location.host + '/signin/redirect?type=naver';
+      const stateString = 'RANDOM_STATE';
+      const URL = `https://nid.naver.com/oauth2.0/authorize?client_id=${clientID}&response_type=code&redirect_uri=${callbackUrl}&state=${stateString}`;
+      window.location.href = URL;
+      return;
+    }
+    case 'kakao':
+      // @ts-ignore
+      Kakao.Auth.authorize({
+        redirectUri: location.protocol + '//' + location.host + '/signin/redirect?type=kakao',
+      });
+      return;
+    case 'google': {
+      const clientID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+      const redirectUrl = location.protocol + '//' + location.host + '/signin/redirect?type=google';
+      const URL = `https://accounts.google.com/o/oauth2/v2/auth?
+		client_id=${clientID}
+		&redirect_uri=${redirectUrl}
+		&response_type=code
+		&scope=email profile`;
+      window.location.href = URL;
+      return;
+    }
+  }
+};
