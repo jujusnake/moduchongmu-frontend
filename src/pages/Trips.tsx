@@ -1,11 +1,12 @@
 import { useTravelList } from '@/APIs/travel/list/get';
 import { TripListItem } from '@/components/molecules/TripListItem';
-import TripListTabs from '@/components/molecules/TripListTabs';
+// import TripListTabs from '@/components/molecules/TripListTabs';
 import TripsEmpty from '@/components/organism/trips/TripsEmpty';
 import TripsCurrentCarousel from '@/components/organism/TripsCurrentCarousel';
 import { Button, ButtonIcon } from '@/components/ui/buttons';
 import { parseDateRange } from '@/lib/datetime';
 import { getDestinationName } from '@/lib/geonames';
+import { getTravelThumbnail } from '@/lib/urls';
 import { ChevronDown, Plane } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -13,10 +14,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 const Trips = () => {
   // Hooks
   const navigate = useNavigate();
-  const { pathname } = useLocation();
+  // const { pathname } = useLocation();
 
   // States
-  const [activeTab, setActiveTab] = useState<string>('all');
+  // const [activeTab, setActiveTab] = useState<string>('all');
 
   // API Calls
   const { data: travelList, fetchNextPage, hasNextPage } = useTravelList();
@@ -82,7 +83,8 @@ const Trips = () => {
             location={getDestinationName(travel.city, travel.country)}
             members={travel.memberArray.length}
             date={parseDateRange(travel.startDate, travel.endDate)}
-            imgSrc={travel.coverImgUrl}
+            // imgSrc={travel.coverImgUrl}
+            imgSrc={getTravelThumbnail(travel.uid)}
           />
         ))}
         {!hasNextPage && (
