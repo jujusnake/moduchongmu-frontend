@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input, InputLabel } from '@/components/ui/input';
 import { removeTokens } from '@/lib/auth';
+import { getUserThumbnail } from '@/lib/urls';
 import axios from 'axios';
 import { profile } from 'console';
 import { Check } from 'lucide-react';
@@ -37,7 +38,9 @@ const MyEditMode = ({ onUpdate }: Props) => {
 
   const [nickname, setNickname] = useState('');
   const [marketingAgreement, setMarketingAgreement] = useState(user?.data.user.marketingAgreed === 1);
-  const [profileImg, setProfileImg] = useState<File | null>(null);
+  const [profileImg, setProfileImg] = useState<File | null | string>(
+    getUserThumbnail(user?.data.user.userEmail) ?? null,
+  );
 
   const handleUpdateAccount = () => {
     updateUser(

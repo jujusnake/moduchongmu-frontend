@@ -2,13 +2,18 @@ import { useUser } from '@/APIs/user/get';
 import ProfileImgButton from '@/components/ProfileImgButton';
 import { Checkbox, CheckboxLabel, CheckboxLabelDesc } from '@/components/ui/checkbox';
 import { Input, InputLabel } from '@/components/ui/input';
+import { getUserThumbnail } from '@/lib/urls';
 
 const MyShowMode = () => {
   const { data: user } = useUser();
 
   return (
     <>
-      <ProfileImgButton disabled className="absolute top-0 z-20 -translate-y-1/2 left-6" />
+      <ProfileImgButton
+        selectedImg={getUserThumbnail(user?.data.user.userEmail)}
+        disabled
+        className="absolute top-0 z-20 -translate-y-1/2 left-6"
+      />
 
       <div className="mb-8">
         <div className="mb-6">

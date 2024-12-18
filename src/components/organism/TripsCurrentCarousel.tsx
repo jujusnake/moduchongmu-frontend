@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { GetTravelListRes } from '@/types/travel';
 import { getDestinationName } from '@/lib/geonames';
 import { getDday, parseDateRange } from '@/lib/datetime';
+import { getTravelThumbnail } from '@/lib/urls';
 
 const TripsCurrentCarousel = ({ currentTravel }: { currentTravel?: GetTravelListRes['currentTravel'] }) => {
   // Hooks
@@ -34,7 +35,7 @@ const TripsCurrentCarousel = ({ currentTravel }: { currentTravel?: GetTravelList
   return (
     <div className="px-6">
       <TripListItemFloat
-        imgSrc={currentTravel?.coverImgUrl}
+        imgSrc={getTravelThumbnail(currentTravel.uid)}
         title={currentTravel.travelName}
         location={getDestinationName(currentTravel.city, currentTravel.country)}
         members={currentTravel.memberArray.length}
