@@ -65,8 +65,12 @@ const Signin = () => {
               <hr className="flex-grow" />
             </div>
             <div className="flex items-center justify-center gap-4">
-              {SOCIAL_SIGNIN.map((type) => (
-                <SocialSigninButton key={`social-signin-btn-${type}`} type={type} onClick={() => loginOAuth(type)} />
+              {SOCIAL_SIGNIN.map((carrier) => (
+                <SocialSigninButton
+                  key={`social-signin-btn-${carrier}`}
+                  carrier={carrier}
+                  onClick={() => loginOAuth(carrier)}
+                />
               ))}
             </div>
           </div>
