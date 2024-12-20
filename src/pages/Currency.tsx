@@ -4,21 +4,17 @@ import { CurrencySelectButton, CurrencySuggestionButton, CurrencySwitch } from '
 import { CurrencySelectDrawer } from '@/components/organism/currency';
 import { LOCALSTORAGE_KEYS } from '@/constants/storage';
 import { getDecimalCountFromCurrency, updateCurrencyHistory } from '@/lib/money';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const Currency = () => {
-  const lastSetting = JSON.parse(localStorage.getItem(LOCALSTORAGE_KEYS.currencySetting) || '{}');
-
   // States
   const [openCurrencyDrawer, setOpenCurrencyDrawer] = useState<boolean>(false);
-  const [targetCurrency, setTargetCurrency] = useState<{ currency: string; name: string }>(
-    lastSetting?.targetCurrency ?? {
-      currency: 'USD',
-      name: '미국 달러',
-    },
-  );
-  const [krwAtBottom, setKrwAtBottom] = useState<boolean>(lastSetting?.krwAtBottom ?? true);
-  const [currencyValue, setCurrencyValue] = useState<{ krw: string; target: string }>({ krw: '', target: '' });
+  const [targetCurrency, setTargetCurrency] = useState<{ currency: string; name: string }>({
+    currency: 'USD',
+    name: '미국 달러',
+  });
+  const [krwAtBottom, setKrwAtBottom] = useState<boolean>(true);
+  const [amountValue, setAmountValue] = useState<{ krw: string; target: string }>({ krw: '', target: '' });
 
   // API Calls
   const { data: exchange } = useExchange(targetCurrency.currency.toLocaleLowerCase());
@@ -28,11 +24,30 @@ const Currency = () => {
     [targetCurrency.currency],
   );
 
+  // Lifecycle
+  useEffect(() => {
+    const lastSetting = JSON.parse(localStorage.getItem(LOCALSTORAGE_KEYS.currencySetting) || '{}');
+    const krwAtBottom = lastSetting.krwAtBottom ?? true;
+    const targetCurrency = lastSetting.targetCurrency ?? {
+      currency: 'USD',
+      name: '미국 달러',
+    };
+    setKrwAtBottom(krwAtBottom);
+    setTargetCurrency(targetCurrency);
+  }, []);
+
+  useEffect(() => {
+    setAmountValue((prev) => ({
+      ...prev,
+      krw: prev.target === '' ? '' : (Number(prev.target) / exchangeRate).toFixed(),
+    }));
+  }, [exchangeRate]);
+
   // Handlers
   const handleSelectCurrency = (currencyObj: { currency: string; name: string }) => {
     if (currencyObj.currency === 'KRW') return;
-    setTargetCurrency(currencyObj);
     setOpenCurrencyDrawer(false);
+    setTargetCurrency(currencyObj);
     storeLastSetting(currencyObj, krwAtBottom);
     updateCurrencyHistory(currencyObj);
   };
@@ -41,9 +56,9 @@ const Currency = () => {
     const oppositeValue = isTarget ? Number(value) / exchangeRate : Number(value) * exchangeRate;
     const oppositeDecimal = isTarget ? 0 : targetDecimalCount;
     if (isTarget) {
-      setCurrencyValue({ krw: value === '' ? '' : oppositeValue.toFixed(oppositeDecimal), target: value });
+      setAmountValue({ krw: value === '' ? '' : oppositeValue.toFixed(oppositeDecimal), target: value });
     } else {
-      setCurrencyValue({ krw: value, target: value === '' ? '' : oppositeValue.toFixed(oppositeDecimal) });
+      setAmountValue({ krw: value, target: value === '' ? '' : oppositeValue.toFixed(oppositeDecimal) });
     }
   };
 
@@ -97,7 +112,7 @@ const Currency = () => {
             <AmountInput
               className="bg-brand-primary-dark"
               currency={krwAtBottom ? targetCurrency.currency : 'KRW'}
-              value={krwAtBottom ? currencyValue.target.toString() : currencyValue.krw.toString()}
+              value={krwAtBottom ? amountValue.target.toString() : amountValue.krw.toString()}
               onValueChange={(val) => handleValueChange(val, krwAtBottom)}
               autoFocus
               tabIndex={1}
@@ -136,7 +151,7 @@ const Currency = () => {
             <AmountInput
               className="text-text-primary [&~#amount-input-text]:text-text-primary"
               currency={krwAtBottom ? 'KRW' : targetCurrency.currency}
-              value={krwAtBottom ? currencyValue.krw.toString() : currencyValue.target.toString()}
+              value={krwAtBottom ? amountValue.krw.toString() : amountValue.target.toString()}
               onValueChange={(val) => handleValueChange(val, !krwAtBottom)}
               tabIndex={2}
               placeholder="금액을 입력하세요"
