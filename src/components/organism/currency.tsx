@@ -1,19 +1,38 @@
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
-import { ComponentProps, LiHTMLAttributes, useEffect, useRef, useState } from 'react';
+import { ComponentProps, LiHTMLAttributes, useEffect, useMemo, useRef, useState } from 'react';
 import { Drawer as DrawerPrimitive } from 'vaul';
 import { Input } from '../ui/input';
 import { cn } from '@/lib/utils';
+import { useCurrencies } from '@/APIs/transaction/currency/get';
 
 const CurrencySelectDrawer = ({
   onCurrencySelect,
   ...props
-}: ComponentProps<typeof DrawerPrimitive.Root> & { onCurrencySelect?: (currency: string) => void }) => {
+}: ComponentProps<typeof DrawerPrimitive.Root> & {
+  onCurrencySelect?: (item: { currency: string; name: string }) => void;
+}) => {
+  // API Calls
+  const { data: currencies } = useCurrencies();
+
   // Refs
   const drawerContentRef = useRef<HTMLDivElement>(null);
 
   // State
   const [left, setLeft] = useState(0);
   const [searchValue, setSearchValue] = useState('');
+
+  // Values
+  const sortedFilteredCurrencies = useMemo(() => {
+    if (!currencies) return [];
+    const sorted = currencies.data.currencyList.sort((a, b) => a.currency.localeCompare(b.currency));
+    const filtered = sorted.filter(
+      (currency) =>
+        currency.currency.toLowerCase().includes(searchValue.toLowerCase()) ||
+        currency.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+        currency.country.includes(searchValue),
+    );
+    return filtered;
+  }, [currencies, searchValue]);
 
   // Effects
   useEffect(() => {
@@ -43,6 +62,7 @@ const CurrencySelectDrawer = ({
     }
   }, [props.open]);
 
+  // Functions
   function onVisualViewportChange() {
     if (!drawerContentRef.current || !window.visualViewport) return;
     const visualViewportHeight = window.visualViewport.height;
@@ -55,7 +75,7 @@ const CurrencySelectDrawer = ({
       <DrawerContent
         ref={drawerContentRef}
         id="currency-select-drawer-content"
-        className="max-w-moduchongmu max-h-[80%] [&>div]:shrink-0"
+        className="max-w-moduchongmu h-[80%] [&>div]:shrink-0"
         style={{ left }}
         aria-describedby={undefined}
       >
@@ -64,38 +84,20 @@ const CurrencySelectDrawer = ({
           <Input placeholder="통화 검색" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
         </DrawerHeader>
         <ul className="px-4 pt-2 pb-10 overflow-auto">
-          <CurrencyListItem
-            onClick={() => {
-              props.onOpenChange?.(false);
-              onCurrencySelect?.('KRW');
-            }}
-          >
-            KRW(원)
-          </CurrencyListItem>
-          <CurrencyListItem
-            onClick={() => {
-              props.onOpenChange?.(false);
-              onCurrencySelect?.('CNY');
-            }}
-          >
-            CNY(위안)
-          </CurrencyListItem>
-          <CurrencyListItem
-            onClick={() => {
-              props.onOpenChange?.(false);
-              onCurrencySelect?.('USD');
-            }}
-          >
-            USD(달러)
-          </CurrencyListItem>
-          <CurrencyListItem
-            onClick={() => {
-              props.onOpenChange?.(false);
-              onCurrencySelect?.('JOD');
-            }}
-          >
-            JOD(요르단 디나르)
-          </CurrencyListItem>
+          {sortedFilteredCurrencies.length > 0 ? (
+            sortedFilteredCurrencies.map((currency) => (
+              <CurrencyListItem
+                key={`currency-select-item-${currency.currency}`}
+                onClick={() => {
+                  onCurrencySelect?.({ currency: currency.currency, name: currency.name });
+                }}
+              >
+                {currency.currency}({currency.name})
+              </CurrencyListItem>
+            ))
+          ) : (
+            <div className="my-8 text-base font-semibold text-center text-text-tertiary">검색 결과가 없습니다</div>
+          )}
         </ul>
       </DrawerContent>
     </Drawer>

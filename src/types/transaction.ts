@@ -2,4 +2,20 @@ const TransactionCategory = ['food', 'transport', 'shopping', 'tour', 'accomodat
 
 type TransactionCategoryType = (typeof TransactionCategory)[number];
 
-export { TransactionCategory, type TransactionCategoryType };
+type GetCurrencyRes = {
+  currencyList: {
+    country: string[];
+    currency: string;
+    symbol: string;
+    name: string;
+  }[];
+};
+
+type GetExchangeRateRes = {
+  exchangeRateList: {
+    currency: string;
+    rate: number;
+  }[];
+};
+
+export { TransactionCategory, type TransactionCategoryType, type GetCurrencyRes, type GetExchangeRateRes };

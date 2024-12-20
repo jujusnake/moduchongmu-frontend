@@ -62,7 +62,7 @@ const CreateTransaction = () => {
         <CategorySelector category={category} onCategoryChange={setCategory} />
         <PayerSelector payer={payer} onPayerChange={setPayer} />
         <UserSelector />
-        <SplitSelector isEven={splitEven} onSplitModeChange={setSplitEven} amount={20300} userCount={5} />
+        <SplitSelector isEven={splitEven} onSplitModeChange={setSplitEven} amount={20300} />
       </div>
 
       <CurrencySelectDrawer

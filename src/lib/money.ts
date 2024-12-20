@@ -1,3 +1,5 @@
+import { LOCALSTORAGE_KEYS } from '@/constants/storage';
+
 const getDecimalCountFromCurrency = (currency?: string) => {
   if (!currency) return 0;
 
@@ -34,10 +36,21 @@ const trimStringToFloat = (str: string) => {
   return isNaN(numberVal) ? '' : numberVal.toString();
 };
 
+const updateCurrencyHistory = (newCurrency: { currency: string; name: string }) => {
+  const currencyHistory = JSON.parse(localStorage.getItem(LOCALSTORAGE_KEYS.currencyHistory) || '[]') as {
+    currency: string;
+    name: string;
+  }[];
+  if (currencyHistory.flatMap((currency) => currency.currency).includes(newCurrency.currency)) return;
+  currencyHistory.push(newCurrency);
+  localStorage.setItem(LOCALSTORAGE_KEYS.currencyHistory, JSON.stringify(currencyHistory.slice(-2)));
+};
+
 export {
   getDecimalCountFromCurrency,
   validateNumberString,
   removeDecimalsByCount,
   formatAmountWithCurrency,
   trimStringToFloat,
+  updateCurrencyHistory,
 };
