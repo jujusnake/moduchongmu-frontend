@@ -27,17 +27,17 @@ axiosPrivateInstance.interceptors.request.use(
 axiosPrivateInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const { accessToken, refreshToken } = getTokens();
-
-    if (accessToken === null || refreshToken === null) {
-      removeTokens();
-      window.location.href = '/signin';
-      return Promise.reject(error);
-    }
-
-    const originalRequest = error.config;
-
     if (error.response.status === 403) {
+      const { accessToken, refreshToken } = getTokens();
+
+      if (accessToken === null || refreshToken === null) {
+        removeTokens();
+        window.location.href = '/signin';
+        return Promise.reject(error);
+      }
+
+      const originalRequest = error.config;
+
       try {
         const res = await getNewAccessToken(refreshToken);
         const newAccessToken = res?.data.accessToken;

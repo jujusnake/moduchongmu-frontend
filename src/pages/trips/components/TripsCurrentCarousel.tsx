@@ -1,34 +1,15 @@
-import { Carousel, CarouselApi, CarouselContent, CarouselItem } from '@/components/ui/carousel';
-import { TripListItemFloat } from '../molecules/TripListItem';
-import { useEffect, useState } from 'react';
+import { TripListItemFloat } from './TripListItem';
 import { useNavigate } from 'react-router-dom';
 import { GetTravelListRes } from '@/types/travel';
-import { getDestinationName } from '@/lib/geonames';
 import { getDday, parseDateRange } from '@/lib/datetime';
 import { getTravelThumbnail } from '@/lib/urls';
+// import { Carousel, CarouselApi, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+// import { getDestinationName } from '@/lib/geonames';
+// import { useEffect, useState } from 'react';
 
 const TripsCurrentCarousel = ({ currentTravel }: { currentTravel?: GetTravelListRes['currentTravel'] }) => {
   // Hooks
   const navigate = useNavigate();
-
-  // States
-  // const [api, setApi] = useState<CarouselApi>();
-  // const [current, setCurrent] = useState(0);
-  // const [count, setCount] = useState(0);
-
-  // Lifecycle
-  // useEffect(() => {
-  //   if (!api) {
-  //     return;
-  //   }
-
-  //   setCount(api.scrollSnapList().length);
-  //   setCurrent(api.selectedScrollSnap() + 1);
-
-  //   api.on('select', () => {
-  //     setCurrent(api.selectedScrollSnap() + 1);
-  //   });
-  // }, [api]);
 
   if (currentTravel === undefined || currentTravel === null) return <></>;
 
@@ -37,12 +18,13 @@ const TripsCurrentCarousel = ({ currentTravel }: { currentTravel?: GetTravelList
       <TripListItemFloat
         imgSrc={getTravelThumbnail(currentTravel.uid)}
         title={currentTravel.travelName}
-        location={getDestinationName(currentTravel.city, currentTravel.country)}
         members={currentTravel.memberArray.length}
         date={parseDateRange(currentTravel.startDate, currentTravel.endDate)}
         dday={getDday(currentTravel.endDate)}
         className="w-full px-3 py-4 bg-[#4E7CD4] rounded-[4px]"
         onClick={() => navigate(`/trip/${currentTravel.uid}`)}
+        city={currentTravel.city}
+        country={currentTravel.country}
       />
     </div>
   );

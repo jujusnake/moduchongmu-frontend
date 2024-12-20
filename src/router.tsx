@@ -3,7 +3,7 @@ import Signin from './pages/Signin';
 import Layouts from './layouts/Layouts';
 import Signup from './pages/Signup';
 import BottomNavLayout from './layouts/BottomNavLayout';
-import Trips from './pages/Trips';
+import Trips from './pages/trips/Trips';
 import CreateTrip from './pages/CreateTrip';
 import Now from './pages/Now';
 import Currency from './pages/Currency';

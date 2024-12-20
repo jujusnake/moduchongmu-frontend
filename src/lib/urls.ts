@@ -8,4 +8,9 @@ const getTravelThumbnail = (travelId?: string) => {
   return `https://moduchongmu-dev-bucket.s3.ap-northeast-2.amazonaws.com/travel/${travelId}/cover.png`;
 };
 
-export { getUserThumbnail, getTravelThumbnail };
+const getCityThumbnail = (cityName?: string) => {
+  if (!cityName) return;
+  return `https://moduchongmu-dev-bucket.s3.ap-northeast-2.amazonaws.com/city/${encodeURIComponent(cityName)}/cover`;
+};
+
+export { getUserThumbnail, getTravelThumbnail, getCityThumbnail };
