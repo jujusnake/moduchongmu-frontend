@@ -107,17 +107,23 @@ CurrencySuggestionButton.displayName = 'CurrencySuggestionButton';
 
 interface CurrencySelectButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
 
-const CurrencySelectButton = ({ className, children, ...props }: CurrencySelectButtonProps) => {
+const CurrencySelectButton = ({ className, children, disabled, ...props }: CurrencySelectButtonProps) => {
   return (
     <button
       className={cn(
-        'flex items-center gap-1 text-lg px-3 py-2.5 rounded-[4px] font-semibold bg-[#46508C] hover:bg-brand-primary-darker active:bg-brand-primary-darker text-brand-primary-contrastText',
+        'relative flex items-center gap-1 text-lg pl-3 pr-7 py-2.5 rounded-[4px] font-semibold bg-[#46508C] hover:bg-brand-primary-darker active:bg-brand-primary-darker text-brand-primary-contrastText disabled:hover:bg-[#46508C] disabled:active:bg-[#46508C] disabled:pr-3 transition-colors',
         className,
       )}
+      disabled={disabled}
       {...props}
     >
-      {children}
-      <ChevronDown size={16} strokeWidth={3} />
+      <div className="truncate">{children}</div>
+      <ChevronDown
+        size={16}
+        strokeWidth={3}
+        className="absolute -translate-y-1/2 right-2 top-1/2 data-[hide=true]:hidden"
+        data-hide={disabled}
+      />
     </button>
   );
 };

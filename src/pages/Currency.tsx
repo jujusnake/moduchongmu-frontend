@@ -1,25 +1,65 @@
+import { useExchange } from '@/APIs/transaction/exchange/get';
+import AmountInput from '@/components/atoms/AmountInput';
 import { CurrencySelectButton, CurrencySuggestionButton, CurrencySwitch } from '@/components/atoms/currency';
 import { CurrencySelectDrawer } from '@/components/organism/currency';
-import { addCommas } from '@/lib/utils';
-import { useState } from 'react';
+import { LOCALSTORAGE_KEYS } from '@/constants/storage';
+import { getDecimalCountFromCurrency, updateCurrencyHistory } from '@/lib/money';
+import { useMemo, useState } from 'react';
 
 const Currency = () => {
-  const [openCurrencyDrawer, setOpenCurrencyDrawer] = useState(false);
-  const [topCurrency, setTopCurrency] = useState('KRW(원)');
-  const [topValue, setTopValue] = useState(10000);
-  const [bottomCurrency, setBottomCurrency] = useState('VND(동)');
-  const [bottomValue, setBottomValue] = useState(182796.81);
+  const lastSetting = JSON.parse(localStorage.getItem(LOCALSTORAGE_KEYS.currencySetting) || '{}');
+
+  // States
+  const [openCurrencyDrawer, setOpenCurrencyDrawer] = useState<boolean>(false);
+  const [targetCurrency, setTargetCurrency] = useState<{ currency: string; name: string }>(
+    lastSetting?.targetCurrency ?? {
+      currency: 'USD',
+      name: '미국 달러',
+    },
+  );
+  const [krwAtBottom, setKrwAtBottom] = useState<boolean>(lastSetting?.krwAtBottom ?? true);
+  const [currencyValue, setCurrencyValue] = useState<{ krw: string; target: string }>({ krw: '', target: '' });
+
+  // API Calls
+  const { data: exchange } = useExchange(targetCurrency.currency.toLocaleLowerCase());
+  const exchangeRate = useMemo(() => exchange?.data.exchangeRateList[0].rate ?? 1, [exchange]);
+  const targetDecimalCount = useMemo(
+    () => getDecimalCountFromCurrency(targetCurrency.currency),
+    [targetCurrency.currency],
+  );
+
+  // Handlers
+  const handleSelectCurrency = (currencyObj: { currency: string; name: string }) => {
+    if (currencyObj.currency === 'KRW') return;
+    setTargetCurrency(currencyObj);
+    setOpenCurrencyDrawer(false);
+    storeLastSetting(currencyObj, krwAtBottom);
+    updateCurrencyHistory(currencyObj);
+  };
+
+  const handleValueChange = (value: string, isTarget: boolean) => {
+    const oppositeValue = isTarget ? Number(value) / exchangeRate : Number(value) * exchangeRate;
+    const oppositeDecimal = isTarget ? 0 : targetDecimalCount;
+    if (isTarget) {
+      setCurrencyValue({ krw: value === '' ? '' : oppositeValue.toFixed(oppositeDecimal), target: value });
+    } else {
+      setCurrencyValue({ krw: value, target: value === '' ? '' : oppositeValue.toFixed(oppositeDecimal) });
+    }
+  };
 
   const handleSwitch = () => {
     setTimeout(() => {
-      const tempCurrency = topCurrency;
-      const tempValue = topValue;
-
-      setTopCurrency(bottomCurrency);
-      setTopValue(bottomValue);
-      setBottomCurrency(tempCurrency);
-      setBottomValue(tempValue);
+      setKrwAtBottom(!krwAtBottom);
+      storeLastSetting(targetCurrency, !krwAtBottom);
     }, 150);
+  };
+
+  const storeLastSetting = (targetCurrency: { currency: string; name: string }, krwAtBottom: boolean) => {
+    const lastSetting = {
+      targetCurrency,
+      krwAtBottom,
+    };
+    localStorage.setItem(LOCALSTORAGE_KEYS.currencySetting, JSON.stringify(lastSetting));
   };
 
   return (
@@ -27,42 +67,88 @@ const Currency = () => {
       <main className="min-h-[calc(100dvh-80px)] grid grid-cols-1 grid-rows-2 overflow-hidden relative">
         <div className="bg-brand-primary-dark px-6 shadow-[0px_4px_6px_rgba(0,0,0,0.1)] z-10 pt-10 pb-[56px] overflow-hidden flex flex-col justify-between">
           <h1 className="mb-10 text-2xl font-semibold text-brand-primary-contrastText">환율 계산기</h1>
-          <div className="flex items-end justify-between">
+          <div className="flex items-end justify-between gap-10">
             <div className="space-y-2.5">
-              <div className="flex items-center gap-2.5">
-                <CurrencySuggestionButton>{'USD(달러)'}</CurrencySuggestionButton>
-                <CurrencySuggestionButton>{'JYP(엔)'}</CurrencySuggestionButton>
-              </div>
-              <CurrencySelectButton onClick={() => setOpenCurrencyDrawer(true)}>{topCurrency}</CurrencySelectButton>
+              {krwAtBottom && (
+                <div className="flex items-center gap-2.5">
+                  {localStorage.getItem(LOCALSTORAGE_KEYS.currencyHistory) &&
+                    JSON.parse(localStorage.getItem(LOCALSTORAGE_KEYS.currencyHistory) || '[]')
+                      .reverse()
+                      .map((currency: { currency: string; name: string }) => (
+                        <CurrencySuggestionButton
+                          key={currency.name}
+                          className="truncate max-w-[100px]"
+                          onClick={() => handleSelectCurrency(currency)}
+                        >
+                          {currency.currency}({currency.name})
+                        </CurrencySuggestionButton>
+                      ))}
+                </div>
+              )}
+              <CurrencySelectButton
+                onClick={() => setOpenCurrencyDrawer(true)}
+                className="max-w-[160px]"
+                disabled={!krwAtBottom}
+              >
+                {krwAtBottom ? `${targetCurrency.currency}(${targetCurrency.name})` : 'KRW(한국 원)'}
+              </CurrencySelectButton>
             </div>
-            <strong
-              className="text-[24px]/[125%] font-semibold text-brand-primary-contrastText"
-              style={{ textShadow: '0px 2px 2px rgba(0,0,0,0.15)' }}
-            >
-              ₩ {addCommas(topValue)}
-            </strong>
+
+            <AmountInput
+              className="bg-brand-primary-dark"
+              currency={krwAtBottom ? targetCurrency.currency : 'KRW'}
+              value={krwAtBottom ? currencyValue.target.toString() : currencyValue.krw.toString()}
+              onValueChange={(val) => handleValueChange(val, krwAtBottom)}
+              autoFocus
+              tabIndex={1}
+              placeholder="금액을 입력하세요"
+            />
           </div>
         </div>
         <CurrencySwitch onClick={handleSwitch} />
         <div className="bg-bg-back px-6 pb-10 pt-[56px] overflow-hidden">
           <div className="flex items-start justify-between">
             <div className="space-y-2.5">
-              <CurrencySelectButton onClick={() => setOpenCurrencyDrawer(true)}>{bottomCurrency}</CurrencySelectButton>
-              <div className="flex items-center gap-2.5">
-                <CurrencySuggestionButton variant="gray">{'KRW(원)'}</CurrencySuggestionButton>
-                <CurrencySuggestionButton variant="gray">{'JYP(엔)'}</CurrencySuggestionButton>
-              </div>
+              <CurrencySelectButton
+                onClick={() => setOpenCurrencyDrawer(true)}
+                className="max-w-[160px]"
+                disabled={krwAtBottom}
+              >
+                {krwAtBottom ? 'KRW(한국 원)' : `${targetCurrency.currency}(${targetCurrency.name})`}
+              </CurrencySelectButton>
+              {!krwAtBottom && (
+                <div className="flex items-center gap-2.5">
+                  {localStorage.getItem(LOCALSTORAGE_KEYS.currencyHistory) &&
+                    JSON.parse(localStorage.getItem(LOCALSTORAGE_KEYS.currencyHistory) || '[]')
+                      .reverse()
+                      .map((currency: { currency: string; name: string }) => (
+                        <CurrencySuggestionButton
+                          key={currency.name}
+                          className="truncate max-w-[100px]"
+                          onClick={() => handleSelectCurrency(currency)}
+                        >
+                          {currency.currency}({currency.name})
+                        </CurrencySuggestionButton>
+                      ))}
+                </div>
+              )}
             </div>
-            <strong
-              className="text-[24px]/[125%] font-semibold text-text-primary"
-              // style={{ textShadow: '0px 2px 2px rgba(0,0,0,0.15)' }}
-            >
-              ₫ {addCommas(bottomValue)}
-            </strong>
+            <AmountInput
+              className="text-text-primary [&~#amount-input-text]:text-text-primary"
+              currency={krwAtBottom ? 'KRW' : targetCurrency.currency}
+              value={krwAtBottom ? currencyValue.krw.toString() : currencyValue.target.toString()}
+              onValueChange={(val) => handleValueChange(val, !krwAtBottom)}
+              tabIndex={2}
+              placeholder="금액을 입력하세요"
+            />
           </div>
         </div>
       </main>
-      <CurrencySelectDrawer open={openCurrencyDrawer} onOpenChange={setOpenCurrencyDrawer} />
+      <CurrencySelectDrawer
+        open={openCurrencyDrawer !== false}
+        onOpenChange={(open) => open === false && setOpenCurrencyDrawer(false)}
+        onCurrencySelect={handleSelectCurrency}
+      />
     </>
   );
 };

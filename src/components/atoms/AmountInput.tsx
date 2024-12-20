@@ -76,6 +76,7 @@ const AmountInput = forwardRef<HTMLInputElement, AmountInputProps>(
         />
         {isFocused === false && (
           <strong
+            id="amount-input-text"
             className="absolute top-0 right-0 w-full text-end text-[24px]/[125%] text-brand-primary-contrastText font-semibold pointer-events-none"
             style={{ textShadow: '0px 2px 2px rgba(0, 0, 0, 0.15)' }}
           >
