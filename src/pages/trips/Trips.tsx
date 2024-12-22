@@ -1,21 +1,21 @@
 import { useTravelList } from '@/APIs/travel/list/get';
-import EmptyIcon from '@/components/atoms/EmptyIcon';
 import { TripListItem } from './components/TripListItem';
 import TripsEmpty from '@/pages/trips/components/TripsEmpty';
 import { Button, ButtonIcon } from '@/components/ui/buttons';
 import { parseDateRange } from '@/lib/datetime';
 import { getTravelThumbnail } from '@/lib/urls';
-import { ChevronDown, Plane } from 'lucide-react';
+import { Plane } from 'lucide-react';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TripsCurrentCarousel from './components/TripsCurrentCarousel';
+import InfinityScrollTrigger from './components/InfinityScrollTrigger';
 
 const Trips = () => {
   // Hooks
   const navigate = useNavigate();
 
   // API Calls
-  const { data: travelList, fetchNextPage, hasNextPage } = useTravelList();
+  const { data: travelList, fetchNextPage, hasNextPage, isFetchingNextPage, isFetched } = useTravelList();
 
   // Values
   const hasNoTravels = useMemo(() => {
@@ -83,10 +83,12 @@ const Trips = () => {
             onClick={() => navigate(`/trip/${travel.uid}`)}
           />
         ))}
-        {!hasNextPage && (
-          <button onClick={() => fetchNextPage()} className="flex justify-center w-full px-6">
-            더 보기 <ChevronDown />
-          </button>
+        {isFetched && (
+          <InfinityScrollTrigger
+            onIntersect={() => fetchNextPage()}
+            hasNextPage={hasNextPage}
+            isFetching={isFetchingNextPage}
+          />
         )}
       </main>
     </>

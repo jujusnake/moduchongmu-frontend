@@ -5,7 +5,7 @@ import { GetTravelListRes } from '@/types/travel';
 import { QueryFunctionContext, useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 
-const PAGE_SIZE = 6;
+const PAGE_SIZE = 5;
 
 // For Infinite Scroll
 const getTravelList = async ({ pageParam = 1 }: QueryFunctionContext) => {
@@ -25,8 +25,10 @@ const useTravelList = () => {
     queryFn: getTravelList,
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages, lastPageParam) => {
-      const lastPageNumber = Number.isInteger(lastPageParam) ? (lastPageParam as number) : 0;
-      const hasNextPage = lastPageNumber < Math.ceil(lastPage.totalCount / PAGE_SIZE);
+      const totalItemsCount = allPages.reduce((acc, page) => acc + page.travelList.length, 0);
+      const lastPageNumber = Number.isInteger(lastPageParam) ? (lastPageParam as number) : 1;
+      const hasNextPage = totalItemsCount < lastPage.totalCount;
+
       return hasNextPage ? lastPageNumber + 1 : undefined;
     },
   });
