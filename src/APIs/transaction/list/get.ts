@@ -25,7 +25,7 @@ const useTransactionList = (travelUid: string) => {
     queryFn: (r) => getTransactionList({ pageParam: r.pageParam as number, travelUid }),
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages, lastPageParam) => {
-      const totalItemsCount = allPages.reduce((acc, page) => acc + page.transactionList.length, 0);
+      const totalItemsCount = allPages.reduce((acc, page) => acc + page.transactionList?.length, 0);
       const lastPageNumber = Number.isInteger(lastPageParam) ? (lastPageParam as number) : 1;
       const hasNextPage = totalItemsCount < lastPage.totalCount;
       return hasNextPage ? lastPageNumber + 1 : undefined;
