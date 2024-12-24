@@ -4,12 +4,13 @@ import { CurrencySelectButton, CurrencySuggestionButton, CurrencySwitch } from '
 import { CurrencySelectDrawer } from '@/components/organism/currency';
 import { LOCALSTORAGE_KEYS } from '@/constants/storage';
 import { getDecimalCountFromCurrency, updateCurrencyHistory } from '@/lib/money';
+import { CurrencyItem } from '@/types/transaction';
 import { useEffect, useMemo, useState } from 'react';
 
 const Currency = () => {
   // States
   const [openCurrencyDrawer, setOpenCurrencyDrawer] = useState<boolean>(false);
-  const [targetCurrency, setTargetCurrency] = useState<{ currency: string; name: string }>({
+  const [targetCurrency, setTargetCurrency] = useState<CurrencyItem>({
     currency: 'USD',
     name: '미국 달러',
   });
@@ -44,7 +45,7 @@ const Currency = () => {
   }, [exchangeRate]);
 
   // Handlers
-  const handleSelectCurrency = (currencyObj: { currency: string; name: string }) => {
+  const handleSelectCurrency = (currencyObj: CurrencyItem) => {
     if (currencyObj.currency === 'KRW') return;
     setOpenCurrencyDrawer(false);
     setTargetCurrency(currencyObj);
@@ -69,7 +70,7 @@ const Currency = () => {
     }, 150);
   };
 
-  const storeLastSetting = (targetCurrency: { currency: string; name: string }, krwAtBottom: boolean) => {
+  const storeLastSetting = (targetCurrency: CurrencyItem, krwAtBottom: boolean) => {
     const lastSetting = {
       targetCurrency,
       krwAtBottom,
@@ -89,7 +90,7 @@ const Currency = () => {
                   {localStorage.getItem(LOCALSTORAGE_KEYS.currencyHistory) &&
                     JSON.parse(localStorage.getItem(LOCALSTORAGE_KEYS.currencyHistory) || '[]')
                       .reverse()
-                      .map((currency: { currency: string; name: string }) => (
+                      .map((currency: CurrencyItem) => (
                         <CurrencySuggestionButton
                           key={currency.name}
                           className="truncate max-w-[100px]"
@@ -136,7 +137,7 @@ const Currency = () => {
                   {localStorage.getItem(LOCALSTORAGE_KEYS.currencyHistory) &&
                     JSON.parse(localStorage.getItem(LOCALSTORAGE_KEYS.currencyHistory) || '[]')
                       .reverse()
-                      .map((currency: { currency: string; name: string }) => (
+                      .map((currency: CurrencyItem) => (
                         <CurrencySuggestionButton
                           key={currency.name}
                           className="truncate max-w-[100px]"

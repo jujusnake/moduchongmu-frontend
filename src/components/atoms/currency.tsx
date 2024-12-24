@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils';
 import { Slot } from '@radix-ui/react-slot';
 import { type VariantProps, cva } from 'class-variance-authority';
 import { ChevronDown } from 'lucide-react';
-import { ButtonHTMLAttributes, MouseEvent as ReactMouseEvent, forwardRef, useState } from 'react';
+import { ButtonHTMLAttributes, MouseEvent as ReactMouseEvent, forwardRef, memo, useState } from 'react';
 
 interface CurrencySwitchProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
 
@@ -130,4 +130,6 @@ const CurrencySelectButton = ({ className, children, disabled, ...props }: Curre
 
 CurrencySelectButton.displayName = 'CurrencySelectButton';
 
-export { CurrencySwitch, CurrencySuggestionButton, CurrencySelectButton };
+const CurrencySelectButtonMemoized = memo(CurrencySelectButton);
+
+export { CurrencySwitch, CurrencySuggestionButton, CurrencySelectButton, CurrencySelectButtonMemoized };

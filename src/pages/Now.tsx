@@ -3,7 +3,7 @@ import { Button, ButtonIcon } from '@/components/ui/buttons';
 import { TentTree } from 'lucide-react';
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import Trip from './Trip';
+import Trip from './trip/Trip';
 
 const Now = () => {
   const { data: travelList, isFetching } = useTravelList();
@@ -30,7 +30,7 @@ const Now = () => {
     );
   }
 
-  return <Trip tripUid={travelList?.pages[0].currentTravel.uid} />;
+  return <Trip fixedUid={travelList?.pages[0].currentTravel.uid} />;
 };
 
 export default Now;

@@ -6,7 +6,11 @@ import { queryKeys } from '../react-query';
 import { ErrorResponse } from '@/types/axios';
 
 const getTravel = async (uid: string) => {
-  const res = await axiosPrivateInstance.get(`/travel/${uid}`);
+  const res = await axiosPrivateInstance.get(`/travel`, {
+    params: {
+      uid,
+    },
+  });
 
   return res as AxiosResponse<GetTravelRes>;
 };

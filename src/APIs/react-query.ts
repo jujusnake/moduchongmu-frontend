@@ -16,6 +16,7 @@ const queryClient = new QueryClient({
 const queryKeys = {
   user: 'user',
   travel: 'travel',
+  transaction: 'transaction',
 };
 
 export { queryClient, queryKeys };

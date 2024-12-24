@@ -1,6 +1,6 @@
 import { getCityThumbnail } from '@/lib/urls';
 import { cn } from '@/lib/utils';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 type Props = { city?: string } & React.ImgHTMLAttributes<HTMLImageElement>;
 
@@ -16,6 +16,13 @@ const TripThumbnailImg = ({ city, src, className, onLoad, onError, ...props }: P
     }
     imgAttempt.current += 1;
   };
+
+  useEffect(() => {
+    if (src === undefined || city === undefined) return;
+    setImgSrc(src);
+    setImgLoaded(false);
+    imgAttempt.current = 0;
+  }, [src, city]);
 
   return (
     <img

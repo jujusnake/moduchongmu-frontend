@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { ChangeEvent, FocusEvent, forwardRef, InputHTMLAttributes, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, FocusEvent, forwardRef, InputHTMLAttributes, memo, useEffect, useMemo, useState } from 'react';
 import { AutoTextSize } from 'auto-text-size';
 import {
   getDecimalCountFromCurrency,
@@ -21,11 +21,11 @@ const AmountInput = forwardRef<HTMLInputElement, AmountInputProps>(
     const [isFocused, setIsFocused] = useState(false);
 
     // Values
-    const decimalCount = useMemo(() => getDecimalCountFromCurrency(currency), [currency]);
+    const decimalCount = useMemo(() => getDecimalCountFromCurrency(currency ?? 'krw'), [currency]);
 
     const formattedVal = useMemo(() => {
       const parsed = parseFloat(value);
-      return formatAmountWithCurrency(parsed, currency);
+      return formatAmountWithCurrency(parsed, currency ?? 'krw');
     }, [value, currency]);
 
     // Handlers
@@ -90,4 +90,4 @@ const AmountInput = forwardRef<HTMLInputElement, AmountInputProps>(
   },
 );
 
-export default AmountInput;
+export default memo(AmountInput);

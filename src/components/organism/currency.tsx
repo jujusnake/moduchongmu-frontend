@@ -4,12 +4,13 @@ import { Drawer as DrawerPrimitive } from 'vaul';
 import { Input } from '../ui/input';
 import { cn } from '@/lib/utils';
 import { useCurrencies } from '@/APIs/transaction/currency/get';
+import { CurrencyItem } from '@/types/transaction';
 
 const CurrencySelectDrawer = ({
   onCurrencySelect,
   ...props
 }: ComponentProps<typeof DrawerPrimitive.Root> & {
-  onCurrencySelect?: (item: { currency: string; name: string }) => void;
+  onCurrencySelect?: (item: CurrencyItem) => void;
 }) => {
   // API Calls
   const { data: currencies } = useCurrencies();

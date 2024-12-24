@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { ButtonHTMLAttributes, useState } from 'react';
+import { ButtonHTMLAttributes } from 'react';
 import TripThumbnailImg from '@/components/atoms/TripThumbnailImg';
 import { getDestinationName } from '@/lib/geonames';
 
@@ -44,18 +44,10 @@ const TripListItemFloat = ({
   country,
   ...props
 }: TripListItemProps) => {
-  const [imgLoaded, setImgLoaded] = useState(false);
-
   return (
     <button className={cn('px-6 py-3 flex gap-4 items-center relative', className)} {...props}>
       <div className="w-[60px] h-[60px] rounded-[4px] bg-[#D9D9D9] overflow-hidden isolate">
-        <img
-          src={imgSrc}
-          className="w-full h-full object-cover data-[loaded=false]:opacity-0 transition-opacity"
-          data-loaded={imgLoaded}
-          onLoad={() => setImgLoaded(true)}
-          onError={() => setImgLoaded(false)}
-        />
+        <TripThumbnailImg src={imgSrc} city={city} />
       </div>
       <div className="space-y-2 text-start">
         <h1 className="text-base font-semibold text-brand-primary-contrastText ellipsis-text-oneline">{title}</h1>
