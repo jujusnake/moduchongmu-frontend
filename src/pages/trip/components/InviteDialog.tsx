@@ -50,6 +50,8 @@ const InviteDialog = ({ travelUid }: { travelUid?: string }) => {
     // @ts-ignore
     if (Kakao.isInitialized() === false) return;
 
+    const URL = `https://moduchongmu.com/invitation/${travelUid ?? 'unknown'}`;
+
     function shareMessage() {
       // 현재 링크 가져오기
       var currentURL = window.location.href;
