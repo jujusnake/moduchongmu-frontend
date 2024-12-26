@@ -24,6 +24,9 @@ module.exports = {
       },
     },
     extend: {
+      screens: {
+        moduchongmu: '500px',
+      },
       height: {
         vvh: 'var(--vvh, 100vh)',
       },

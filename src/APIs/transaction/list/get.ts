@@ -21,7 +21,7 @@ const getTransactionList = async (params: { pageParam: number; travelUid: string
 
 const useTransactionList = (travelUid: string) => {
   const query = useInfiniteQuery<GetTransactionListRes, AxiosError<ErrorResponse>>({
-    queryKey: [queryKeys.transaction, 'list', travelUid],
+    queryKey: [queryKeys.transaction, { type: 'list', uid: travelUid }],
     queryFn: (r) => getTransactionList({ pageParam: r.pageParam as number, travelUid }),
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages, lastPageParam) => {

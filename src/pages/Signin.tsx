@@ -2,6 +2,7 @@ import SocialSigninButton from '@/components/atoms/SocialSigninButton';
 import TextRotation from '@/components/atoms/TextRotation';
 import { SOCIAL_SIGNIN, SocialSigninType } from '@/types/signin';
 import { useEffect } from 'react';
+import InviteDialog from './trip/components/InviteDialog';
 
 const Signin = () => {
   window.initContent = (parameter) => {
@@ -80,6 +81,7 @@ const Signin = () => {
           로그인함으로써 <a className="underline text-text-primary">이용약관</a> 및{' '}
           <a className="underline text-text-primary">개인정보취급방침</a>에 동의합니다
         </aside>
+        <InviteDialog travelUid="T7igpzfU8k" />
       </section>
     </div>
   );

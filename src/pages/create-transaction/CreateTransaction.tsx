@@ -1,10 +1,10 @@
 import AmountInput from '@/components/atoms/AmountInput';
-import { CurrencySelectButton, CurrencySelectButtonMemoized } from '@/components/atoms/currency';
+import { CurrencySelectButtonMemoized } from '@/components/atoms/currency';
 import DateSelector from '@/pages/create-transaction/components/DateSelector';
 import { CurrencySelectDrawer } from '@/components/organism/currency';
-import { Button, ButtonIcon } from '@/components/ui/buttons';
+import { Button } from '@/components/ui/buttons';
 import { useCallback, useReducer, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import CategorySelector from '@/pages/create-transaction/components/CategorySelector';
 import { CurrencyItem, TransactionCategoryType } from '@/types/transaction';
 import PayerSelector from '@/pages/create-transaction/components/PayerSelector';
@@ -16,13 +16,17 @@ import { TRANSACTION_FORM_INITIAL, TransactionFormAction, transactionFormReducer
 import TripUidSelector from './components/TripUidSelector';
 import { useCreateTransaction } from '@/APIs/transaction/post';
 import { format } from 'date-fns';
+import ExitButton from './components/ExitButton';
+import { toast } from 'sonner';
+import { queryClient, queryKeys } from '@/APIs/react-query';
 
 const CreateTransaction = () => {
   // Values
+  const navigate = useNavigate();
   const { tripUid } = useParams();
 
   // API Calls
-  const { mutate: createTransaction } = useCreateTransaction();
+  const { mutate: createTransaction, isPending: isCreating } = useCreateTransaction();
 
   // Reducer
   const [formState, dispatch] = useReducer(transactionFormReducer, {
@@ -94,19 +98,33 @@ const CreateTransaction = () => {
     } else if (formState.splitEven === false && formState.expenseSplit.size !== formState.spenders.length) {
       alert('지출자별 금액을 입력해주세요');
     } else {
-      createTransaction({
-        travelUid: formState.travelUid,
-        executorList: [formState.payer.idx],
-        targetList: formState.spenders.map((spender) => spender.idx),
-        category: formState.category,
-        content: formState.memo ?? '',
-        type: 'expense',
-        amount: formState.amount,
-        currency: formState.currency.currency,
-        paymentMethod: 'card',
-        expenseSplit: formState.splitEven ? {} : Object.fromEntries(formState.expenseSplit),
-        createdDate: format(formState.date, "yyyy-MM-dd'T'HH:mm:ssXXX"),
-      });
+      createTransaction(
+        {
+          travelUid: formState.travelUid,
+          executorList: [formState.payer.idx],
+          targetList: formState.spenders.map((spender) => spender.idx),
+          category: formState.category,
+          content: formState.memo ?? '',
+          type: 'expense',
+          amount: formState.amount,
+          currency: formState.currency.currency,
+          paymentMethod: 'card',
+          expenseSplit: formState.splitEven ? {} : Object.fromEntries(formState.expenseSplit),
+          usedDate: format(formState.date, "yyyy-MM-dd'T'HH:mm:ssXXX"),
+        },
+        {
+          onSuccess: () => {
+            toast.success('기록이 성공적으로 저장되었습니다.');
+            navigate(`/trip/${formState.travelUid}`);
+            queryClient.invalidateQueries({
+              queryKey: [queryKeys.transaction, { type: 'list', uid: formState.travelUid }],
+            });
+          },
+          onError: () => {
+            toast.error('기록 저장에 실패했습니다. 다시 시도해주세요.');
+          },
+        },
+      );
     }
   };
 
@@ -115,9 +133,7 @@ const CreateTransaction = () => {
       <div className="fixed top-0 z-30 w-full p-6 -translate-x-1/2 max-w-moduchongmu left-1/2 bg-brand-primary-dark">
         <header className="flex items-center justify-between gap-2 mb-12">
           <h1 className="text-2xl font-semibold text-brand-primary-contrastText">기록 작성</h1>
-          <Button variant="contrast" className="p-2" size="large">
-            <ButtonIcon name="x" size={24} />
-          </Button>
+          <ExitButton />
         </header>
 
         <div className="flex items-center justify-between gap-6">
@@ -175,8 +191,8 @@ const CreateTransaction = () => {
         <div className="space-y-4">
           <TransactionMemo value={formState.memo} onValueChange={handleMemoChange} />
           <TripUidSelector selected={formState.travelUid} onSelectedChange={handleTripUIDChange} />
-          <Button className="w-full" onClick={handleCreateTransaction}>
-            기록 저장
+          <Button className="w-full" onClick={handleCreateTransaction} disabled={isCreating}>
+            {isCreating ? '생성 중...' : '기록 저장'}
           </Button>
         </div>
       </div>

@@ -31,7 +31,7 @@ const TripUidSelector = ({ selected, onSelectedChange }: Props) => {
             </button>
           )}
           {flatTrips?.reverse().map((trip) => (
-            <SelectItem value={trip.uid}>
+            <SelectItem value={trip.uid} key={trip.uid}>
               <div className="font-semibold">{trip.travelName}</div>
               <div className="text-text-secondary">{parseDateRange(trip.startDate, trip.endDate)}</div>
             </SelectItem>

@@ -25,7 +25,7 @@ const SpenderSelector = ({ activated, spenders, onSpenderChange }: SpenderSelect
           <TransactionAvatarButton
             key={`create-transaction-spender-select-${member}`}
             label={member.name}
-            imgSrc={getUserThumbnail('')}
+            imgSrc={getUserThumbnail(member.email)}
             onClick={() => onSpenderChange?.(member)}
             selected={spenders?.find((spender) => spender.idx === member.idx) !== undefined}
           />

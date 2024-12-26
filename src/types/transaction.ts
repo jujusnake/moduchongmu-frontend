@@ -36,7 +36,7 @@ type PostTransactionParams = {
   expenseSplit?: {
     [travelMemberIdx: number]: string;
   };
-  createdDate: string; // YYYY-MM-DD T HH:mm:ss +09:00
+  usedDate: string; // YYYY-MM-DD T HH:mm:ss +09:00
 };
 
 type TransactionItem = {
@@ -69,6 +69,7 @@ export {
   type GetCurrencyRes,
   type GetExchangeRateRes,
   type CurrencyItem,
+  type TransactionItem,
   type GetTransactionListRes,
   type PostTransactionParams,
   type PostTransactionRes,

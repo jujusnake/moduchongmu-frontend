@@ -1,20 +1,16 @@
-import {
-  DailyExpenseAdd,
-  DailyExpenseBlock,
-  DailyExpenseTitle,
-  ExpenseItem,
-} from '@/pages/trip/components/expense-list';
 import { Button, ButtonIcon } from '@/components/ui/buttons';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ChevronLeft, Ellipsis, MapPin, UserPlus, UsersRound } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTravel } from '@/APIs/travel/get';
-import { getDday, getDdayOrElapsedDay, parseDateRange } from '@/lib/datetime';
+import { getDdayOrElapsedDay, parseDateRange } from '@/lib/datetime';
 import { getDestinationName } from '@/lib/geonames';
 import TripThumbnailImg from '@/components/atoms/TripThumbnailImg';
 import { getTravelThumbnail } from '@/lib/urls';
 import { TransactionList, TransactionListByDate } from './components/transaction-list';
+import MemberList from './components/MemberList';
+import InviteDialog from './components/InviteDialog';
 
 const Trip = ({ fixedUid }: { fixedUid?: string }) => {
   // Hooks
@@ -43,9 +39,7 @@ const Trip = ({ fixedUid }: { fixedUid?: string }) => {
           </button>
 
           <div className="flex gap-3">
-            <button className="p-2 transition-colors rounded-full text-text-secondary bg-white/80 hover:bg-white/100 active:bg-neutral-200">
-              <UserPlus size={20} strokeWidth={2.5} />
-            </button>
+            <InviteDialog travelUid={travelData?.uid} />
             <button className="p-2 transition-colors rounded-full text-text-secondary bg-white/80 hover:bg-white/100 active:bg-neutral-200">
               <Ellipsis size={20} strokeWidth={2.5} />
             </button>
@@ -75,10 +69,7 @@ const Trip = ({ fixedUid }: { fixedUid?: string }) => {
             <MapPin size={14} />
             <span>{travelData ? getDestinationName(travelData.city, travelData?.country) : '-'}</span>
           </div>
-          <button className="rounded-full flex items-center gap-1 px-3 py-1.5 border border-border-light text-text-secondary font-semibold text-sm">
-            <UsersRound size={14} />
-            <span>{travelData?.memberArray.length ?? 0}명의 메이트</span>
-          </button>
+          <MemberList memberArray={travelData?.memberArray} />
         </div>
       </div>
 

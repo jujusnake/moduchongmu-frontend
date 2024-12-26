@@ -1,17 +1,49 @@
 import { useTransactionList } from '@/APIs/transaction/list/get';
 import { DailyExpenseAdd, DailyExpenseBlock, DailyExpenseTitle, ExpenseItem } from './expense-list';
+import { useMemo } from 'react';
+import { TransactionCategoryType, TransactionItem } from '@/types/transaction';
+import EmptyIcon from '@/components/atoms/EmptyIcon';
+
+const CATEGORY_LABEL: Record<TransactionCategoryType, string> = {
+  food: '식비',
+  transport: '교통',
+  shopping: '쇼핑',
+  tour: '관광',
+  accomodation: '숙박',
+  flight: '항공',
+  etc: '기타',
+};
 
 const TransactionList = ({ travelUid }: { travelUid: string }) => {
   // API Calls
   const { data } = useTransactionList(travelUid);
 
-  console.log(data);
+  // Values
+  const transactions = useMemo(() => {
+    return data?.pages.reduce((acc: TransactionItem[], page) => {
+      const nextList = page?.transactionList ?? [];
+      return [...acc, ...nextList];
+    }, []);
+  }, [data]);
+
   return (
     <>
-      <ExpenseItem title="점심식사" amount={12300} currency="₩" category="식비" mates={['남듀', '효고버섯']} />
-      <ExpenseItem title="점심식사" amount={12300} currency="₩" category="식비" mates={['남듀', '효고버섯']} />
-      <ExpenseItem title="점심식사" amount={12300} currency="₩" category="식비" mates={['남듀', '효고버섯']} />
-      <ExpenseItem title="점심식사" amount={12300} currency="₩" category="식비" mates={['남듀', '효고버섯']} />
+      {transactions?.length === 0 && (
+        <div className="flex flex-col items-center justify-center gap-3 py-5 text-base font-medium text-gray-500">
+          <EmptyIcon />
+          거래 내역이 없습니다
+        </div>
+      )}
+      {transactions?.map((transaction) => (
+        <ExpenseItem
+          key={transaction.uid}
+          title={transaction.content ?? CATEGORY_LABEL[transaction.category as TransactionCategoryType]}
+          amount={transaction.amount}
+          currency={transaction.currency}
+          category={CATEGORY_LABEL[transaction.category as TransactionCategoryType]}
+          mates={transaction.targetList}
+        />
+      ))}
     </>
   );
 };
