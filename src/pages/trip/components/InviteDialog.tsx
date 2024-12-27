@@ -8,6 +8,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { copyToClipboard } from '@/lib/utils';
 import { set } from 'date-fns';
 import { UserPlus } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
@@ -28,71 +29,73 @@ const InviteDialog = ({ travelUid }: { travelUid?: string }) => {
   const handleCopy = () => {
     timer.current && clearTimeout(timer.current);
 
-    try {
-      navigator.clipboard.writeText(`https://moduchongmu.com/invitation/${travelUid ?? 'unknown'}`);
-      setCopied(true);
-      timer.current = setTimeout(() => setCopied(false), 5000);
-    } catch (error) {
-      console.error('Failed to copy: ', error);
-      setCopied(false);
-    }
+    copyToClipboard(`https://moduchongmu.com/invitation/${travelUid ?? 'unknown'}`, {
+      onSuccess: () => {
+        setCopied(true);
+        timer.current = setTimeout(() => setCopied(false), 5000);
+      },
+      onError: () => {
+        setCopied(false);
+        timer.current && clearTimeout(timer.current);
+      },
+    });
   };
 
-  const handleShare = async () => {
-    try {
-      await navigator.share(shareData);
-    } catch (e) {
-      console.error('Failed to share: ', e);
-    }
-  };
+  // const handleShare = async () => {
+  //   try {
+  //     await navigator.share(shareData);
+  //   } catch (e) {
+  //     console.error('Failed to share: ', e);
+  //   }
+  // };
 
-  const handleKakaoShare = () => {
-    // @ts-ignore
-    if (Kakao.isInitialized() === false) return;
+  // const handleKakaoShare = () => {
+  //   // @ts-ignore
+  //   if (Kakao.isInitialized() === false) return;
 
-    const URL = `https://moduchongmu.com/invitation/${travelUid ?? 'unknown'}`;
+  //   const URL = `https://moduchongmu.com/invitation/${travelUid ?? 'unknown'}`;
 
-    function shareMessage() {
-      // 현재 링크 가져오기
-      var currentURL = window.location.href;
+  //   // function shareMessage() {
+  //   //   // 현재 링크 가져오기
+  //   //   var currentURL = window.location.href;
 
-      // 제품 타이틀을 가져오는 부분
-      var productTitleElement = document.querySelector('p.prod_top');
-      var productTitle = productTitleElement ? productTitleElement.innerText : '';
+  //   //   // 제품 타이틀을 가져오는 부분
+  //   //   var productTitleElement = document.querySelector('p.prod_top');
+  //   //   var productTitle = productTitleElement ? productTitleElement.innerText : '';
 
-      // 제품 설명을 가져오는 부분
-      var productSummaryElement = document.querySelector('pre');
-      var productSummary = productSummaryElement ? productSummaryElement.innerText : '';
+  //   //   // 제품 설명을 가져오는 부분
+  //   //   var productSummaryElement = document.querySelector('pre');
+  //   //   var productSummary = productSummaryElement ? productSummaryElement.innerText : '';
 
-      // 제품 이미지를 가져오는 부분
-      var productImageElement = document.querySelector('.swiper-slide img');
-      var productImageUrl = productImageElement ? productImageElement.getAttribute('src') : '';
+  //   //   // 제품 이미지를 가져오는 부분
+  //   //   var productImageElement = document.querySelector('.swiper-slide img');
+  //   //   var productImageUrl = productImageElement ? productImageElement.getAttribute('src') : '';
 
-      Kakao.Link.sendDefault({
-        objectType: 'feed',
-        content: {
-          title: productTitle,
-          description: productSummary,
-          imageUrl: productImageUrl,
-          link: {
-            mobileWebUrl: currentURL,
-            webUrl: currentURL,
-          },
-        },
-        buttons: [
-          {
-            title: '웹으로 보기',
-            link: {
-              mobileWebUrl: currentURL,
-              webUrl: currentURL,
-            },
-          },
-        ],
-        // 카카오톡 미설치 시 카카오톡 설치 경로이동
-        installTalk: true,
-      });
-    }
-  };
+  //   //   Kakao.Link.sendDefault({
+  //   //     objectType: 'feed',
+  //   //     content: {
+  //   //       title: productTitle,
+  //   //       description: productSummary,
+  //   //       imageUrl: productImageUrl,
+  //   //       link: {
+  //   //         mobileWebUrl: currentURL,
+  //   //         webUrl: currentURL,
+  //   //       },
+  //   //     },
+  //   //     buttons: [
+  //   //       {
+  //   //         title: '웹으로 보기',
+  //   //         link: {
+  //   //           mobileWebUrl: currentURL,
+  //   //           webUrl: currentURL,
+  //   //         },
+  //   //       },
+  //   //     ],
+  //   //     // 카카오톡 미설치 시 카카오톡 설치 경로이동
+  //   //     installTalk: true,
+  //   //   });
+  //   // }
+  // };
 
   // Lifecycle
   useEffect(() => {
@@ -127,7 +130,7 @@ const InviteDialog = ({ travelUid }: { travelUid?: string }) => {
               value={`https://moduchongmu.com/invitation/${travelUid ?? 'unknown'}`}
             />
             <Button
-              variant={copied ? 'primary' : 'secondary'}
+              variant={copied ? 'secondary' : 'primary'}
               size="small"
               disabled={travelUid === undefined}
               onClick={handleCopy}
@@ -147,7 +150,7 @@ const InviteDialog = ({ travelUid }: { travelUid?: string }) => {
           </div>
         </div>
 
-        {showWebShareBtn && <button onClick={handleShare}>Share</button>}
+        {/* {showWebShareBtn && <button onClick={handleShare}>Share</button>} */}
       </DialogContent>
     </Dialog>
   );
