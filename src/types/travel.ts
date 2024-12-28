@@ -1,3 +1,5 @@
+import { TravelUser } from './transaction';
+
 type Member = {
   idx: number;
   name: string;
@@ -118,16 +120,8 @@ type SettlementRes = {
     exchangeRate: number;
     originAmount: number;
     originCurrency: string;
-    sender: {
-      idx: number;
-      userName: string;
-      userEmail: string;
-    };
-    receiver: {
-      idx: number;
-      userName: string;
-      userEmail: string;
-    };
+    sender: TravelUser;
+    receiver: TravelUser;
   }[];
   otherCurrencySettlementList: {
     [currency: string]: {
