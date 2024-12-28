@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/buttons';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { useUser } from '@/APIs/user/get';
 import { useUserStore } from '@/stores/userStore';
+import { SESSIONSTORAGE_KEYS } from '@/constants/storage';
 
 const SigninRedirect = () => {
   // hooks
@@ -39,10 +40,13 @@ const SigninRedirect = () => {
       {
         onSuccess: (data) => {
           setTokens({ oauthType: type, accessToken: data.data.accessToken, refreshToken: data.data.refreshToken });
+
+          const invitationUid = sessionStorage.getItem(SESSIONSTORAGE_KEYS.invitationTravelUid);
+
           if (data.data.processType === 'signin') {
-            navigate('/');
+            navigate(invitationUid ? `/invitation/${invitationUid}` : '/');
           } else {
-            navigate('/signup');
+            navigate(invitationUid ? `/signup?invitation=${invitationUid}` : '/signup');
           }
         },
         onError: (error) => {

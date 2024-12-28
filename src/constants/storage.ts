@@ -6,4 +6,8 @@ const LOCALSTORAGE_KEYS = {
   currencyHistory: 'currency-history',
 };
 
-export { LOCALSTORAGE_KEYS };
+const SESSIONSTORAGE_KEYS = {
+  invitationTravelUid: 'invitation-travel-uid',
+};
+
+export { LOCALSTORAGE_KEYS, SESSIONSTORAGE_KEYS };

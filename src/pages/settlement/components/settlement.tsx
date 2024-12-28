@@ -1,5 +1,5 @@
 import { addCommas, cn } from '@/lib/utils';
-import BetterImg from '../atoms/BetterImg';
+import BetterImg from '../../../components/atoms/BetterImg';
 import { forwardRef, HTMLAttributes } from 'react';
 
 interface SettlementAvatarProps {

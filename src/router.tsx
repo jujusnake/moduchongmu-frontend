@@ -9,15 +9,17 @@ import Now from './pages/Now';
 import Currency from './pages/Currency';
 import My from './pages/my-page/My';
 import Trip from './pages/trip/Trip';
-import TripSettlement from './pages/TripSettlement';
+import TripSettlement from './pages/settlement/TripSettlement';
 import CreateTransaction from './pages/create-transaction/CreateTransaction';
 import SigninRedirect from './pages/auth/SigninRedirect';
+import Invitation from './pages/invitation/Invitation';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Layouts />,
     children: [
+      { path: '/invitation/:tripUid', element: <Invitation /> },
       { path: '/signin', element: <Signin /> },
       { path: '/signin/redirect', element: <SigninRedirect /> },
       { path: '/signup', element: <Signup /> },

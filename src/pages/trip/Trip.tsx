@@ -74,11 +74,15 @@ const Trip = ({ fixedUid }: { fixedUid?: string }) => {
       </div>
 
       <div className="grid grid-cols-2 gap-3 px-5 mb-9">
-        <Button shape="round" variant="secondary">
+        <Button shape="round" variant="secondary" onClick={() => navigate(`/trip/${TripUID}/settlement`)}>
           <ButtonIcon name="chart-pie" />
           정산하기
         </Button>
-        <Button shape="round" variant="primary" onClick={() => navigate(`/createtransaction/${TripUID}`)}>
+        <Button
+          shape="round"
+          variant="primary"
+          onClick={() => navigate(`/createtransaction/${TripUID}`, { state: { from: `/trip/${TripUID}` } })}
+        >
           <ButtonIcon name="plus" />
           기록 추가하기
         </Button>
