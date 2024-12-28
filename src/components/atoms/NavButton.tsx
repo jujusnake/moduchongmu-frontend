@@ -42,6 +42,7 @@ const NavButton = ({ variant, current, children, className, to, ...props }: NavB
 
   const isCurrent = useMemo(() => {
     if (current !== undefined) return current;
+    if (variant === 'now') return getCleanPathname(pathname) === defaultPaths.now || getCleanPathname(pathname) === '/';
     return variant ? getCleanPathname(pathname) === defaultPaths[variant] : false;
   }, [current, pathname]);
 

@@ -1,21 +1,17 @@
-import { useTravelList } from '@/APIs/travel/list/get';
 import { Button, ButtonIcon } from '@/components/ui/buttons';
 import { TentTree } from 'lucide-react';
-import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import Trip from './trip/Trip';
+import { useCurrentTravel } from '@/APIs/travel/current/get';
 
 const Now = () => {
-  const { data: travelList, isFetching } = useTravelList();
-
-  const empty =
-    travelList && (travelList.pages[0].currentTravel === undefined || travelList.pages[0].currentTravel === null);
+  const { data: travel, isFetching } = useCurrentTravel();
 
   if (isFetching) {
     return <></>;
   }
 
-  if (empty) {
+  if (travel?.travel === null) {
     return (
       <main className="min-h-[calc(100dvh-80px)] flex flex-col justify-center p-6 items-center">
         <TentTree size={100} strokeWidth={1.5} className="mb-6" />
@@ -30,7 +26,7 @@ const Now = () => {
     );
   }
 
-  return <Trip fixedUid={travelList?.pages[0].currentTravel.uid} />;
+  return <Trip fixedUid={travel?.travel.uid} />;
 };
 
 export default Now;

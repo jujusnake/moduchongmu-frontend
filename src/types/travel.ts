@@ -24,6 +24,10 @@ type GetTravelRes = {
   travel: Travel;
 };
 
+type GetCurrentTravelRes = {
+  travel: Travel | null;
+};
+
 type GetTravelErrorCodes = 'NOT_MEMBER' | 'Internal_Server_Error';
 
 type PostTravelParams = {
@@ -120,4 +124,5 @@ export {
   type GetTravelCityRes,
   type GetTravelCityErrorCodes,
   type Member,
+  type GetCurrentTravelRes,
 };

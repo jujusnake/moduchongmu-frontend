@@ -32,8 +32,9 @@ const Trip = ({ fixedUid }: { fixedUid?: string }) => {
       <header className="relative z-0 bg-brand-primary-lighter">
         <div className="absolute top-0 left-0 right-0 flex justify-between p-5">
           <button
-            className="p-2 transition-colors rounded-full text-text-secondary bg-white/80 hover:bg-white/100 active:bg-neutral-200"
+            className="p-2 transition-colors rounded-full text-text-secondary bg-white/80 hover:bg-white/100 active:bg-neutral-200 data-[hide=true]:invisible"
             onClick={() => navigate('/trips')}
+            data-hide={fixedUid !== undefined}
           >
             <ChevronLeft size={20} strokeWidth={2.5} />
           </button>
