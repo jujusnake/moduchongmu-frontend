@@ -1,16 +1,17 @@
-import { memo, useEffect, useState } from 'react';
+import { memo } from 'react';
 import { TransactionAvatarButton, TransactionLabel } from '../../../components/ui/transaction';
-import { useParams } from 'react-router-dom';
 import { useTravel } from '@/APIs/travel/get';
 import { getUserThumbnail } from '@/lib/urls';
 import { Member } from '@/types/travel';
 
-type SpenderSelectorProps = { activated?: boolean; spenders?: Member[]; onSpenderChange?: (spender: Member) => void };
+type SpenderSelectorProps = {
+  activated?: boolean;
+  spenders?: Member[];
+  onSpenderChange?: (spender: Member) => void;
+  tripUid?: string | null;
+};
 
-const SpenderSelector = ({ activated, spenders, onSpenderChange }: SpenderSelectorProps) => {
-  // Values
-  const { tripUid } = useParams();
-
+const SpenderSelector = ({ activated, spenders, onSpenderChange, tripUid }: SpenderSelectorProps) => {
   // API Calls
   const { data: travelRes } = useTravel(tripUid ?? '');
 
