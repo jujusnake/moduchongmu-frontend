@@ -8,12 +8,22 @@ type TripListItemProps = {
   title?: string;
   members?: number;
   date?: string;
-  dday?: number;
+  dday?: string | null;
   city: string;
   country: string;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
-const TripListItem = ({ city, country, imgSrc, title, members, date, className, ...props }: TripListItemProps) => {
+const TripListItem = ({
+  city,
+  country,
+  imgSrc,
+  title,
+  members,
+  date,
+  dday,
+  className,
+  ...props
+}: TripListItemProps) => {
   return (
     <button className={cn('px-6 py-3 flex gap-4 items-center', className)} {...props}>
       <div className="w-[60px] h-[60px] rounded-[4px] bg-[#D9D9D9] overflow-hidden isolate">
@@ -59,9 +69,7 @@ const TripListItemFloat = ({
           <div>{date}</div>
         </div>
       </div>
-      {dday !== undefined && (
-        <aside className="absolute text-sm font-semibold top-2 right-2">D{dday > 0 ? `+${dday}` : dday}</aside>
-      )}
+      {dday !== undefined && <aside className="absolute text-sm font-semibold top-2 right-2">{dday}</aside>}
     </button>
   );
 };

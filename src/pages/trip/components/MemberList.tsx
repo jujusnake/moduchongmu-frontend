@@ -87,7 +87,14 @@ const MemberList = ({ memberArray, host, travelUid }: Props) => {
                   <BetterImg src={getUserThumbnail(member.email)} className="size-full" />
                 </div>
                 <div className="space-y-0.5 flex-shrink flex-grow">
-                  <div className="text-base font-semibold truncate text-text-primary">{member.name}</div>
+                  <div className="flex items-center text-base font-semibold truncate text-text-primary">
+                    {user?.data.user.userEmail === member.email && (
+                      <div className="shrink-0 text-sm font-bold mr-1.5 px-1 py-0.5 rounded-md bg-brand-primary-main text-white shadow">
+                        방장
+                      </div>
+                    )}
+                    <div className="truncate shrink grow">{member.name}</div>
+                  </div>
                   <div className="text-base truncate text-text-tertiary">{member.email}</div>
                 </div>
                 {isHost && member.email !== user?.data.user.userEmail && (

@@ -43,7 +43,7 @@ const Trips = () => {
         </header>
 
         <div className="mt-6 data-[hide=true]:hidden" data-hide={hasNoTravels || currentTravel === undefined}>
-          <TripsCurrentCarousel currentTravel={currentTravel} />
+          <TripsCurrentCarousel />
         </div>
       </div>
 

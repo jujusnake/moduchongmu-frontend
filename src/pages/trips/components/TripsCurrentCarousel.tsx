@@ -1,30 +1,32 @@
 import { TripListItemFloat } from './TripListItem';
 import { useNavigate } from 'react-router-dom';
-import { GetTravelListRes } from '@/types/travel';
-import { getDday, parseDateRange } from '@/lib/datetime';
+import { getDdayOrElapsedDay, parseDateRange } from '@/lib/datetime';
 import { getTravelThumbnail } from '@/lib/urls';
-// import { Carousel, CarouselApi, CarouselContent, CarouselItem } from '@/components/ui/carousel';
-// import { getDestinationName } from '@/lib/geonames';
-// import { useEffect, useState } from 'react';
+import { useCurrentTravel } from '@/APIs/travel/current/get';
 
-const TripsCurrentCarousel = ({ currentTravel }: { currentTravel?: GetTravelListRes['currentTravel'] }) => {
+const TripsCurrentCarousel = () => {
   // Hooks
   const navigate = useNavigate();
 
-  if (currentTravel === undefined || currentTravel === null) return <></>;
+  // API Calls
+  const { data: travel, isFetching } = useCurrentTravel();
+
+  if (travel === undefined || travel.travel === null || isFetching) {
+    return <></>;
+  }
 
   return (
     <div className="px-6">
       <TripListItemFloat
-        imgSrc={getTravelThumbnail(currentTravel.uid)}
-        title={currentTravel.travelName}
-        members={currentTravel.memberArray.length}
-        date={parseDateRange(currentTravel.startDate, currentTravel.endDate)}
-        dday={getDday(currentTravel.endDate)}
+        imgSrc={getTravelThumbnail(travel.travel.uid)}
+        title={travel.travel.travelName}
+        members={travel.travel.memberArray.length}
+        date={parseDateRange(travel.travel.startDate, travel.travel.endDate)}
+        dday={getDdayOrElapsedDay(travel.travel.startDate, travel.travel.endDate)}
         className="w-full px-3 py-4 bg-[#4E7CD4] rounded-[4px]"
-        onClick={() => navigate(`/trip/${currentTravel.uid}`)}
-        city={currentTravel.city}
-        country={currentTravel.country}
+        onClick={() => navigate(`/trip/${travel.travel?.uid}`)}
+        city={travel.travel.city}
+        country={travel.travel.country}
       />
     </div>
   );
