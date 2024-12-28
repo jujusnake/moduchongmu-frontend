@@ -8,6 +8,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { detectDevice } from '@/lib/navigator';
 import { copyToClipboard } from '@/lib/utils';
 import { set } from 'date-fns';
 import { UserPlus } from 'lucide-react';

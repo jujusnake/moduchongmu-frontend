@@ -1,12 +1,18 @@
+import { useTravelInviteInfo } from '@/APIs/travel/invite/get';
 import { useTravelInvite } from '@/APIs/travel/invite/post';
 import { useUser } from '@/APIs/user/get';
 import SocialSigninButton from '@/components/atoms/SocialSigninButton';
+import TripThumbnailImg from '@/components/atoms/TripThumbnailImg';
 import { Button } from '@/components/ui/buttons';
 import { SESSIONSTORAGE_KEYS } from '@/constants/storage';
+import { getCityThumbnail, getTravelThumbnail } from '@/lib/urls';
 import { SOCIAL_SIGNIN, SocialSigninType } from '@/types/signin';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
+import { TripListItem } from '../trips/components/TripListItem';
+import { parseDateRange } from '@/lib/datetime';
+import { getDestinationName } from '@/lib/geonames';
 
 const Invitation = () => {
   // Hooks
@@ -16,6 +22,7 @@ const Invitation = () => {
   // API Calls
   const { isSuccess, isPending, isError } = useUser();
   const { mutate: acceptInvitation, isPending: isAcceptingInvitation } = useTravelInvite();
+  const { data: travelInviteInfo } = useTravelInviteInfo(tripUid);
 
   // Handlers
   const loginOAuth = (type: SocialSigninType) => {
@@ -77,10 +84,31 @@ const Invitation = () => {
   }
 
   return (
-    <main className="flex items-center justify-center min-h-dvh">
-      {isSuccess && (
-        <div className="flex flex-col items-center text-center">
-          <h1 className="mb-4 text-xl font-semibold">... 여행에 참여하시겠습니까?</h1>
+    <main className="flex items-center justify-center px-6 min-h-dvh bg-brand-primary-bg">
+      {isSuccess && travelInviteInfo && (
+        <div className="flex flex-col items-center w-full space-y-5 text-center">
+          <h1 className="text-lg font-semibold">{travelInviteInfo.travel.host}님의 여행에 참여하시겠습니까?</h1>
+          <div className="flex items-center gap-4 p-4 border w-full max-w-[400px] rounded-lg bg-bg-back">
+            <div className="flex-shrink overflow-hidden rounded size-24">
+              <TripThumbnailImg
+                src={getTravelThumbnail(travelInviteInfo.travel.uid)}
+                city={travelInviteInfo.travel.city}
+              />
+            </div>
+            <div className="text-start">
+              <h1 className="mb-2 text-lg font-semibold">{travelInviteInfo.travel.travelName}</h1>
+              <div className="space-y-0.5">
+                <p className="text-sm text-text-secondary">
+                  {getDestinationName(travelInviteInfo.travel.city, travelInviteInfo.travel.country)}
+                </p>
+                <p className="text-sm text-text-secondary">
+                  {parseDateRange(travelInviteInfo.travel.startDate, travelInviteInfo.travel.endDate)}
+                </p>
+                <p className="text-sm text-text-secondary">{travelInviteInfo.travel.memberArray.length}명의 메이트</p>
+                <p></p>
+              </div>
+            </div>
+          </div>
           <Button disabled={isAcceptingInvitation} className="gap-0" onClick={handleJoin}>
             <span
               className={`whitespace-nowrap overflow-hidden  transition-[width,_opacity] ${isAcceptingInvitation ? 'w-0 opacity-0' : 'w-[49px] opacity-100'}`}

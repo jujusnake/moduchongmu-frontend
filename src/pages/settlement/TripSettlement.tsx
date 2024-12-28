@@ -1,15 +1,16 @@
 import { Button, ButtonIcon } from '@/components/ui/buttons';
 import { SettlementContainer, SettlementReceiver, SettlementSender } from '@/pages/settlement/components/settlement';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { toBlob } from 'html-to-image';
 import { useSettlement } from '@/APIs/travel/settlement/get';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { isAxiosError } from 'axios';
+import { Loader2 } from 'lucide-react';
 
 const TripSettlement = () => {
   // API Calls
-  const { mutate: postSettlement, data: settlementData } = useSettlement();
+  const { mutate: postSettlement, data: settlementData, isPending, isError } = useSettlement();
 
   // Hooks
   const { tripUid: travelUid } = useParams();
@@ -56,9 +57,6 @@ const TripSettlement = () => {
   useEffect(() => {
     if (travelUid) {
       postSettlement(travelUid, {
-        onSuccess: () => {
-          toast.success('정산이 완료되었습니다.', { duration: 1500 });
-        },
         onError: (error) => {
           if (isAxiosError(error)) {
             toast.error(`에러가 발생했습니다. 정산에 실패했습니다. code: ${error.code}`, { duration: 4000 });
@@ -69,6 +67,28 @@ const TripSettlement = () => {
   }, [travelUid]);
 
   console.log(settlementData);
+
+  if (isPending || isError) {
+    return (
+      <>
+        <header className="flex items-center gap-3 px-5 pt-10 pb-5">
+          <Button className="p-2" variant="ghost" size="large" onClick={() => navigate(`/trip/${travelUid}`)}>
+            <ButtonIcon name="chevron-left" />
+          </Button>
+          <span className="text-2xl font-semibold text-text-primary">정산하기</span>
+        </header>
+        <div className="min-h-[calc(100dvh-96px)] flex items-center justify-center flex-col space-y-5">
+          {isError && <div className="text-lg font-medium">정산서를 만들지 못했어요. 다시 시도해주세요.</div>}
+          {isPending && (
+            <>
+              <Loader2 size={40} className="text-brand-primary-main animate-spin" />
+              <div className="text-lg font-medium">정산서를 만들고 있어요...</div>
+            </>
+          )}
+        </div>
+      </>
+    );
+  }
 
   return (
     <>

@@ -1,3 +1,4 @@
+import { deleteRefreshToken } from '@/APIs/token/refresh/delete';
 import { useUser } from '@/APIs/user/get';
 import ProfileImgButton from '@/components/ProfileImgButton';
 import { Button } from '@/components/ui/buttons';
@@ -5,6 +6,7 @@ import { Checkbox, CheckboxLabel, CheckboxLabelDesc } from '@/components/ui/chec
 import { Input, InputLabel } from '@/components/ui/input';
 import { removeTokens } from '@/lib/auth';
 import { getUserThumbnail } from '@/lib/urls';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const MyShowMode = () => {
@@ -12,9 +14,20 @@ const MyShowMode = () => {
 
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    removeTokens();
-    navigate('/signin');
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+
+    try {
+      await deleteRefreshToken();
+      removeTokens();
+      navigate('/signin');
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   return (
@@ -58,8 +71,8 @@ const MyShowMode = () => {
         <Checkbox id="signup-form-marketing" checked={user?.data.user.marketingAgreed === 1} disabled />
       </div>
 
-      <Button className="w-full" onClick={handleLogout}>
-        로그아웃
+      <Button className="w-full" onClick={handleLogout} disabled={isLoggingOut}>
+        {isLoggingOut ? '로그아웃 중...' : '로그아웃'}
       </Button>
     </>
   );
