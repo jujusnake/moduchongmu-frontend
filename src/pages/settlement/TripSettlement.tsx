@@ -68,6 +68,8 @@ const TripSettlement = () => {
     }
   }, [travelUid]);
 
+  console.log(settlementData);
+
   return (
     <>
       <header className="flex items-center gap-3 px-5 pt-10 pb-5">

@@ -23,7 +23,7 @@ const SpenderSelector = ({ activated, spenders, onSpenderChange }: SpenderSelect
       <div className="flex flex-wrap gap-1">
         {travelRes?.data.travel.memberArray.map((member) => (
           <TransactionAvatarButton
-            key={`create-transaction-spender-select-${member}`}
+            key={`create-transaction-spender-select-${member.idx}`}
             label={member.name}
             imgSrc={getUserThumbnail(member.email)}
             onClick={() => onSpenderChange?.(member)}
