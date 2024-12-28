@@ -72,12 +72,12 @@ const MemberList = ({ memberArray, host, travelUid }: Props) => {
             <span>{memberArray?.length ?? 0}명의 메이트</span>
           </button>
         </DrawerTrigger>
-        <DrawerContent className="min-h-[50dvh] max-w-moduchongmu moduchongmu:left-[calc(50%-250px)]">
+        <DrawerContent className="max-h-[60dvh] min-h-[50dvh] max-w-moduchongmu moduchongmu:left-[calc(50%-250px)]">
           <DrawerHeader>
             <DrawerTitle>여행 메이트</DrawerTitle>
             <DrawerDescription>여행에 함께하는 {memberArray?.length ?? 0}명의 메이트들</DrawerDescription>
           </DrawerHeader>
-          <ul className="p-4 pt-0">
+          <ul className="p-4 pt-0 overflow-auto">
             {memberArray?.map((member) => (
               <li
                 key={`member-list-item-${member.idx}`}
