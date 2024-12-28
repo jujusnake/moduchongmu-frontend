@@ -39,7 +39,6 @@ axiosPrivateInstance.interceptors.response.use(
       const originalRequest = error.config;
 
       try {
-        console.log('리프레쉬 한당');
         const res = await getNewAccessToken(refreshToken);
         const newAccessToken = res?.data.accessToken;
         setTokens({ accessToken: newAccessToken });

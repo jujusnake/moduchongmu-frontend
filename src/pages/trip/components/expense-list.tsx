@@ -3,7 +3,7 @@ import { parseDateStr } from '@/lib/datetime';
 import { formatAmountWithCurrency } from '@/lib/money';
 import { cn } from '@/lib/utils';
 import { TravelUser } from '@/types/transaction';
-import { Plus } from 'lucide-react';
+import { ChartPie, CreditCard, Plus } from 'lucide-react';
 import { ButtonHTMLAttributes, HTMLAttributes, PointerEvent, forwardRef, useState } from 'react';
 
 interface ExpenseItemProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -38,7 +38,9 @@ const ExpenseItem = forwardRef<HTMLButtonElement, ExpenseItemProps>(
             <div className="space-y-2 text-start">
               <h1 className="text-base font-semibold ellipsis-text-oneline text-text-primary">{title}</h1>
               <aside className="text-sm ellipsis-text-oneline text-text-tertiary">{category}</aside>
-              <aside className="text-sm ellipsis-text-oneline text-text-tertiary">{payer?.userName}</aside>
+              <aside className="flex items-center gap-1 text-sm ellipsis-text-oneline text-text-tertiary">
+                <CreditCard size={15} /> {payer?.userName}
+              </aside>
             </div>
             <div className="space-y-2 text-end">
               {amount !== undefined && (
@@ -49,7 +51,8 @@ const ExpenseItem = forwardRef<HTMLButtonElement, ExpenseItemProps>(
               <aside className="text-sm ellipsis-text-oneline text-text-tertiary">
                 {date && parseDateStr(date, 'yyyy-MM-dd')}
               </aside>
-              <aside className="text-sm ellipsis-text-oneline text-text-tertiary">
+              <aside className="flex items-center justify-end gap-1 text-sm ellipsis-text-oneline text-text-tertiary">
+                {/* <ChartPie size={15} /> */}
                 {mates?.map((mate) => mate.userName)?.join(', ')}
               </aside>
             </div>

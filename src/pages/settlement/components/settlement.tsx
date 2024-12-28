@@ -78,14 +78,20 @@ const SettlementSender = forwardRef<HTMLDivElement, SettlementSenderProps>(
 
 interface SettlementReceiverProps extends HTMLAttributes<HTMLDivElement> {
   userName?: string;
-  amount?: number;
-  currency?: string;
+  amounts?: {
+    amount: number;
+    currency: string;
+  }[];
 }
 
 const SettlementReceiver = forwardRef<HTMLDivElement, SettlementReceiverProps>(
-  ({ userName, amount, currency, className, ...props }, ref) => {
+  ({ userName, amounts, className, ...props }, ref) => {
     return (
-      <div ref={ref} className={cn('flex items-center justify-between w-full gap-2', className)} {...props}>
+      <div
+        ref={ref}
+        className={cn('border-b last:border-0 pb-3 last:pb-0 flex items-start justify-between w-full gap-2', className)}
+        {...props}
+      >
         <div className="flex items-center gap-1.5 text-lg font-semibold text-text-secondary w-full overflow-hidden">
           <svg
             width="11"
@@ -102,13 +108,16 @@ const SettlementReceiver = forwardRef<HTMLDivElement, SettlementReceiverProps>(
           </svg>
           <span className="ellipsis-text-oneline">{userName}</span>
         </div>
-
-        {amount && (
-          <div className="text-lg font-bold text-brand-primary-dark shrink-0">
-            {currency}
-            {formatAmountWithCurrency(amount, currency)}
-          </div>
-        )}
+        <div className="flex flex-col gap-1 text-end">
+          {amounts?.map(({ amount, currency }) => (
+            <div
+              className="text-lg font-bold text-brand-primary-dark shrink-0"
+              key={`settlement-receiver-${userName}-${amount}-${currency}`}
+            >
+              {formatAmountWithCurrency(amount, currency)}
+            </div>
+          ))}
+        </div>
       </div>
     );
   },
