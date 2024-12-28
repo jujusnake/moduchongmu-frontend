@@ -8,7 +8,7 @@ import { Plane } from 'lucide-react';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TripsCurrentCarousel from './components/TripsCurrentCarousel';
-import InfinityScrollTrigger from './components/InfinityScrollTrigger';
+import InfinityScrollTrigger from '@/components/atoms/InfinityScrollTrigger';
 
 const Trips = () => {
   // Hooks
@@ -43,7 +43,7 @@ const Trips = () => {
         </header>
 
         <div className="mt-6 data-[hide=true]:hidden" data-hide={hasNoTravels || currentTravel === undefined}>
-          <TripsCurrentCarousel currentTravel={currentTravel} />
+          <TripsCurrentCarousel />
         </div>
       </div>
 
@@ -88,6 +88,7 @@ const Trips = () => {
             onIntersect={() => fetchNextPage()}
             hasNextPage={hasNextPage}
             isFetching={isFetchingNextPage}
+            className="mt-5"
           />
         )}
       </main>

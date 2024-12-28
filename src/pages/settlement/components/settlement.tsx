@@ -1,6 +1,7 @@
 import { addCommas, cn } from '@/lib/utils';
 import BetterImg from '../../../components/atoms/BetterImg';
 import { forwardRef, HTMLAttributes } from 'react';
+import { formatAmountWithCurrency } from '@/lib/money';
 
 interface SettlementAvatarProps {
   userName?: string;
@@ -105,7 +106,7 @@ const SettlementReceiver = forwardRef<HTMLDivElement, SettlementReceiverProps>(
         {amount && (
           <div className="text-lg font-bold text-brand-primary-dark shrink-0">
             {currency}
-            {addCommas(amount)}
+            {formatAmountWithCurrency(amount, currency)}
           </div>
         )}
       </div>

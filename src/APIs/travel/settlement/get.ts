@@ -1,4 +1,5 @@
 import { axiosPrivateInstance } from '@/APIs/axios';
+import { SettlementRes } from '@/types/travel';
 import { useMutation } from '@tanstack/react-query';
 
 const postSettlement = async (travelUid: string) => {
@@ -6,7 +7,7 @@ const postSettlement = async (travelUid: string) => {
     travelUid,
   });
 
-  return res.data;
+  return res.data as SettlementRes;
 };
 
 const useSettlement = () => {

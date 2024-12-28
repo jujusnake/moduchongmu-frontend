@@ -1,5 +1,6 @@
 const PUBLIC_PATHS = ['/signin', '/signin/redirect'];
 const PRIVATE_PATHS = [
+  '/',
   '/signup',
   '/createtrip',
   '/createtransaction',

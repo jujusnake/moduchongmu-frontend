@@ -5,7 +5,7 @@ import { GetTransactionListRes } from '@/types/transaction';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 5;
 
 const getTransactionList = async (params: { pageParam: number; travelUid: string }) => {
   const res = await axiosPrivateInstance.get('/transaction/list', {

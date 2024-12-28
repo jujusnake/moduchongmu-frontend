@@ -1,6 +1,8 @@
 import useRipple from '@/hooks/useRipple';
+import { parseDateStr } from '@/lib/datetime';
 import { formatAmountWithCurrency } from '@/lib/money';
-import { addCommas, cn } from '@/lib/utils';
+import { cn } from '@/lib/utils';
+import { TravelUser } from '@/types/transaction';
 import { Plus } from 'lucide-react';
 import { ButtonHTMLAttributes, HTMLAttributes, PointerEvent, forwardRef, useState } from 'react';
 
@@ -9,11 +11,13 @@ interface ExpenseItemProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   amount?: number;
   currency?: string;
   category?: string;
-  mates?: string[];
+  payer?: TravelUser;
+  mates?: TravelUser[];
+  date?: string;
 }
 
 const ExpenseItem = forwardRef<HTMLButtonElement, ExpenseItemProps>(
-  ({ title, amount, currency, category, mates, className, onPointerDown, ...props }, ref) => {
+  ({ title, amount, currency, category, payer, mates, className, date, onPointerDown, ...props }, ref) => {
     const [addRipple, ripples] = useRipple({ background: 'rgba(0, 0, 0, 0.15)' });
 
     return (
@@ -34,6 +38,7 @@ const ExpenseItem = forwardRef<HTMLButtonElement, ExpenseItemProps>(
             <div className="space-y-2 text-start">
               <h1 className="text-base font-semibold ellipsis-text-oneline text-text-primary">{title}</h1>
               <aside className="text-sm ellipsis-text-oneline text-text-tertiary">{category}</aside>
+              <aside className="text-sm ellipsis-text-oneline text-text-tertiary">{payer?.userName}</aside>
             </div>
             <div className="space-y-2 text-end">
               {amount !== undefined && (
@@ -41,7 +46,12 @@ const ExpenseItem = forwardRef<HTMLButtonElement, ExpenseItemProps>(
                   {formatAmountWithCurrency(amount, currency)}
                 </h2>
               )}
-              <aside className="text-sm ellipsis-text-oneline text-text-tertiary">{mates?.join(', ')}</aside>
+              <aside className="text-sm ellipsis-text-oneline text-text-tertiary">
+                {date && parseDateStr(date, 'yyyy-MM-dd')}
+              </aside>
+              <aside className="text-sm ellipsis-text-oneline text-text-tertiary">
+                {mates?.map((mate) => mate.userName)?.join(', ')}
+              </aside>
             </div>
           </>
         )}

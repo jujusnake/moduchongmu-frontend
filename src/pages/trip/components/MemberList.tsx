@@ -72,12 +72,12 @@ const MemberList = ({ memberArray, host, travelUid }: Props) => {
             <span>{memberArray?.length ?? 0}명의 메이트</span>
           </button>
         </DrawerTrigger>
-        <DrawerContent className="min-h-[50dvh] max-w-moduchongmu moduchongmu:left-[calc(50%-250px)]">
+        <DrawerContent className="max-h-[60dvh] min-h-[50dvh] max-w-moduchongmu moduchongmu:left-[calc(50%-250px)]">
           <DrawerHeader>
             <DrawerTitle>여행 메이트</DrawerTitle>
             <DrawerDescription>여행에 함께하는 {memberArray?.length ?? 0}명의 메이트들</DrawerDescription>
           </DrawerHeader>
-          <ul className="p-4 pt-0">
+          <ul className="p-4 pt-0 overflow-auto">
             {memberArray?.map((member) => (
               <li
                 key={`member-list-item-${member.idx}`}
@@ -87,7 +87,14 @@ const MemberList = ({ memberArray, host, travelUid }: Props) => {
                   <BetterImg src={getUserThumbnail(member.email)} className="size-full" />
                 </div>
                 <div className="space-y-0.5 flex-shrink flex-grow">
-                  <div className="text-base font-semibold truncate text-text-primary">{member.name}</div>
+                  <div className="flex items-center text-base font-semibold truncate text-text-primary">
+                    {member.name === host && (
+                      <div className="shrink-0 text-sm font-bold mr-1.5 px-1 py-0.5 rounded-md bg-brand-primary-main text-white shadow">
+                        방장
+                      </div>
+                    )}
+                    <div className="truncate shrink grow">{member.name}</div>
+                  </div>
                   <div className="text-base truncate text-text-tertiary">{member.email}</div>
                 </div>
                 {isHost && member.email !== user?.data.user.userEmail && (

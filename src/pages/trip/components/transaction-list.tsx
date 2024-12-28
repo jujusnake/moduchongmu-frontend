@@ -3,6 +3,7 @@ import { DailyExpenseAdd, DailyExpenseBlock, DailyExpenseTitle, ExpenseItem } fr
 import { useMemo } from 'react';
 import { TransactionCategoryType, TransactionItem } from '@/types/transaction';
 import EmptyIcon from '@/components/atoms/EmptyIcon';
+import InfinityScrollTrigger from '@/components/atoms/InfinityScrollTrigger';
 
 const CATEGORY_LABEL: Record<TransactionCategoryType, string> = {
   food: '식비',
@@ -16,7 +17,7 @@ const CATEGORY_LABEL: Record<TransactionCategoryType, string> = {
 
 const TransactionList = ({ travelUid }: { travelUid: string }) => {
   // API Calls
-  const { data } = useTransactionList(travelUid);
+  const { data, hasNextPage, fetchNextPage, isFetched, isFetchingNextPage } = useTransactionList(travelUid);
 
   // Values
   const transactions = useMemo(() => {
@@ -37,13 +38,24 @@ const TransactionList = ({ travelUid }: { travelUid: string }) => {
       {transactions?.map((transaction) => (
         <ExpenseItem
           key={transaction.uid}
-          title={transaction.content ?? CATEGORY_LABEL[transaction.category as TransactionCategoryType]}
+          title={transaction.content || CATEGORY_LABEL[transaction.category as TransactionCategoryType]}
           amount={transaction.amount}
           currency={transaction.currency}
           category={CATEGORY_LABEL[transaction.category as TransactionCategoryType]}
+          payer={transaction.executorList[0]}
           mates={transaction.targetList}
+          date={transaction.usedDate}
         />
       ))}
+
+      {isFetched && transactions && transactions?.length > 0 && (
+        <InfinityScrollTrigger
+          hasNextPage={hasNextPage}
+          onIntersect={fetchNextPage}
+          isFetching={isFetchingNextPage}
+          className="mt-5"
+        />
+      )}
     </>
   );
 };
@@ -71,24 +83,24 @@ const TransactionListByDate = ({ travelUid }: { travelUid: string }) => {
           <DailyExpenseTitle>05.02 (1일차)</DailyExpenseTitle>
           <DailyExpenseAdd />
         </div>
-        <ExpenseItem title="점심식사" amount={12300} currency="₩" category="식비" mates={['남듀', '효고버섯']} />
-        <ExpenseItem title="점심식사" amount={12300} currency="₩" category="식비" mates={['남듀', '효고버섯']} />
+        {/* <ExpenseItem title="점심식사" amount={12300} currency="₩" category="식비" mates={['남듀', '효고버섯']} />
+        <ExpenseItem title="점심식사" amount={12300} currency="₩" category="식비" mates={['남듀', '효고버섯']} /> */}
       </DailyExpenseBlock>
       <DailyExpenseBlock className="mb-5 last:mb-0">
         <div className="flex items-center justify-between gap-2 mb-1">
           <DailyExpenseTitle>05.02 (1일차)</DailyExpenseTitle>
           <DailyExpenseAdd />
         </div>
-        <ExpenseItem title="점심식사" amount={12300} currency="₩" category="식비" mates={['남듀', '효고버섯']} />
-        <ExpenseItem title="점심식사" amount={12300} currency="₩" category="식비" mates={['남듀', '효고버섯']} />
+        {/* <ExpenseItem title="점심식사" amount={12300} currency="₩" category="식비" mates={['남듀', '효고버섯']} />
+        <ExpenseItem title="점심식사" amount={12300} currency="₩" category="식비" mates={['남듀', '효고버섯']} /> */}
       </DailyExpenseBlock>
       <DailyExpenseBlock className="mb-5 last:mb-0">
         <div className="flex items-center justify-between gap-2 mb-1">
           <DailyExpenseTitle>05.02 (1일차)</DailyExpenseTitle>
           <DailyExpenseAdd />
         </div>
-        <ExpenseItem title="점심식사" amount={12300} currency="₩" category="식비" mates={['남듀', '효고버섯']} />
-        <ExpenseItem title="점심식사" amount={12300} currency="₩" category="식비" mates={['남듀', '효고버섯']} />
+        {/* <ExpenseItem title="점심식사" amount={12300} currency="₩" category="식비" mates={['남듀', '효고버섯']} />
+        <ExpenseItem title="점심식사" amount={12300} currency="₩" category="식비" mates={['남듀', '효고버섯']} /> */}
       </DailyExpenseBlock>
     </>
   );
