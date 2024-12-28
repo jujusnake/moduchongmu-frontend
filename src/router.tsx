@@ -3,28 +3,30 @@ import Signin from './pages/Signin';
 import Layouts from './layouts/Layouts';
 import Signup from './pages/Signup';
 import BottomNavLayout from './layouts/BottomNavLayout';
-import Trips from './pages/Trips';
+import Trips from './pages/trips/Trips';
 import CreateTrip from './pages/CreateTrip';
 import Now from './pages/Now';
 import Currency from './pages/Currency';
 import My from './pages/my-page/My';
-import Trip from './pages/Trip';
-import TripSettlement from './pages/TripSettlement';
-import CreateTransaction from './pages/CreateTransaction';
+import Trip from './pages/trip/Trip';
+import TripSettlement from './pages/settlement/TripSettlement';
+import CreateTransaction from './pages/create-transaction/CreateTransaction';
 import SigninRedirect from './pages/auth/SigninRedirect';
+import Invitation from './pages/invitation/Invitation';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Layouts />,
     children: [
+      { path: '/invitation/:tripUid', element: <Invitation /> },
       { path: '/signin', element: <Signin /> },
       { path: '/signin/redirect', element: <SigninRedirect /> },
       { path: '/signup', element: <Signup /> },
       { path: '/createtrip', element: <CreateTrip /> },
-      { path: '/createtransaction', element: <CreateTransaction /> },
-      { path: '/trip/:travelUid', element: <Trip /> },
-      { path: '/trip/:travelUid/settlement', element: <TripSettlement /> },
+      { path: '/createtransaction/:tripUid', element: <CreateTransaction /> },
+      { path: '/trip/:tripUid', element: <Trip /> },
+      { path: '/trip/:tripUid/settlement', element: <TripSettlement /> },
       {
         path: '/',
         element: <BottomNavLayout />,

@@ -1,4 +1,5 @@
 import { LOCALSTORAGE_KEYS } from '@/constants/storage';
+import { CurrencyItem } from '@/types/transaction';
 
 const getDecimalCountFromCurrency = (currency?: string) => {
   if (!currency) return 0;
@@ -36,7 +37,7 @@ const trimStringToFloat = (str: string) => {
   return isNaN(numberVal) ? '' : numberVal.toString();
 };
 
-const updateCurrencyHistory = (newCurrency: { currency: string; name: string }) => {
+const updateCurrencyHistory = (newCurrency: CurrencyItem) => {
   const currencyHistory = JSON.parse(localStorage.getItem(LOCALSTORAGE_KEYS.currencyHistory) || '[]') as {
     currency: string;
     name: string;

@@ -77,13 +77,16 @@ const MyEditMode = ({ onUpdate }: Props) => {
         <p>언젠가 다시 만나요! 🥲</p>
       </div>,
       {
-        duration: 5000,
+        duration: 3000,
       },
     );
     deleteAccount(undefined, {
       onSuccess: () => {
         removeTokens();
         navigate('/signin');
+      },
+      onError: () => {
+        toast.error('회원탈퇴에 실패했습니다. 다시 시도해주세요.', { duration: 3000 });
       },
     });
   };

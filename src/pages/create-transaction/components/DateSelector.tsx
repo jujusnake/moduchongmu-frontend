@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { TransactionLabel } from '@/components/ui/transaction';
 import { Calendar } from '@/components/ui/calendar';
 import { Button } from '@/components/ui/buttons';
 import { CalendarIcon, ChevronDown } from 'lucide-react';
 import { SwitchTransitionContainer, SwitchTransitionOff, SwitchTransitionOn } from '@/components/ui/transitions';
+import { startOfToday } from 'date-fns';
 
 type DateSelectorProps = {
   date?: Date;
@@ -48,10 +49,20 @@ const DateSelector = ({ date, onDateChange }: DateSelectorProps) => {
                 'rounded-md bg-brand-primary-main !text-brand-primary-contrastText !font-bold hover:bg-brand-primary-main',
             }}
           />
+          <Button
+            variant="secondary"
+            className="w-full mt-3 max-w-[330px]"
+            onClick={() => {
+              onDateChange?.(startOfToday());
+              setIsEdit(false);
+            }}
+          >
+            오늘 지출했어요
+          </Button>
         </SwitchTransitionOn>
       </SwitchTransitionContainer>
     </div>
   );
 };
 
-export default DateSelector;
+export default memo(DateSelector);

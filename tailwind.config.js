@@ -24,6 +24,9 @@ module.exports = {
       },
     },
     extend: {
+      screens: {
+        moduchongmu: '500px',
+      },
       height: {
         vvh: 'var(--vvh, 100vh)',
       },
@@ -88,6 +91,7 @@ module.exports = {
           light: '#E0E0E0',
           main: '#C0C0C0',
           dark: '#ADADAD',
+          DEFAULT: '#C0C0C0',
         },
         bg: {
           base: '#F9F9F9',

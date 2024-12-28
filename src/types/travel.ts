@@ -1,10 +1,16 @@
+type Member = {
+  idx: number;
+  name: string;
+  email: string;
+};
+
 type Travel = {
   uid: string;
   host: string;
   travelName: string;
   country: string;
   city: string;
-  memberArray: string[];
+  memberArray: Member[];
   startDate: string;
   endDate: string;
   currency: string;
@@ -16,6 +22,10 @@ type Travel = {
 
 type GetTravelRes = {
   travel: Travel;
+};
+
+type GetCurrentTravelRes = {
+  travel: Travel | null;
 };
 
 type GetTravelErrorCodes = 'NOT_MEMBER' | 'Internal_Server_Error';
@@ -113,4 +123,6 @@ export {
   type GetTravelListRes,
   type GetTravelCityRes,
   type GetTravelCityErrorCodes,
+  type Member,
+  type GetCurrentTravelRes,
 };

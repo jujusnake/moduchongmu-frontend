@@ -4,12 +4,13 @@ import { Drawer as DrawerPrimitive } from 'vaul';
 import { Input } from '../ui/input';
 import { cn } from '@/lib/utils';
 import { useCurrencies } from '@/APIs/transaction/currency/get';
+import { CurrencyItem } from '@/types/transaction';
 
 const CurrencySelectDrawer = ({
   onCurrencySelect,
   ...props
 }: ComponentProps<typeof DrawerPrimitive.Root> & {
-  onCurrencySelect?: (item: { currency: string; name: string }) => void;
+  onCurrencySelect?: (item: CurrencyItem) => void;
 }) => {
   // API Calls
   const { data: currencies } = useCurrencies();
@@ -35,24 +36,24 @@ const CurrencySelectDrawer = ({
   }, [currencies, searchValue]);
 
   // Effects
-  useEffect(() => {
-    const ro = new ResizeObserver((entries) => {
-      const entry = entries[0];
+  // useEffect(() => {
+  //   const ro = new ResizeObserver((entries) => {
+  //     const entry = entries[0];
 
-      // set left position so that it is centered on window
-      if (entry.contentRect.width > 500) {
-        setLeft((entry.contentRect.width - 500) / 2);
-      } else {
-        setLeft(0);
-      }
-    });
+  //     // set left position so that it is centered on window
+  //     if (entry.contentRect.width > 500) {
+  //       setLeft((entry.contentRect.width - 500) / 2);
+  //     } else {
+  //       setLeft(0);
+  //     }
+  //   });
 
-    ro.observe(document.body);
+  //   ro.observe(document.body);
 
-    return () => {
-      ro.disconnect();
-    };
-  }, []);
+  //   return () => {
+  //     ro.disconnect();
+  //   };
+  // }, []);
 
   useEffect(() => {
     if (props.open && window.visualViewport) {
@@ -75,8 +76,7 @@ const CurrencySelectDrawer = ({
       <DrawerContent
         ref={drawerContentRef}
         id="currency-select-drawer-content"
-        className="max-w-moduchongmu h-[80%] [&>div]:shrink-0"
-        style={{ left }}
+        className="max-w-moduchongmu h-[80%] [&>div]:shrink-0 moduchongmu:left-[calc(50%-250px)]"
         aria-describedby={undefined}
       >
         <DrawerHeader>

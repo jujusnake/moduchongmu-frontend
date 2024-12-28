@@ -1,4 +1,5 @@
 import useRipple from '@/hooks/useRipple';
+import { formatAmountWithCurrency } from '@/lib/money';
 import { addCommas, cn } from '@/lib/utils';
 import { Plus } from 'lucide-react';
 import { ButtonHTMLAttributes, HTMLAttributes, PointerEvent, forwardRef, useState } from 'react';
@@ -37,8 +38,7 @@ const ExpenseItem = forwardRef<HTMLButtonElement, ExpenseItemProps>(
             <div className="space-y-2 text-end">
               {amount !== undefined && (
                 <h2 className="text-base font-semibold ellipsis-text-oneline text-text-primary">
-                  {currency}
-                  {addCommas(amount)}
+                  {formatAmountWithCurrency(amount, currency)}
                 </h2>
               )}
               <aside className="text-sm ellipsis-text-oneline text-text-tertiary">{mates?.join(', ')}</aside>

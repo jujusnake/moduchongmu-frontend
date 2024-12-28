@@ -1,9 +1,20 @@
 import { Button, ButtonIcon } from '@/components/ui/buttons';
-import { SettlementContainer, SettlementReceiver, SettlementSender } from '@/components/ui/settlement';
-import { useRef } from 'react';
+import { SettlementContainer, SettlementReceiver, SettlementSender } from '@/pages/settlement/components/settlement';
+import { useEffect, useMemo, useRef } from 'react';
 import { toBlob } from 'html-to-image';
+import { useSettlement } from '@/APIs/travel/settlement/get';
+import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'sonner';
+import { isAxiosError } from 'axios';
 
 const TripSettlement = () => {
+  // API Calls
+  const { mutate: postSettlement, data: settlementData } = useSettlement();
+
+  // Hooks
+  const { tripUid: travelUid } = useParams();
+  const navigate = useNavigate();
+
   const htmlToPngRef = useRef<HTMLDivElement>(null);
 
   const handleShare = () => {
@@ -42,10 +53,25 @@ const TripSettlement = () => {
       });
   };
 
+  useEffect(() => {
+    if (travelUid) {
+      postSettlement(travelUid, {
+        onSuccess: () => {
+          toast.success('정산이 완료되었습니다.', { duration: 1500 });
+        },
+        onError: (error) => {
+          if (isAxiosError(error)) {
+            toast.error(`에러가 발생했습니다. 정산에 실패했습니다. code: ${error.code}`, { duration: 4000 });
+          }
+        },
+      });
+    }
+  }, [travelUid]);
+
   return (
     <>
       <header className="flex items-center gap-3 px-5 pt-10 pb-5">
-        <Button className="p-2" variant="ghost" size="large">
+        <Button className="p-2" variant="ghost" size="large" onClick={() => navigate(`/trip/${travelUid}`)}>
           <ButtonIcon name="chevron-left" />
         </Button>
         <span className="text-2xl font-semibold text-text-primary">정산하기</span>

@@ -1,30 +1,25 @@
 import { useTravelList } from '@/APIs/travel/list/get';
-import { TripListItem } from '@/components/molecules/TripListItem';
-// import TripListTabs from '@/components/molecules/TripListTabs';
-import TripsEmpty from '@/components/organism/trips/TripsEmpty';
-import TripsCurrentCarousel from '@/components/organism/TripsCurrentCarousel';
+import { TripListItem } from './components/TripListItem';
+import TripsEmpty from '@/pages/trips/components/TripsEmpty';
 import { Button, ButtonIcon } from '@/components/ui/buttons';
 import { parseDateRange } from '@/lib/datetime';
-import { getDestinationName } from '@/lib/geonames';
 import { getTravelThumbnail } from '@/lib/urls';
-import { ChevronDown, Plane } from 'lucide-react';
-import { useMemo, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Plane } from 'lucide-react';
+import { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import TripsCurrentCarousel from './components/TripsCurrentCarousel';
+import InfinityScrollTrigger from './components/InfinityScrollTrigger';
 
 const Trips = () => {
   // Hooks
   const navigate = useNavigate();
-  // const { pathname } = useLocation();
-
-  // States
-  // const [activeTab, setActiveTab] = useState<string>('all');
 
   // API Calls
-  const { data: travelList, fetchNextPage, hasNextPage } = useTravelList();
+  const { data: travelList, fetchNextPage, hasNextPage, isFetchingNextPage, isFetched } = useTravelList();
 
   // Values
   const hasNoTravels = useMemo(() => {
-    return travelList && travelList?.pages.length < 1;
+    return travelList && travelList?.pages[0].totalCount < 1;
   }, [travelList]);
 
   const currentTravel = useMemo(() => {
@@ -80,25 +75,22 @@ const Trips = () => {
           <TripListItem
             key={`trips-list-item-${travel.uid}`}
             title={travel.travelName}
-            location={getDestinationName(travel.city, travel.country)}
             members={travel.memberArray.length}
             date={parseDateRange(travel.startDate, travel.endDate)}
-            // imgSrc={travel.coverImgUrl}
             imgSrc={getTravelThumbnail(travel.uid)}
+            city={travel.city}
+            country={travel.country}
+            onClick={() => navigate(`/trip/${travel.uid}`)}
           />
         ))}
-        {!hasNextPage && (
-          <button onClick={() => fetchNextPage()} className="flex justify-center w-full px-6">
-            더 보기 <ChevronDown />
-          </button>
+        {isFetched && (
+          <InfinityScrollTrigger
+            onIntersect={() => fetchNextPage()}
+            hasNextPage={hasNextPage}
+            isFetching={isFetchingNextPage}
+          />
         )}
       </main>
-
-      {/* Main List Empty */}
-      {/* <aside className="flex flex-col items-center justify-center px-6 py-10 text-text-tertiary">
-        <EmptyIcon width={40} height={40} className="mb-5" />
-        <p className="text-lg font-semibold">여행을 찾지 못했어요!</p>
-      </aside> */}
     </>
   );
 };

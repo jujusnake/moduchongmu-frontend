@@ -8,11 +8,12 @@ import { Input, InputLabel } from '@/components/ui/input';
 import axios from 'axios';
 import { PartyPopper } from 'lucide-react';
 import { FormEvent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const Signup = () => {
   // Hooks
   const navigate = useNavigate();
+  const [searchParam] = useSearchParams();
 
   // API Calls
   const { data: userData } = useUser();
@@ -41,7 +42,8 @@ const Signup = () => {
           if (data.data.profileImageUrl) {
             await axios.put(data.data.profileImageUrl, profileImg);
           }
-          navigate('/');
+          const invitationUid = searchParam.get('invitation');
+          navigate(invitationUid ? `/invitation/${invitationUid}` : '/');
         },
       },
     );
