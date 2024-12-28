@@ -12,7 +12,7 @@ import SpenderSelector from '@/pages/create-transaction/components/SpenderSelect
 import SplitSelector from '@/pages/create-transaction/components/SplitSelector';
 import { Member } from '@/types/travel';
 import TransactionMemo from './components/TransactionMemo';
-import { TRANSACTION_FORM_INITIAL, TransactionFormAction, transactionFormReducer } from './TransactionReducer';
+import { transactionFormReducer } from './TransactionReducer';
 import TripUidSelector from './components/TripUidSelector';
 import { useCreateTransaction } from '@/APIs/transaction/post';
 import { format } from 'date-fns';
@@ -30,9 +30,17 @@ const CreateTransaction = () => {
 
   // Reducer
   const [formState, dispatch] = useReducer(transactionFormReducer, {
-    ...TRANSACTION_FORM_INITIAL,
     travelUid: tripUid ?? null,
     currency: { currency: 'KRW', name: '한국 원' },
+    amount: '',
+    date: undefined,
+    category: null,
+    payer: null,
+    spenders: [],
+    splitEven: true,
+    expenseSplit: new Map(),
+    memo: '',
+    showBlock: new Set(['date' as 'date']),
   });
 
   // States
