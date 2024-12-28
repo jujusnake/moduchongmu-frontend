@@ -79,6 +79,7 @@ const CreateTransaction = () => {
   }, []);
 
   const handleTripUIDChange = useCallback((tripUid: string) => {
+    dispatch({ type: 'RESET_TRAVEL_UID_SENSITIVE_FIELDS' });
     dispatch({ type: 'SET_TRAVEL_UID', payload: tripUid });
   }, []);
 
@@ -154,6 +155,8 @@ const CreateTransaction = () => {
       </div>
 
       <div className="px-6 pt-6 pb-4 space-y-6 mt-[180px]">
+        <TripUidSelector selected={formState.travelUid} onSelectedChange={handleTripUIDChange} />
+
         <DateSelector date={formState.date} onDateChange={handleDateChange} />
         <CategorySelector
           activated={formState.showBlock.has('category')}
@@ -164,11 +167,13 @@ const CreateTransaction = () => {
           activated={formState.showBlock.has('payer')}
           payer={formState.payer}
           onPayerChange={handlePayerChange}
+          tripUid={formState.travelUid}
         />
         <SpenderSelector
           activated={formState.showBlock.has('spenders')}
           spenders={formState.spenders}
           onSpenderChange={handleSpendersChange}
+          tripUid={formState.travelUid}
         />
       </div>
 
@@ -190,7 +195,6 @@ const CreateTransaction = () => {
 
         <div className="space-y-4">
           <TransactionMemo value={formState.memo} onValueChange={handleMemoChange} />
-          <TripUidSelector selected={formState.travelUid} onSelectedChange={handleTripUIDChange} />
           <Button className="w-full" onClick={handleCreateTransaction} disabled={isCreating}>
             {isCreating ? '생성 중...' : '기록 저장'}
           </Button>

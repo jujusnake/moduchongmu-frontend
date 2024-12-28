@@ -16,6 +16,7 @@ type Props = {
   onSplitModeChange?: (isEven: boolean) => void;
   expenseSplit?: Map<number, string>;
   setExpenseSplit?: (userIdx: number, amount: string) => void;
+  resetExpenseSplit?: () => void;
 };
 
 const SplitSelector = ({
@@ -26,6 +27,7 @@ const SplitSelector = ({
   onSplitModeChange,
   expenseSplit,
   setExpenseSplit,
+  resetExpenseSplit,
 }: Props) => {
   // Values
   const userCount = useMemo(() => users?.length, [users]);
@@ -57,6 +59,12 @@ const SplitSelector = ({
     const amountPerPerson = sumDifference / emptyPersonCount / 10 ** 3;
     return amountPerPerson.toString();
   }, [amount, sumDifference, expenseSplit?.values(), userCount]);
+
+  // Effects
+  useEffect(() => {
+    onSplitModeChange?.(true);
+    resetExpenseSplit?.();
+  }, [users]);
 
   return (
     <div>

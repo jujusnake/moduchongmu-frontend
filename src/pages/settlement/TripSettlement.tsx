@@ -9,13 +9,29 @@ import { isAxiosError } from 'axios';
 import { Loader2 } from 'lucide-react';
 import useUnstrictEffect from '@/hooks/useUnstrictEffect';
 import { TravelUser } from '@/types/transaction';
+import { detectDevice } from '@/lib/navigator';
+
+type SettlementItem = {
+  sender: { idx: string | number; userName: string };
+  receiver: { idx: string | number; userName: string };
+  amount: number;
+  currency: string;
+};
+
+type SettlementItemForRender = Record<
+  string,
+  {
+    sender: SettlementItem['sender'];
+    receivers: { idx: string | number; userName: string; transactions: { amount: number; currency: string }[] }[];
+  }
+>;
 
 const TripSettlement = () => {
   // API Calls
   const { mutate: postSettlement, data: settlementData, isPending, isError } = useSettlement();
 
   // States
-  const [selectedCurrency, setSelectedCurrency] = useState<{ currency: string; isMain: boolean }>();
+  const [currencyMode, setCurrencyMode] = useState<'each' | 'krw'>('krw');
 
   // Hooks
   const { tripUid: travelUid } = useParams();
@@ -31,6 +47,16 @@ const TripSettlement = () => {
         if (dataUrl === null) return;
 
         const fileName = '정산결과.jpeg';
+
+        if (detectDevice() === 'pc') {
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(dataUrl);
+          a.download = fileName;
+          a.click();
+          return;
+        }
+
+        // TODO: 쉐어 분기쳐야함
 
         if (!navigator.share) {
           const a = document.createElement('a');
@@ -72,32 +98,80 @@ const TripSettlement = () => {
   });
 
   // Values
-  const currencies = useMemo(() => {
-    if (!settlementData) return [];
-
-    const currencies: { currency: string; isMain: boolean }[] = [];
-    settlementData.settlementList.forEach((settlement) => {
-      if (currencies.find((c) => c.currency === settlement.originCurrency)) return;
-      currencies.push({ currency: settlement.originCurrency, isMain: true });
-    });
-    Object.keys(settlementData.otherCurrencySettlementList).forEach((currency) => {
-      if (currencies.find((c) => c.currency === currency)) return;
-      currencies.push({ currency, isMain: false });
-    });
-
-    return currencies;
-  }, [settlementData]);
-
   const settlementList = useMemo(() => {
     if (!settlementData) return [];
 
-    if (selectedCurrency?.isMain) {
-      const list: { sender: TravelUser }[] = [];
-      settlementData.settlementList.forEach((settlement) => {
-        settlement.sender;
+    const otherCurrencyList = Object.values(settlementData.otherCurrencySettlementList).flat();
+    const mergedMap = [...settlementData.settlementList, ...otherCurrencyList];
+
+    const result: SettlementItem[] = [];
+    mergedMap.forEach((si) => {
+      result.push({
+        sender: { idx: si.sender.idx, userName: si.sender.userName },
+        receiver: { idx: si.receiver.idx, userName: si.receiver.userName },
+        amount: si.originAmount,
+        currency: si.originCurrency,
       });
+    });
+
+    return mergeSettlementBlocks(result);
+  }, [settlementData]);
+
+  const krwSettlementList = useMemo(() => {
+    if (!settlementData) return [];
+
+    const otherCurrencyList = Object.values(settlementData.otherCurrencySettlementList).flat();
+    const transactions = [...settlementData.settlementList, ...otherCurrencyList];
+
+    // Step 1: Calculate net balances for each person
+    const balances: Record<number, { amount: number; userName: string }> = {};
+    transactions.forEach((t) => {
+      balances[t.sender.idx] = {
+        amount: (balances[t.sender.idx]?.amount || 0) - t.amount,
+        userName: t.sender.userName,
+      };
+      balances[t.receiver.idx] = {
+        amount: (balances[t.receiver.idx]?.amount || 0) + t.amount,
+        userName: t.receiver.userName,
+      };
+    });
+
+    const creditors: { idx: string; userName: string; balance: number }[] = [];
+    const debtors: { idx: string; userName: string; balance: number }[] = [];
+
+    for (const [idx, balance] of Object.entries(balances)) {
+      if (balance.amount > 0) {
+        creditors.push({ idx, userName: balance.userName, balance: balance.amount });
+      } else if (balance.amount < 0) {
+        debtors.push({ idx, userName: balance.userName, balance: -balance.amount }); // Convert to positive for easier processing
+      }
     }
-  }, [settlementData, selectedCurrency]);
+
+    const simplified: SettlementItem[] = [];
+
+    let i = 0,
+      j = 0;
+    while (i < creditors.length && j < debtors.length) {
+      const creditor = creditors[i];
+      const debtor = debtors[j];
+      const amount = Math.min(creditor.balance, debtor.balance);
+
+      simplified.push({
+        sender: { idx: debtor.idx, userName: debtor.userName },
+        receiver: { idx: creditor.idx, userName: creditor.userName },
+        amount,
+        currency: 'KRW',
+      });
+
+      creditor.balance -= amount;
+      debtor.balance -= amount;
+
+      if (creditor.balance === 0) i++;
+      if (debtor.balance === 0) j++;
+    }
+
+    return mergeSettlementBlocks(simplified);
+  }, [settlementData]);
 
   if (isPending || isError) {
     return (
@@ -133,31 +207,45 @@ const TripSettlement = () => {
       {/* 정산 내역 */}
       <main className="pb-[100px]">
         <div className="flex gap-1 px-5">
-          {currencies.map((currency) => (
-            <Button
-              key={currency.currency}
-              onClick={() => {
-                setSelectedCurrency(currency);
-              }}
-              variant={selectedCurrency?.currency === currency.currency ? 'primary' : 'outline'}
-            >
-              {currency.currency}
-            </Button>
-          ))}
+          <Button
+            onClick={() => {
+              setCurrencyMode('krw');
+            }}
+            variant={currencyMode === 'krw' ? 'primary' : 'outline'}
+          >
+            KRW(한국 원)
+          </Button>
+          <Button
+            onClick={() => {
+              setCurrencyMode('each');
+            }}
+            variant={currencyMode === 'each' ? 'primary' : 'outline'}
+          >
+            개별 화폐
+          </Button>
         </div>
+        <aside
+          className="px-5 mt-1 ml-1 text-xs font-medium visible data-[hide=true]:invisible"
+          data-hide={currencyMode === 'each'}
+        >
+          *오늘의 환율로 계산됩니다.
+        </aside>
+
         <div ref={htmlToPngRef} className="p-5 space-y-4 bg-bg-back">
-          {/* {settlementData?.otherCurrencySettlementList?.['KRW']?.map((settlement) => (
-            <SettlementContainer key={}>
-              <SettlementSender userName={settlement.sender.userName} className="mb-3" />
+          {(currencyMode === 'each' ? settlementList : krwSettlementList).map((stm) => (
+            <SettlementContainer key={`settlement-${stm.sender.idx}`}>
+              <SettlementSender userName={stm.sender.userName} className="mb-3" />
               <div className="pl-10 space-y-3">
-                <SettlementReceiver
-                  userName={settlement.receiver.userName}
-                  amount={settlement.amount}
-                  currency={settlement.currency}
-                />
+                {stm.receivers.map((receiver) => (
+                  <SettlementReceiver
+                    key={`settlement-${stm.sender.idx}-${receiver.idx}`}
+                    userName={receiver.userName}
+                    amounts={receiver.transactions}
+                  />
+                ))}
               </div>
             </SettlementContainer>
-          ))} */}
+          ))}
         </div>
       </main>
 
@@ -173,3 +261,32 @@ const TripSettlement = () => {
 };
 
 export default TripSettlement;
+
+const mergeSettlementBlocks = (stms: SettlementItem[]) => {
+  const result: SettlementItemForRender = {};
+
+  for (const stm of stms) {
+    const strIdx = String(stm.sender.idx);
+
+    if (result[strIdx] === undefined) {
+      result[strIdx] = {
+        sender: stm.sender,
+        receivers: [],
+      };
+    }
+
+    const hasReceiver = result[strIdx].receivers.find((r) => r.idx === stm.receiver.idx);
+
+    if (hasReceiver) {
+      hasReceiver.transactions.push({ amount: stm.amount, currency: stm.currency });
+    } else {
+      result[strIdx].receivers.push({
+        idx: stm.receiver.idx,
+        userName: stm.receiver.userName,
+        transactions: [{ amount: stm.amount, currency: stm.currency }],
+      });
+    }
+  }
+
+  return Object.values(result);
+};

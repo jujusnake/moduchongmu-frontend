@@ -25,7 +25,8 @@ type TransactionFormAction =
   | { type: 'SET_SPENDERS'; payload: Member }
   | { type: 'SET_SPLIT_EVEN'; payload: boolean }
   | { type: 'SET_EXPENSE_SPLIT'; payload: { userIdx: number; amount: string } }
-  | { type: 'SET_MEMO'; payload: string };
+  | { type: 'SET_MEMO'; payload: string }
+  | { type: 'RESET_TRAVEL_UID_SENSITIVE_FIELDS' };
 
 const transactionFormReducer = (state: TransactionFormState, action: TransactionFormAction): TransactionFormState => {
   switch (action.type) {
@@ -52,7 +53,7 @@ const transactionFormReducer = (state: TransactionFormState, action: Transaction
     }
     case 'SET_SPENDERS': {
       state.showBlock.add('all');
-      if (state.spenders.find((s) => s.idx === action.payload.idx) !== undefined) {
+      if (state.spenders.find((s) => s.idx === action.payload?.idx) !== undefined) {
         return { ...state, spenders: state.spenders.filter((s) => s !== action.payload) };
       } else {
         return { ...state, spenders: [...state.spenders, action.payload] };
@@ -66,6 +67,15 @@ const transactionFormReducer = (state: TransactionFormState, action: Transaction
     }
     case 'SET_MEMO':
       return { ...state, memo: action.payload };
+    case 'RESET_TRAVEL_UID_SENSITIVE_FIELDS': {
+      return {
+        ...state,
+        payer: null,
+        spenders: [],
+        splitEven: true,
+        expenseSplit: new Map(),
+      };
+    }
     default:
       return state;
   }

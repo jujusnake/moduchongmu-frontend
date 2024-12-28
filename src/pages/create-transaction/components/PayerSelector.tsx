@@ -1,20 +1,17 @@
 import { useTravel } from '@/APIs/travel/get';
 import { TransactionAvatarButton, TransactionLabel } from '../../../components/ui/transaction';
-import { useParams } from 'react-router-dom';
 import { getUserThumbnail } from '@/lib/urls';
-import { memo, useEffect, useState } from 'react';
+import { memo } from 'react';
 import { Member } from '@/types/travel';
 
 type PayerSelectorProps = {
   activated?: boolean;
   payer?: Member | null;
   onPayerChange?: (payer: Member | null) => void;
+  tripUid?: string | null;
 };
 
-const PayerSelector = ({ activated, payer, onPayerChange }: PayerSelectorProps) => {
-  // Values
-  const { tripUid } = useParams();
-
+const PayerSelector = ({ tripUid, activated, payer, onPayerChange }: PayerSelectorProps) => {
   // API Calls
   const { data: travelRes } = useTravel(tripUid ?? '');
 
