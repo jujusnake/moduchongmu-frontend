@@ -24,6 +24,7 @@ const router = createBrowserRouter([
       { path: '/signin/redirect', element: <SigninRedirect /> },
       { path: '/signup', element: <Signup /> },
       { path: '/createtrip', element: <CreateTrip /> },
+      { path: '/createtransaction', element: <CreateTransaction /> },
       { path: '/createtransaction/:tripUid', element: <CreateTransaction /> },
       { path: '/trip/:tripUid', element: <Trip /> },
       { path: '/trip/:tripUid/settlement', element: <TripSettlement /> },
