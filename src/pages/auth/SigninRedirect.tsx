@@ -14,8 +14,6 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/buttons';
 import { DialogClose } from '@radix-ui/react-dialog';
-import { useUser } from '@/APIs/user/get';
-import { useUserStore } from '@/stores/userStore';
 import { SESSIONSTORAGE_KEYS } from '@/constants/storage';
 
 const SigninRedirect = () => {

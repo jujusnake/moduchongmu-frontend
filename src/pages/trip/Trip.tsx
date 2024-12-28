@@ -69,7 +69,7 @@ const Trip = ({ fixedUid }: { fixedUid?: string }) => {
             <MapPin size={14} />
             <span>{travelData ? getDestinationName(travelData.city, travelData?.country) : '-'}</span>
           </div>
-          <MemberList memberArray={travelData?.memberArray} />
+          <MemberList travelUid={TripUID} memberArray={travelData?.memberArray} host={travelData?.host} />
         </div>
       </div>
 
