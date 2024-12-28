@@ -81,18 +81,4 @@ const transactionFormReducer = (state: TransactionFormState, action: Transaction
   }
 };
 
-const TRANSACTION_FORM_INITIAL: TransactionFormState = {
-  travelUid: null,
-  currency: { currency: 'KRW', name: '한국 원' },
-  amount: '',
-  date: undefined,
-  category: null,
-  payer: null,
-  spenders: [],
-  splitEven: true,
-  expenseSplit: new Map(),
-  memo: '',
-  showBlock: new Set(['date']),
-};
-
-export { type TransactionFormState, type TransactionFormAction, transactionFormReducer, TRANSACTION_FORM_INITIAL };
+export { type TransactionFormState, type TransactionFormAction, transactionFormReducer };

@@ -12,8 +12,8 @@ import { TravelUser } from '@/types/transaction';
 import { detectDevice } from '@/lib/navigator';
 
 type SettlementItem = {
-  sender: { idx: string | number; userName: string };
-  receiver: { idx: string | number; userName: string };
+  sender: { idx: string | number; userName: string; userEmail: string };
+  receiver: { idx: string | number; userName: string; userEmail: string };
   amount: number;
   currency: string;
 };
@@ -107,8 +107,8 @@ const TripSettlement = () => {
     const result: SettlementItem[] = [];
     mergedMap.forEach((si) => {
       result.push({
-        sender: { idx: si.sender.idx, userName: si.sender.userName },
-        receiver: { idx: si.receiver.idx, userName: si.receiver.userName },
+        sender: { idx: si.sender.idx, userName: si.sender.userName, userEmail: si.sender.userEmail },
+        receiver: { idx: si.receiver.idx, userName: si.receiver.userName, userEmail: si.receiver.userEmail },
         amount: si.originAmount,
         currency: si.originCurrency,
       });
@@ -124,26 +124,28 @@ const TripSettlement = () => {
     const transactions = [...settlementData.settlementList, ...otherCurrencyList];
 
     // Step 1: Calculate net balances for each person
-    const balances: Record<number, { amount: number; userName: string }> = {};
+    const balances: Record<number, { amount: number; userName: string; userEmail: string }> = {};
     transactions.forEach((t) => {
       balances[t.sender.idx] = {
         amount: (balances[t.sender.idx]?.amount || 0) - t.amount,
         userName: t.sender.userName,
+        userEmail: t.sender.userEmail,
       };
       balances[t.receiver.idx] = {
         amount: (balances[t.receiver.idx]?.amount || 0) + t.amount,
         userName: t.receiver.userName,
+        userEmail: t.receiver.userEmail,
       };
     });
 
-    const creditors: { idx: string; userName: string; balance: number }[] = [];
-    const debtors: { idx: string; userName: string; balance: number }[] = [];
+    const creditors: { idx: string; userName: string; userEmail: string; balance: number }[] = [];
+    const debtors: { idx: string; userName: string; userEmail: string; balance: number }[] = [];
 
     for (const [idx, balance] of Object.entries(balances)) {
       if (balance.amount > 0) {
-        creditors.push({ idx, userName: balance.userName, balance: balance.amount });
+        creditors.push({ idx, userName: balance.userName, balance: balance.amount, userEmail: balance.userEmail });
       } else if (balance.amount < 0) {
-        debtors.push({ idx, userName: balance.userName, balance: -balance.amount }); // Convert to positive for easier processing
+        debtors.push({ idx, userName: balance.userName, balance: -balance.amount, userEmail: balance.userEmail }); // Convert to positive for easier processing
       }
     }
 
@@ -157,8 +159,8 @@ const TripSettlement = () => {
       const amount = Math.min(creditor.balance, debtor.balance);
 
       simplified.push({
-        sender: { idx: debtor.idx, userName: debtor.userName },
-        receiver: { idx: creditor.idx, userName: creditor.userName },
+        sender: { idx: debtor.idx, userName: debtor.userName, userEmail: debtor.userEmail },
+        receiver: { idx: creditor.idx, userName: creditor.userName, userEmail: creditor.userEmail },
         amount,
         currency: 'KRW',
       });
@@ -234,7 +236,7 @@ const TripSettlement = () => {
         <div ref={htmlToPngRef} className="p-5 space-y-4 bg-bg-back">
           {(currencyMode === 'each' ? settlementList : krwSettlementList).map((stm) => (
             <SettlementContainer key={`settlement-${stm.sender.idx}`}>
-              <SettlementSender userName={stm.sender.userName} className="mb-3" />
+              <SettlementSender userName={stm.sender.userName} className="mb-3" userEmail={stm.sender.userEmail} />
               <div className="pl-10 space-y-3">
                 {stm.receivers.map((receiver) => (
                   <SettlementReceiver

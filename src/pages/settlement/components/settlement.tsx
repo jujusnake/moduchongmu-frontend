@@ -2,6 +2,7 @@ import { addCommas, cn } from '@/lib/utils';
 import BetterImg from '../../../components/atoms/BetterImg';
 import { forwardRef, HTMLAttributes } from 'react';
 import { formatAmountWithCurrency } from '@/lib/money';
+import { getUserThumbnail } from '@/lib/urls';
 
 interface SettlementAvatarProps {
   userName?: string;
@@ -58,16 +59,20 @@ const SettlementContainer = forwardRef<HTMLDivElement, SettlementContainerProps>
 
 interface SettlementSenderProps extends HTMLAttributes<HTMLDivElement> {
   userName?: string;
+  userEmail?: string;
   profileImg?: string;
 }
 
 const SettlementSender = forwardRef<HTMLDivElement, SettlementSenderProps>(
-  ({ userName, profileImg, className, ...props }, ref) => {
+  ({ userName, userEmail, className, ...props }, ref) => {
     return (
       <div ref={ref} className={cn('flex items-center gap-3', className)} {...props}>
         <div className="relative flex items-center justify-center overflow-hidden text-sm font-semibold rounded-full w-7 h-7 bg-brand-primary-lighter text-text-secondary">
-          {profileImg === undefined && userName?.charAt(0)}
-          <BetterImg className="absolute top-0 left-0 object-cover object-center w-full h-full" src={profileImg} />
+          {userEmail === undefined && userName?.charAt(0)}
+          <BetterImg
+            className="absolute top-0 left-0 object-cover object-center w-full h-full"
+            src={getUserThumbnail(userEmail)}
+          />
         </div>
 
         <div className="text-2xl font-bold text-text-primary">{userName}</div>
@@ -111,7 +116,7 @@ const SettlementReceiver = forwardRef<HTMLDivElement, SettlementReceiverProps>(
         <div className="flex flex-col gap-1 text-end">
           {amounts?.map(({ amount, currency }) => (
             <div
-              className="text-lg font-bold text-brand-primary-dark shrink-0"
+              className="text-lg font-bold text-brand-primary-dark shrink-0 before:content-['+'] justify-end first:before:content-[''] flex items-center gap-1.5"
               key={`settlement-receiver-${userName}-${amount}-${currency}`}
             >
               {formatAmountWithCurrency(amount, currency)}
