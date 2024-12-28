@@ -2,6 +2,12 @@ const TransactionCategory = ['food', 'transport', 'shopping', 'tour', 'accomodat
 
 type TransactionCategoryType = (typeof TransactionCategory)[number];
 
+type TravelUser = {
+  idx: number;
+  userName: string;
+  userEmail: string;
+};
+
 type GetCurrencyRes = {
   currencyList: {
     country: string[];
@@ -42,8 +48,8 @@ type PostTransactionParams = {
 type TransactionItem = {
   uid: string;
   recordBy: string;
-  executorList: string[];
-  targetList: string[];
+  executorList: TravelUser[];
+  targetList: TravelUser[];
   category: string;
   content: string;
   type: 'expense' | 'income' | 'transfer';
@@ -65,6 +71,7 @@ type PostTransactionRes = {
 
 export {
   TransactionCategory,
+  type TravelUser,
   type TransactionCategoryType,
   type GetCurrencyRes,
   type GetExchangeRateRes,

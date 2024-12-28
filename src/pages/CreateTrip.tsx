@@ -1,3 +1,4 @@
+import { queryClient, queryKeys } from '@/APIs/react-query';
 import { usePostSignin } from '@/APIs/signin/post';
 import { usePostTravel } from '@/APIs/travel/post';
 import CreateTripNextButton from '@/components/atoms/CreateTripNextButton';
@@ -57,6 +58,7 @@ const CreateTrip = () => {
             if (data.data.postingImageUrl) {
               await axios.put(data.data.postingImageUrl, thumbnailImg);
             }
+            queryClient.invalidateQueries({ queryKey: [queryKeys.travel] });
             navigate(`/trips`);
             toast.success('여행이 성공적으로 생성되었습니다');
           },

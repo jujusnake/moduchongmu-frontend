@@ -114,14 +114,14 @@ const CreateTransaction = () => {
         },
         {
           onSuccess: () => {
-            toast.success('기록이 성공적으로 저장되었습니다.');
+            toast.success('기록이 성공적으로 저장되었습니다.', { duration: 3000 });
             navigate(`/trip/${formState.travelUid}`);
             queryClient.invalidateQueries({
               queryKey: [queryKeys.transaction, { type: 'list', uid: formState.travelUid }],
             });
           },
           onError: () => {
-            toast.error('기록 저장에 실패했습니다. 다시 시도해주세요.');
+            toast.error('기록 저장에 실패했습니다. 다시 시도해주세요.', { duration: 3000 });
           },
         },
       );

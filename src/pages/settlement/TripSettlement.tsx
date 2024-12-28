@@ -7,6 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { isAxiosError } from 'axios';
 import { Loader2 } from 'lucide-react';
+import useUnstrictEffect from '@/hooks/useUnstrictEffect';
 
 const TripSettlement = () => {
   // API Calls
@@ -54,7 +55,7 @@ const TripSettlement = () => {
       });
   };
 
-  useEffect(() => {
+  useUnstrictEffect(() => {
     if (travelUid) {
       postSettlement(travelUid, {
         onError: (error) => {
@@ -64,9 +65,7 @@ const TripSettlement = () => {
         },
       });
     }
-  }, [travelUid]);
-
-  console.log(settlementData);
+  });
 
   if (isPending || isError) {
     return (
@@ -102,33 +101,18 @@ const TripSettlement = () => {
       {/* 정산 내역 */}
       <main className="pb-[100px]">
         <div ref={htmlToPngRef} className="p-5 space-y-4 bg-bg-back">
-          <SettlementContainer>
-            <SettlementSender userName="김철수" className="mb-3" />
-            <div className="pl-10 space-y-3">
-              <SettlementReceiver userName="윤남주" amount={130000} currency="₩" />
-              <SettlementReceiver userName="윤남주" amount={130000} currency="₩" />
-              <SettlementReceiver userName="윤남주" amount={130000} currency="₩" />
-              <SettlementReceiver userName="윤남주" amount={130000} currency="₩" />
-            </div>
-          </SettlementContainer>
-          <SettlementContainer>
-            <SettlementSender userName="김철수" profileImg="/example-thumbnail.png" className="mb-3" />
-            <div className="pl-10 space-y-3">
-              <SettlementReceiver userName="윤남주" amount={130000} currency="₩" />
-              <SettlementReceiver userName="윤남주" amount={130000} currency="₩" />
-              <SettlementReceiver userName="윤남주" amount={130000} currency="₩" />
-              <SettlementReceiver userName="윤남주" amount={130000} currency="₩" />
-            </div>
-          </SettlementContainer>
-          <SettlementContainer>
-            <SettlementSender userName="김철수" profileImg="/images/profile.jpg" className="mb-3" />
-            <div className="pl-10 space-y-3">
-              <SettlementReceiver userName="윤남주" amount={130000} currency="₩" />
-              <SettlementReceiver userName="윤남주" amount={130000} currency="₩" />
-              <SettlementReceiver userName="윤남주" amount={130000} currency="₩" />
-              <SettlementReceiver userName="윤남주" amount={130000} currency="₩" />
-            </div>
-          </SettlementContainer>
+          {settlementData?.otherCurrencySettlementList?.['KRW']?.map((settlement) => (
+            <SettlementContainer key={''}>
+              <SettlementSender userName={settlement.sender.userName} className="mb-3" />
+              <div className="pl-10 space-y-3">
+                <SettlementReceiver
+                  userName={settlement.receiver.userName}
+                  amount={settlement.amount}
+                  currency={settlement.currency}
+                />
+              </div>
+            </SettlementContainer>
+          ))}
         </div>
       </main>
 

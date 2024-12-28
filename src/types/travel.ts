@@ -111,6 +111,45 @@ type GetTravelCityRes = {
 
 type GetTravelCityErrorCodes = 'Internal_Server_Error';
 
+type SettlementRes = {
+  settlementList: {
+    amount: number;
+    currency: string;
+    exchangeRate: number;
+    originAmount: number;
+    originCurrency: string;
+    sender: {
+      idx: number;
+      userName: string;
+      userEmail: string;
+    };
+    receiver: {
+      idx: number;
+      userName: string;
+      userEmail: string;
+    };
+  }[];
+  otherCurrencySettlementList: {
+    [currency: string]: {
+      amount: number;
+      currency: string;
+      exchangeRate: number;
+      originAmount: number;
+      originCurrency: string;
+      sender: {
+        idx: number;
+        userName: string;
+        userEmail: string;
+      };
+      receiver: {
+        idx: number;
+        userName: string;
+        userEmail: string;
+      };
+    }[];
+  };
+};
+
 export {
   type GetTravelRes,
   type GetTravelErrorCodes,
@@ -125,4 +164,5 @@ export {
   type GetTravelCityErrorCodes,
   type Member,
   type GetCurrentTravelRes,
+  type SettlementRes,
 };
