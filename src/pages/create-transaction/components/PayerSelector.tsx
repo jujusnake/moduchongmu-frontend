@@ -27,7 +27,7 @@ const PayerSelector = ({ activated, payer, onPayerChange }: PayerSelectorProps) 
       <div className="flex flex-wrap gap-1">
         {travelRes?.data.travel.memberArray.map((member) => (
           <TransactionAvatarButton
-            key={`create-transaction-payer-select-${member}`}
+            key={`create-transaction-payer-select-${member.idx}`}
             label={member.name}
             imgSrc={getUserThumbnail(member.email)}
             onClick={() => onPayerChange?.(payer?.idx === member.idx ? null : member)}

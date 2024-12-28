@@ -50,11 +50,11 @@ const Invitation = () => {
     tripUid &&
       acceptInvitation(tripUid, {
         onSuccess: () => {
-          toast.success('여행에 참여하였습니다!');
+          toast.success('여행에 참여하였습니다!', { duration: 2000 });
           navigate(`/trip/${tripUid}`);
         },
         onError: () => {
-          toast.error('여행 참여에 실패하였습니다. 다시 시도해주세요.');
+          toast.error('여행 참여에 실패하였습니다. 다시 시도해주세요.', { duration: 2000 });
         },
       });
   };

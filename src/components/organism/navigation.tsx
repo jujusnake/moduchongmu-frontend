@@ -1,7 +1,9 @@
 import { cn } from '@/lib/utils';
-import { HTMLAttributes } from 'react';
+import { HTMLAttributes, useMemo } from 'react';
 import NavButton from '../atoms/NavButton';
 import { Plus } from 'lucide-react';
+import { useCurrentTravel } from '@/APIs/travel/current/get';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface BottomNavigationProps extends HTMLAttributes<HTMLElement> {}
 
@@ -16,14 +18,32 @@ const BottomNavigation = ({ className, ...props }: BottomNavigationProps) => {
     >
       <NavButton variant="now" className="w-1/5" />
       <NavButton variant="trips" className="w-1/5" />
-      <div className="w-1/5 relative">
-        <button className="p-3 text-brand-primary-contrastText bg-brand-primary-main rounded-full border-white border-4 absolute -top-4 left-1/2 -translate-x-1/2">
-          <Plus size={28} />
-        </button>
+      <div className="relative w-1/5">
+        <AddButton />
       </div>
       <NavButton variant="currency" className="w-1/5" />
       <NavButton variant="my" className="w-1/5" />
     </nav>
+  );
+};
+
+const AddButton = () => {
+  const { data: travel, isSuccess } = useCurrentTravel();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  const createTransactionToCurrent = () => {
+    navigate(`/createtransaction/${travel?.travel?.uid ?? ''}`, { state: { from: pathname } });
+  };
+
+  return (
+    <button
+      className="absolute p-3 -translate-x-1/2 border-4 border-white rounded-full text-brand-primary-contrastText bg-brand-primary-main -top-4 left-1/2 disabled:opacity-70"
+      disabled={!isSuccess}
+      onClick={createTransactionToCurrent}
+    >
+      <Plus size={28} />
+    </button>
   );
 };
 
