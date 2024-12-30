@@ -4,7 +4,7 @@ import Layouts from './layouts/Layouts';
 import Signup from './pages/Signup';
 import BottomNavLayout from './layouts/BottomNavLayout';
 import Trips from './pages/trips/Trips';
-import CreateTrip from './pages/CreateTrip';
+import CreateTrip from './pages/create-trip/CreateTrip';
 import Now from './pages/Now';
 import Currency from './pages/Currency';
 import My from './pages/my-page/My';
@@ -13,6 +13,7 @@ import TripSettlement from './pages/settlement/TripSettlement';
 import CreateTransaction from './pages/create-transaction/CreateTransaction';
 import SigninRedirect from './pages/auth/SigninRedirect';
 import Invitation from './pages/invitation/Invitation';
+import EditTrip from './pages/create-trip/EditTrip';
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,7 @@ const router = createBrowserRouter([
       { path: '/createtransaction', element: <CreateTransaction /> },
       { path: '/createtransaction/:tripUid', element: <CreateTransaction /> },
       { path: '/trip/:tripUid', element: <Trip /> },
+      { path: '/trip/:tripUid/edit', element: <EditTrip /> },
       { path: '/trip/:tripUid/settlement', element: <TripSettlement /> },
       {
         path: '/',

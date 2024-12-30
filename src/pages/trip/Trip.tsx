@@ -1,6 +1,6 @@
 import { Button, ButtonIcon } from '@/components/ui/buttons';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ChevronLeft, Ellipsis, Loader2, MapPin, UserPlus, UsersRound } from 'lucide-react';
+import { ChevronLeft, Loader2, MapPin, Settings } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTravel } from '@/APIs/travel/get';
@@ -42,8 +42,13 @@ const Trip = ({ fixedUid }: { fixedUid?: string }) => {
 
             <div className="flex gap-3">
               <InviteDialog travelUid={travelData?.uid} />
-              <button className="p-2 transition-colors rounded-full text-text-secondary bg-white/80 hover:bg-white/100 active:bg-neutral-200">
-                <Ellipsis size={20} strokeWidth={2.5} />
+              <button
+                className="p-2 transition-colors rounded-full text-text-secondary bg-white/80 hover:bg-white/100 active:bg-neutral-200"
+                onClick={() =>
+                  navigate(`/trip/${TripUID}/edit`, { state: { from: fixedUid !== undefined ? '/now' : undefined } })
+                }
+              >
+                <Settings size={20} strokeWidth={2.5} />
               </button>
             </div>
           </div>

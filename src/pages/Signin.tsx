@@ -78,7 +78,6 @@ const Signin = () => {
           로그인함으로써 <a className="underline text-text-primary">이용약관</a> 및{' '}
           <a className="underline text-text-primary">개인정보취급방침</a>에 동의합니다
         </aside>
-        <InviteDialog travelUid="T7igpzfU8k" />
       </section>
     </div>
   );
@@ -86,7 +85,7 @@ const Signin = () => {
 
 export default Signin;
 
-const webSignin = (type: SocialSigninType) => {
+const webSignin = async (type: SocialSigninType) => {
   switch (type) {
     case 'naver': {
       const clientID = import.meta.env.VITE_NAVER_CLIENT_ID;
@@ -112,6 +111,24 @@ const webSignin = (type: SocialSigninType) => {
 		&scope=email profile`;
       window.location.href = URL;
       return;
+    }
+    case 'apple': {
+      // @ts-ignore
+      window.AppleID.auth.init({
+        clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+        scope: 'name email',
+        redirectURI: location.protocol + '//' + location.host + '/signin/redirect?type=apple',
+        state: 'signin',
+        usePopup: false, //  redirect 페이지 이용
+      });
+
+      try {
+        // @ts-ignore
+        const res = await window.AppleID.auth.signIn();
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 };

@@ -1,5 +1,4 @@
 import { queryClient, queryKeys } from '@/APIs/react-query';
-import { usePostSignin } from '@/APIs/signin/post';
 import { usePostTravel } from '@/APIs/travel/post';
 import CreateTripNextButton from '@/components/atoms/CreateTripNextButton';
 import CreateTripFirst from '@/components/templates/CreateTripFirst';
