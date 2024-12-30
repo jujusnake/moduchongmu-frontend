@@ -53,7 +53,7 @@ const SigninRedirect = () => {
         onSettled: () => {},
       },
     );
-  });
+  }, []);
 
   return (
     <>
