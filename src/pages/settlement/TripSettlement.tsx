@@ -7,8 +7,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { isAxiosError } from 'axios';
 import { Loader2 } from 'lucide-react';
-import useUnstrictEffect from '@/hooks/useUnstrictEffect';
-import { TravelUser } from '@/types/transaction';
 import { detectDevice } from '@/lib/navigator';
 
 type SettlementItem = {
@@ -85,7 +83,7 @@ const TripSettlement = () => {
       });
   };
 
-  useUnstrictEffect(() => {
+  useEffect(() => {
     if (travelUid) {
       postSettlement(travelUid, {
         onError: (error) => {

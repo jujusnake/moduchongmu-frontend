@@ -1,5 +1,4 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import useUnstrictEffect from '@/hooks/useUnstrictEffect';
 import { usePostSignin } from '@/APIs/signin/post';
 import { SocialSigninType } from '@/types/signin';
 import { Loader2 } from 'lucide-react';
@@ -29,13 +28,6 @@ const SigninRedirect = () => {
   useEffect(() => {
     const type = searchParams.get('type') as SocialSigninType;
     const code = searchParams.get('code');
-    console.log(`type : ${type}, code : ${code}`);
-  }, []);
-
-  useUnstrictEffect(() => {
-    const type = searchParams.get('type') as SocialSigninType;
-    const code = searchParams.get('code');
-    console.log(`type : ${type}, code : ${code}`);
 
     if (!type || !code) {
       return;
