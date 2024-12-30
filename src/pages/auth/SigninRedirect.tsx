@@ -15,6 +15,7 @@ import {
 import { Button } from '@/components/ui/buttons';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { SESSIONSTORAGE_KEYS } from '@/constants/storage';
+import { useEffect } from 'react';
 
 const SigninRedirect = () => {
   // hooks
@@ -25,9 +26,16 @@ const SigninRedirect = () => {
   const { mutate: postSignin, isPending, isError } = usePostSignin();
 
   // Lifecycle
+  useEffect(() => {
+    const type = searchParams.get('type') as SocialSigninType;
+    const code = searchParams.get('code');
+    console.log(`type : ${type}, code : ${code}`);
+  }, []);
+
   useUnstrictEffect(() => {
     const type = searchParams.get('type') as SocialSigninType;
     const code = searchParams.get('code');
+    console.log(`type : ${type}, code : ${code}`);
 
     if (!type || !code) {
       return;
