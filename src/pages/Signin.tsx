@@ -1,7 +1,6 @@
 import SocialSigninButton from '@/components/atoms/SocialSigninButton';
 import TextRotation from '@/components/atoms/TextRotation';
 import { SOCIAL_SIGNIN, SocialSigninType } from '@/types/signin';
-import InviteDialog from './trip/components/InviteDialog';
 import { detectDevice } from '@/lib/navigator';
 
 const Signin = () => {
