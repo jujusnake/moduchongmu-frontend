@@ -93,7 +93,7 @@ const TripSettlement = () => {
         },
       });
     }
-  });
+  }, []);
 
   // Values
   const settlementList = useMemo(() => {
