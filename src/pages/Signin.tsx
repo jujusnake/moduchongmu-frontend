@@ -2,6 +2,7 @@ import SocialSigninButton from '@/components/atoms/SocialSigninButton';
 import TextRotation from '@/components/atoms/TextRotation';
 import { SOCIAL_SIGNIN, SocialSigninType } from '@/types/signin';
 import InviteDialog from './trip/components/InviteDialog';
+import { detectDevice } from '@/lib/navigator';
 
 const Signin = () => {
   window.initContent = (parameter) => {
@@ -10,12 +11,9 @@ const Signin = () => {
   };
 
   const loginOAuth = (type: SocialSigninType) => {
-    // @ts-ignore
-    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    const deviceType = detectDevice();
 
-    // iOS Swift WebView
-    // @ts-ignore
-    if (/iPhone|iPad|iPod/.test(userAgent) && !window.MSStream) {
+    if (deviceType === 'ioswv') {
       if (window.webkit && window.webkit.messageHandlers) {
         window.webkit.messageHandlers.moChong.postMessage(JSON.stringify({ action: 'login', type }));
         return;
@@ -23,7 +21,7 @@ const Signin = () => {
     }
 
     // Android Kotlin WebView
-    if (/Android/.test(userAgent)) {
+    if (deviceType === 'androidwv') {
       // @ts-ignore
       if (typeof window.AndroidInterface !== 'undefined' || userAgent.includes('wv')) {
         console.log('Android Kotlin WebView');
