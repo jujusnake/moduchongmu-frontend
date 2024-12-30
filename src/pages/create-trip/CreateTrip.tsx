@@ -59,11 +59,11 @@ const CreateTrip = () => {
             }
             queryClient.invalidateQueries({ queryKey: [queryKeys.travel] });
             navigate(`/trips`);
-            toast.success('여행이 성공적으로 생성되었습니다');
+            toast.success('여행이 성공적으로 생성되었습니다', { duration: 3000 });
           },
           onError: (error) => {
             console.log(error);
-            toast.error('여행 만들기를 실패했습니다. 다시 시도해주세요');
+            toast.error('여행 만들기를 실패했습니다. 다시 시도해주세요', { duration: 3000 });
           },
         },
       );
