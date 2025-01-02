@@ -1,5 +1,5 @@
 import { useTravelList } from '@/APIs/travel/list/get';
-import { TripListItem } from './components/TripListItem';
+import { TripListItem, TripListItemSkeleton } from './components/TripListItem';
 import TripsEmpty from '@/pages/trips/components/TripsEmpty';
 import { Button, ButtonIcon } from '@/components/ui/buttons';
 import { parseDateRange } from '@/lib/datetime';
@@ -15,7 +15,7 @@ const Trips = () => {
   const navigate = useNavigate();
 
   // API Calls
-  const { data: travelList, fetchNextPage, hasNextPage, isFetchingNextPage, isFetched } = useTravelList();
+  const { data: travelList, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isFetched } = useTravelList();
 
   // Values
   const hasNoTravels = useMemo(() => {
@@ -42,7 +42,7 @@ const Trips = () => {
           <span className="text-2xl font-semibold">여행</span>
         </header>
 
-        <div className="mt-6 data-[hide=true]:hidden" data-hide={hasNoTravels || currentTravel === undefined}>
+        <div className="mt-6 data-[hide=true]:hidden">
           <TripsCurrentCarousel />
         </div>
       </div>
@@ -71,6 +71,15 @@ const Trips = () => {
 
       {/* Main List */}
       <main data-hide={hasNoTravels} className="data-[hide=true]:hidden">
+        {isLoading && (
+          <>
+            <TripListItemSkeleton className="w-full" />
+            <TripListItemSkeleton className="w-full" />
+            <TripListItemSkeleton className="w-full" />
+            <TripListItemSkeleton className="w-full" />
+            <TripListItemSkeleton className="w-full" />
+          </>
+        )}
         {flatTravelList?.map((travel) => (
           <TripListItem
             key={`trips-list-item-${travel.uid}`}

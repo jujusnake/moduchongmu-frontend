@@ -18,6 +18,7 @@ import { format } from 'date-fns';
 import axios from 'axios';
 import { queryClient, queryKeys } from '@/APIs/react-query';
 import { toast } from 'sonner';
+import { getDestinationName } from '@/lib/geonames';
 
 const EditTrip = () => {
   // Hooks
@@ -107,7 +108,7 @@ const EditTrip = () => {
     if (travelRes) {
       setTravelName(travelRes.data.travel.travelName);
       setLocation([travelRes.data.travel.city, travelRes.data.travel.country]);
-      setSearchValue(`${travelRes.data.travel.city}, ${travelRes.data.travel.country}`);
+      setSearchValue(getDestinationName(travelRes.data.travel.city, travelRes.data.travel.country));
       setDate({
         from: new Date(travelRes.data.travel.startDate),
         to: new Date(travelRes.data.travel.endDate),

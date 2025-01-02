@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { isAxiosError } from 'axios';
 import { Loader2 } from 'lucide-react';
 import { detectDevice } from '@/lib/navigator';
+import EmptyIcon from '@/components/atoms/EmptyIcon';
 
 type SettlementItem = {
   sender: { idx: string | number; userName: string; userEmail: string };
@@ -232,6 +233,12 @@ const TripSettlement = () => {
         </aside>
 
         <div ref={htmlToPngRef} className="p-5 space-y-4 bg-bg-back">
+          {settlementList.length === 0 && krwSettlementList.length === 0 && (
+            <div className="flex flex-col items-center justify-center gap-3 py-10 text-base font-medium text-gray-500">
+              <EmptyIcon />
+              정산할 내역이 없어요!
+            </div>
+          )}
           {(currencyMode === 'each' ? settlementList : krwSettlementList).map((stm) => (
             <SettlementContainer key={`settlement-${stm.sender.idx}`}>
               <SettlementSender userName={stm.sender.userName} className="mb-3" userEmail={stm.sender.userEmail} />

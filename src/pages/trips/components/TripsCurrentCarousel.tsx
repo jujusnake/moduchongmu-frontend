@@ -1,4 +1,4 @@
-import { TripListItemFloat } from './TripListItem';
+import { TripListItemFloat, TripListItemFloatSkeleton } from './TripListItem';
 import { useNavigate } from 'react-router-dom';
 import { getDdayOrElapsedDay, parseDateRange } from '@/lib/datetime';
 import { getTravelThumbnail } from '@/lib/urls';
@@ -9,9 +9,17 @@ const TripsCurrentCarousel = () => {
   const navigate = useNavigate();
 
   // API Calls
-  const { data: travel, isFetching } = useCurrentTravel();
+  const { data: travel, isLoading } = useCurrentTravel();
 
-  if (travel === undefined || travel.travel === null || isFetching) {
+  if (isLoading) {
+    return (
+      <div className="px-6">
+        <TripListItemFloatSkeleton className="w-full px-3 py-4 bg-[#4E7CD4] rounded-[4px]" />
+      </div>
+    );
+  }
+
+  if (travel === undefined || travel.travel === null) {
     return <></>;
   }
 
