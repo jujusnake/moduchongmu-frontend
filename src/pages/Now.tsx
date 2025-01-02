@@ -1,14 +1,21 @@
 import { Button, ButtonIcon } from '@/components/ui/buttons';
-import { TentTree } from 'lucide-react';
+import { LandPlot, TentTree } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Trip from './trip/Trip';
 import { useCurrentTravel } from '@/APIs/travel/current/get';
 
 const Now = () => {
-  const { data: travel, isFetching } = useCurrentTravel();
+  const { data: travel, isLoading } = useCurrentTravel();
 
-  if (isFetching) {
-    return <></>;
+  if (isLoading) {
+    return (
+      <main className="min-h-[calc(100dvh-80px)] flex flex-col justify-center p-6 items-center animate-pulse text-text-secondary">
+        <div className="relative">
+          <LandPlot size={100} strokeWidth={1.5} className="mb-6" />
+        </div>
+        <h1 className="flex items-center gap-3 mb-2 text-lg font-semibold">현재 여행 불러오는 중...</h1>
+      </main>
+    );
   }
 
   if (travel?.travel === null) {

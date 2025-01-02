@@ -63,7 +63,7 @@ const TransactionList = ({ travelUid }: { travelUid: string }) => {
 
 const TransactionListByDate = ({ travelUid }: { travelUid: string }) => {
   // API Calls
-  const { data } = useTransactionList(travelUid);
+  const { data, hasNextPage, fetchNextPage, isFetched, isFetchingNextPage } = useTransactionList(travelUid);
 
   const transactions = useMemo(() => {
     return data?.pages.reduce((acc: TransactionItem[], page) => {
@@ -71,8 +71,6 @@ const TransactionListByDate = ({ travelUid }: { travelUid: string }) => {
       return [...acc, ...nextList];
     }, []);
   }, [data]);
-
-  console.log(transactions);
 
   // Values
   const transactionsByDate = useMemo(() => {
@@ -92,10 +90,17 @@ const TransactionListByDate = ({ travelUid }: { travelUid: string }) => {
 
   return (
     <>
+      {transactions?.length === 0 && (
+        <div className="flex flex-col items-center justify-center gap-3 py-5 text-base font-medium text-gray-500">
+          <EmptyIcon />
+          거래 내역이 없습니다
+        </div>
+      )}
+
       {transactionsByDate.map(([date, transactions]) => (
-        <DailyExpenseBlock className="mb-5 last:mb-0" key={`travel-${travelUid}-daily-${date}`}>
+        <DailyExpenseBlock className="mb-5 shadow last:mb-0" key={`travel-${travelUid}-daily-${date}`}>
           <div className="flex items-center justify-between gap-2 mb-1">
-            {date && <DailyExpenseTitle>{date && format(date, 'MM-dd')}</DailyExpenseTitle>}
+            {date && <DailyExpenseTitle>{date && format(date, 'yyyy-MM-dd')}</DailyExpenseTitle>}
             {/* <DailyExpenseAdd /> */}
           </div>
           {transactions.map((transaction) => (
@@ -112,6 +117,15 @@ const TransactionListByDate = ({ travelUid }: { travelUid: string }) => {
           ))}
         </DailyExpenseBlock>
       ))}
+
+      {isFetched && transactions && transactions?.length > 0 && (
+        <InfinityScrollTrigger
+          hasNextPage={hasNextPage}
+          onIntersect={fetchNextPage}
+          isFetching={isFetchingNextPage}
+          className="mt-5"
+        />
+      )}
     </>
   );
 };

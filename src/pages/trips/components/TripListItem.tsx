@@ -74,4 +74,46 @@ const TripListItemFloat = ({
   );
 };
 
-export { TripListItem, TripListItemFloat };
+const TripListItemSkeleton = ({ className }: { className?: string }) => {
+  return (
+    <button className={cn('px-6 py-3 flex gap-4 items-center animate-pulse', className)}>
+      <div className="w-[60px] h-[60px] rounded-[4px] bg-neutral-200 overflow-hidden isolate"></div>
+      <div className="flex-grow space-y-2 text-start">
+        <h1 className="text-base font-semibold text-text-primary ellipsis-text-oneline">
+          <div className="w-1/2 h-3 rounded-full bg-neutral-200 max-w-[160px]" />
+        </h1>
+        <div className="space-y-0.5 text-sm text-brand-primary-contrastText ellipsis-text-oneline">
+          <div className="flex gap-3 h-[15px] items-center">
+            <div className="w-1/2 h-2 rounded-full bg-neutral-200 max-w-[100px]" />
+          </div>
+          <div className="flex gap-3 h-[15px] items-center">
+            <div className="w-1/2 h-2 rounded-full bg-neutral-200 max-w-[100px]" />
+          </div>
+        </div>
+      </div>
+    </button>
+  );
+};
+
+const TripListItemFloatSkeleton = ({ className }: { className?: string }) => {
+  return (
+    <button className={cn('px-6 py-3 flex gap-4 items-center animate-pulse', className)}>
+      <div className="w-[60px] h-[60px] rounded-[4px] bg-bg-base/50 overflow-hidden isolate"></div>
+      <div className="flex-grow space-y-2 text-start">
+        <h1 className="flex items-center text-base font-semibold text-brand-primary-contrastText ellipsis-text-oneline h-[17.5px]">
+          <div className="w-1/2 h-3 rounded-full bg-bg-base/50 max-w-[160px]" />
+        </h1>
+        <div className="space-y-0.5 text-sm text-brand-primary-contrastText ellipsis-text-oneline">
+          <div className="flex gap-3 h-[15px] items-center">
+            <div className="w-1/2 h-2 rounded-full bg-bg-base/50 max-w-[100px]" />
+          </div>
+          <div className="flex gap-3 h-[15px] items-center">
+            <div className="w-1/2 h-2 rounded-full bg-bg-base/50 max-w-[100px]" />
+          </div>
+        </div>
+      </div>
+    </button>
+  );
+};
+
+export { TripListItem, TripListItemFloat, TripListItemSkeleton, TripListItemFloatSkeleton };
