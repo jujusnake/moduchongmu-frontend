@@ -1,5 +1,5 @@
-import Vacation from '../icons/Vacation';
-import { Input } from '../ui/input';
+import Vacation from '../../../components/icons/Vacation';
+import { Input } from '../../../components/ui/input';
 
 type Props = {
   nickname: string;
