@@ -4,8 +4,7 @@ import { useMemo } from 'react';
 import { TransactionCategoryType, TransactionItem } from '@/types/transaction';
 import EmptyIcon from '@/components/atoms/EmptyIcon';
 import InfinityScrollTrigger from '@/components/atoms/InfinityScrollTrigger';
-import { compareAsc, compareDesc, format } from 'date-fns';
-import { getDdayOrElapsedDay } from '@/lib/datetime';
+import { compareDesc, format } from 'date-fns';
 
 const CATEGORY_LABEL: Record<TransactionCategoryType, string> = {
   food: '식비',
@@ -73,6 +72,8 @@ const TransactionListByDate = ({ travelUid }: { travelUid: string }) => {
     }, []);
   }, [data]);
 
+  console.log(transactions);
+
   // Values
   const transactionsByDate = useMemo(() => {
     if (!transactions) return [];
@@ -94,7 +95,7 @@ const TransactionListByDate = ({ travelUid }: { travelUid: string }) => {
       {transactionsByDate.map(([date, transactions]) => (
         <DailyExpenseBlock className="mb-5 last:mb-0" key={`travel-${travelUid}-daily-${date}`}>
           <div className="flex items-center justify-between gap-2 mb-1">
-            <DailyExpenseTitle>{format(date, 'MM-dd')}</DailyExpenseTitle>
+            {date && <DailyExpenseTitle>{date && format(date, 'MM-dd')}</DailyExpenseTitle>}
             {/* <DailyExpenseAdd /> */}
           </div>
           {transactions.map((transaction) => (

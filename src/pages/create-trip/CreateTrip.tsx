@@ -1,10 +1,10 @@
 import { queryClient, queryKeys } from '@/APIs/react-query';
 import { usePostTravel } from '@/APIs/travel/post';
 import CreateTripNextButton from '@/components/atoms/CreateTripNextButton';
-import CreateTripFirst from '@/components/templates/CreateTripFirst';
-import CreateTripFourth from '@/components/templates/CreateTripFourth';
-import CreateTripSecond from '@/components/templates/CreateTripSecond';
-import CreateTripThird from '@/components/templates/CreateTripThird';
+import CreateTripFirst from '@/pages/create-trip/components/CreateTripFirst';
+import CreateTripFourth from '@/pages/create-trip/components/CreateTripFourth';
+import CreateTripSecond from '@/pages/create-trip/components/CreateTripSecond';
+import CreateTripThird from '@/pages/create-trip/components/CreateTripThird';
 import { Button } from '@/components/ui/buttons';
 import { Dialog, DialogTrigger, DialogContent, DialogFooter, DialogClose, DialogHeader } from '@/components/ui/dialog';
 import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';

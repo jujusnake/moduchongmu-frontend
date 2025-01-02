@@ -1,5 +1,5 @@
 import { DateRange } from 'react-day-picker';
-import { Calendar } from '../ui/calendar';
+import { Calendar } from '../../../components/ui/calendar';
 import { useMemo } from 'react';
 
 type Props = { date: DateRange | undefined; onChangeDate: (date: DateRange | undefined) => void };

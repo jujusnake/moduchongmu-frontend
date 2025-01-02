@@ -1,12 +1,12 @@
-import { hasBatchim } from 'es-hangul';
 import { useMemo, useState } from 'react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { TooltipPortal } from '@radix-ui/react-tooltip';
 import Vacation from '@/components/icons/Vacation';
 import { Input } from '@/components/ui/input';
-import EmptyIcon from '../atoms/EmptyIcon';
-import { Button, ButtonIcon } from '../ui/buttons';
+import EmptyIcon from '../../../components/atoms/EmptyIcon';
+import { Button, ButtonIcon } from '../../../components/ui/buttons';
 import { useCitySearch } from '@/APIs/travel/city/get';
+import { roUroJosa } from '@/lib/geonames';
 
 type Props = {
   location: string[];
@@ -25,7 +25,7 @@ const CreateTripFirst = ({ location, onSelectLocation, thumbnail, onThumbnailCha
 
   // Handlers
   const customLocationName = useMemo(() => {
-    if (hasBatchim(searchValue)) {
+    if (roUroJosa(searchValue)) {
       return `"${searchValue}"으로`;
     }
     return `"${searchValue}"로`;
@@ -80,9 +80,6 @@ const CreateTripFirst = ({ location, onSelectLocation, thumbnail, onThumbnailCha
                           <span className="max-w-full text-base text-text-primary shrink-0 ellipsis-text-oneline">
                             {city.city}, {city.country}
                           </span>
-                          {/* <span className="text-sm text-text-aside shrink-[3] ellipsis-text-oneline">
-                            HO CHI MIHN CITY, VIETNAM
-                          </span> */}
                         </li>
                       ))}
 
@@ -119,7 +116,7 @@ const CreateTripFirst = ({ location, onSelectLocation, thumbnail, onThumbnailCha
             </div>
             <img
               src={thumbnail}
-              data-show={thumbnail !== null}
+              data-show={!!thumbnail}
               className="w-full h-full opacity-0 data-[show=true]:opacity-100 transition-opacity object-cover object-center"
             />
           </div>

@@ -1,4 +1,4 @@
-import { hasBatchim } from 'es-hangul';
+import { roUroJosa } from '@/lib/geonames';
 import { useMemo } from 'react';
 import { DateRange } from 'react-day-picker';
 
@@ -30,11 +30,15 @@ const CreateTripFourth = ({ location, thumbnail, date, nickname }: Props) => {
     }
   }, [date?.to]);
 
+  const locationName = useMemo(() => {
+    return location.join(', ');
+  }, [location]);
+
   return (
     <main className="px-6 min-h-[calc(100dvh-218px)] flex flex-col justify-center font-semibold text-text-primary">
       <div className="mb-[18px] text-lg">
-        아름다운 <span className="text-2xl text-brand-primary-dark">{location.join(', ')}</span>
-        {hasBatchim(location[1]) ? '으로' : '로'}
+        아름다운 <span className="text-2xl text-brand-primary-dark">{locationName}</span>
+        {roUroJosa(locationName) ? '으로' : '로'} 떠나요!
       </div>
       {thumbnail && (
         <img
@@ -51,7 +55,7 @@ const CreateTripFourth = ({ location, thumbnail, date, nickname }: Props) => {
 
       <div className="text-lg">
         <span className="text-2xl text-brand-primary-dark">
-          {nickname.length > 0 ? nickname : location.join(', ') + ' 여행'}
+          {nickname.length > 0 ? nickname : locationName + ' 여행'}
         </span>
         을 떠나볼까요?
       </div>
