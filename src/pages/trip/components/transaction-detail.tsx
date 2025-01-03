@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/buttons';
+import { Button, ButtonIcon } from '@/components/ui/buttons';
 import {
   Drawer,
   DrawerContent,
@@ -30,6 +30,7 @@ import { toast } from 'sonner';
 import { isAxiosError } from 'axios';
 import { queryKeys } from '@/APIs/react-query';
 import { useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 
 type ResponsiveDrawerDialogProps = {
   open: boolean;
@@ -62,8 +63,11 @@ export function TransactionDetail({
   expenseSplit,
   children,
 }: ResponsiveDrawerDialogProps) {
+  // Hooks
   const isDesktop = useMediaQuery('(min-width: 500px)');
+  const navigate = useNavigate();
 
+  // Values
   const decimalCount = useMemo(() => getDecimalCountFromCurrency(currency), [currency]);
 
   const evenlySplitAmount = useMemo(() => {
@@ -193,7 +197,13 @@ export function TransactionDetail({
             <div className="flex justify-end gap-2">
               <DeleteTransactionDialog uid={uid} travelUid={travelUid} onDelete={() => onOpenChange(false)} />
 
-              <Button size="small" variant="primary">
+              <Button
+                size="small"
+                variant="primary"
+                className="flex-[1]"
+                onClick={() => navigate(`/trip/${travelUid}/transaction/${uid}/edit`)}
+              >
+                <ButtonIcon name="pen" />
                 수정
               </Button>
             </div>
@@ -222,7 +232,7 @@ const DeleteTransactionDialog = ({
     if (!uid) return;
 
     deleteTransaction(uid, {
-      onSuccess: (res) => {
+      onSuccess: () => {
         // console.log('Deleted transaction : ', res?.data.uid);
         queryClient.refetchQueries({
           queryKey: [queryKeys.transaction, { type: 'list', uid: travelUid }],
@@ -242,7 +252,8 @@ const DeleteTransactionDialog = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="small" variant="ghost-destructive">
+        <Button size="small" variant="outline" className="flex-[1]">
+          <ButtonIcon name="trash-2" />
           삭제
         </Button>
       </DialogTrigger>

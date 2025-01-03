@@ -45,6 +45,22 @@ type PostTransactionParams = {
   usedDate: string; // YYYY-MM-DD T HH:mm:ss +09:00
 };
 
+type PutTransactionParams = {
+  uid: string;
+  executorList?: number[];
+  targetList?: number[];
+  category?: string;
+  content?: string;
+  type?: 'expense' | 'transfer';
+  amount?: number | string;
+  currency?: string;
+  paymentMethod?: 'card' | 'teamCash' | 'personalCash';
+  expenseSplit?: {
+    [travelMemberIdx: number]: string;
+  };
+  usedDate?: string; // YYYY-MM-DD T HH:mm:ss +09:00
+};
+
 type TransactionItem = {
   uid: string;
   recordBy: string;
@@ -81,4 +97,5 @@ export {
   type GetTransactionListRes,
   type PostTransactionParams,
   type PostTransactionRes,
+  type PutTransactionParams,
 };
