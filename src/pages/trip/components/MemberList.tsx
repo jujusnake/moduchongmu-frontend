@@ -24,12 +24,12 @@ import { getUserThumbnail } from '@/lib/urls';
 import { Member } from '@/types/travel';
 import { isAxiosError } from 'axios';
 import { UsersRound } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { ReactNode, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
-type Props = { memberArray?: Member[]; host?: string; travelUid: string };
+type Props = { memberArray?: Member[]; host?: string; travelUid: string; children?: ReactNode };
 
-const MemberList = ({ memberArray, host, travelUid }: Props) => {
+const MemberList = ({ memberArray, host, travelUid, children }: Props) => {
   // States
   const [showKickoutDialog, setShowKickoutDialog] = useState<false | Member>(false);
 
@@ -67,10 +67,12 @@ const MemberList = ({ memberArray, host, travelUid }: Props) => {
     <>
       <Drawer>
         <DrawerTrigger asChild>
-          <button className="rounded-full flex items-center gap-1 px-3 py-1.5 border border-border-light text-text-secondary font-semibold text-sm">
-            <UsersRound size={14} />
-            <span>{memberArray?.length ?? 0}명의 메이트</span>
-          </button>
+          {children ?? (
+            <button className="rounded-full flex items-center gap-1 px-3 py-1.5 border border-border-light text-text-secondary font-semibold text-sm">
+              <UsersRound size={14} />
+              <span>{memberArray?.length ?? 0}명의 메이트</span>
+            </button>
+          )}
         </DrawerTrigger>
         <DrawerContent className="max-h-[60dvh] min-h-[50dvh] max-w-moduchongmu moduchongmu:left-[calc(50%-250px)]">
           <DrawerHeader>

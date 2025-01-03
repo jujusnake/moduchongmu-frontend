@@ -13,7 +13,7 @@ import TripSettlement from './pages/settlement/TripSettlement';
 import CreateTransaction from './pages/create-transaction/CreateTransaction';
 import SigninRedirect from './pages/auth/SigninRedirect';
 import Invitation from './pages/invitation/Invitation';
-import EditTrip from './pages/create-trip/EditTrip';
+import EditTrip from './pages/trip/EditTrip';
 
 const router = createBrowserRouter([
   {

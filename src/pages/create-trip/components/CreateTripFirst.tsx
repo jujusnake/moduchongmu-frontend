@@ -1,12 +1,6 @@
-import { useMemo, useState } from 'react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { TooltipPortal } from '@radix-ui/react-tooltip';
-import Vacation from '@/components/icons/Vacation';
-import { Input } from '@/components/ui/input';
 import EmptyIcon from '../../../components/atoms/EmptyIcon';
 import { Button, ButtonIcon } from '../../../components/ui/buttons';
-import { useCitySearch } from '@/APIs/travel/city/get';
-import { roUroJosa } from '@/lib/geonames';
+import { LocationSelector } from '@/components/organism/location';
 
 type Props = {
   location: string[];
@@ -16,25 +10,10 @@ type Props = {
 };
 
 const CreateTripFirst = ({ location, onSelectLocation, thumbnail, onThumbnailChange }: Props) => {
-  // States
-  const [inputFocus, setInputFocus] = useState(false);
-  const [searchValue, setSearchValue] = useState(location.join(', '));
-
-  // API Calls
-  const { data: citySearchRes } = useCitySearch(searchValue);
-
   // Handlers
-  const customLocationName = useMemo(() => {
-    if (roUroJosa(searchValue)) {
-      return `"${searchValue}"으로`;
-    }
-    return `"${searchValue}"로`;
-  }, [searchValue]);
-
-  const handleSelectLocation = (location: string[]) => {
+  const handleSelectLocation = (location: string[], coverImg: string | null) => {
     onSelectLocation(location);
-    setSearchValue(location.join(', '));
-    setInputFocus(false);
+    onThumbnailChange(coverImg);
   };
 
   const handleUploadThumbnail = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,56 +28,7 @@ const CreateTripFirst = ({ location, onSelectLocation, thumbnail, onThumbnailCha
       <main className="px-6 text-text-primary">
         <section>
           <h1 className="mb-3 text-lg font-semibold">이번 여행지는 어디인가요?</h1>
-          <div className="relative">
-            <TooltipProvider>
-              <Tooltip open={inputFocus}>
-                <TooltipTrigger asChild>
-                  <Input
-                    customIcon={<Vacation />}
-                    placeholder="도시, 국가로 검색해주세요"
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                    onFocus={() => setInputFocus(true)}
-                    onBlur={() => setInputFocus(false)}
-                  />
-                </TooltipTrigger>
-                <TooltipPortal>
-                  <TooltipContent
-                    side="bottom"
-                    className="p-0 rounded-none border-[#fdfdfd] w-screen max-w-moduchongmu px-6 bg-bg-back shadow-none"
-                  >
-                    <ul>
-                      {citySearchRes?.data.result?.map((city) => (
-                        <li
-                          key={`search-result-${city.city}-${city.country}`}
-                          className="py-4 px-2 flex items-center justify-between font-medium border-b border-[#F0F0F0] last:border-0 gap-2 hover:bg-bg-base cursor-pointer"
-                          onClick={() => {
-                            handleSelectLocation([city.city, city.country]);
-                            city.cover && onThumbnailChange(city.cover);
-                          }}
-                        >
-                          <span className="max-w-full text-base text-text-primary shrink-0 ellipsis-text-oneline">
-                            {city.city}, {city.country}
-                          </span>
-                        </li>
-                      ))}
-
-                      <li
-                        className="text-base text-text-primary py-4 px-2 font-bold border-b border-[#F0F0F0] last:border-0 hover:bg-bg-base cursor-pointer data-[show=false]:hidden"
-                        data-show={searchValue.length > 0}
-                        onClick={() => {
-                          handleSelectLocation([searchValue]);
-                          onThumbnailChange(null);
-                        }}
-                      >
-                        {customLocationName} 직접입력
-                      </li>
-                    </ul>
-                  </TooltipContent>
-                </TooltipPortal>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
+          <LocationSelector location={location} onLocationChange={handleSelectLocation} />
         </section>
 
         <section
