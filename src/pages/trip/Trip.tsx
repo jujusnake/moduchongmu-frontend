@@ -11,6 +11,7 @@ import { getTravelThumbnail } from '@/lib/urls';
 import { TransactionList, TransactionListByDate } from './components/transaction-list';
 import MemberList from './components/MemberList';
 import InviteDialog from './components/InviteDialog';
+import { useTransactionList } from '@/APIs/transaction/list/get';
 
 const Trip = ({ fixedUid }: { fixedUid?: string }) => {
   // Hooks
@@ -23,6 +24,7 @@ const Trip = ({ fixedUid }: { fixedUid?: string }) => {
   // API Calls
   const { data: travelRes, isPending: fetchingTravel } = useTravel(TripUID);
   const travelData = useMemo(() => travelRes?.data.travel, [travelRes]);
+  const { refetch, isRefetching } = useTransactionList(TripUID);
 
   // States
   const [currentTab, setCurrentTab] = useState('all');
@@ -31,7 +33,7 @@ const Trip = ({ fixedUid }: { fixedUid?: string }) => {
     <>
       <div className="flex flex-col">
         <header className="relative z-0 bg-brand-primary-lighter">
-          <div className="absolute top-0 left-0 right-0 flex justify-between p-5">
+          <div className="absolute top-0 left-0 right-0 z-20 flex justify-between p-5">
             <button
               className="p-2 transition-colors rounded-full text-text-secondary bg-white/80 hover:bg-white/100 active:bg-neutral-200 data-[hide=true]:invisible"
               onClick={() => navigate('/trips')}
@@ -53,6 +55,7 @@ const Trip = ({ fixedUid }: { fixedUid?: string }) => {
             </div>
           </div>
           <TripThumbnailImg
+            key={`trip-thumbnail-${travelData?.uid}`}
             src={getTravelThumbnail(travelData?.uid)}
             city={travelData?.city}
             className="aspect-video max-h-[280px] object-cover w-full bg-white"
@@ -95,12 +98,17 @@ const Trip = ({ fixedUid }: { fixedUid?: string }) => {
           </Button>
         </div>
 
-        <Tabs className="w-full px-5 mb-4" value={currentTab} onValueChange={setCurrentTab}>
-          <TabsList>
-            <TabsTrigger value="all">전체</TabsTrigger>
-            <TabsTrigger value="per-date">날짜별</TabsTrigger>
-          </TabsList>
-        </Tabs>
+        <div className="flex flex-wrap justify-between w-full gap-3 px-5 mb-4">
+          <Tabs value={currentTab} onValueChange={setCurrentTab}>
+            <TabsList>
+              <TabsTrigger value="all">전체</TabsTrigger>
+              <TabsTrigger value="per-date">날짜별</TabsTrigger>
+            </TabsList>
+          </Tabs>
+          <Button size="small" variant="outline" className="p-2" onClick={() => refetch()} disabled={isRefetching}>
+            <ButtonIcon name="refresh-cw" className={isRefetching ? 'animate-spin' : ''} />
+          </Button>
+        </div>
 
         <main className="px-5 pb-10">
           {currentTab === 'all' && <TransactionList travelUid={TripUID} />}

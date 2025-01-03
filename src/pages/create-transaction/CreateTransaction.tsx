@@ -18,10 +18,12 @@ import { useCreateTransaction } from '@/APIs/transaction/post';
 import { format } from 'date-fns';
 import ExitButton from './components/ExitButton';
 import { toast } from 'sonner';
-import { queryClient, queryKeys } from '@/APIs/react-query';
+import { queryKeys } from '@/APIs/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 const CreateTransaction = () => {
   // Values
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { tripUid } = useParams();
 
@@ -125,7 +127,7 @@ const CreateTransaction = () => {
           onSuccess: () => {
             toast.success('기록이 성공적으로 저장되었습니다.', { duration: 3000 });
             navigate(`/trip/${formState.travelUid}`);
-            queryClient.invalidateQueries({
+            queryClient.refetchQueries({
               queryKey: [queryKeys.transaction, { type: 'list', uid: formState.travelUid }],
             });
           },

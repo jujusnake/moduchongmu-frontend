@@ -111,7 +111,7 @@ Button.displayName = 'Button';
 
 interface ButtonIconProps extends LucideIconProps {}
 
-const ButtonIcon = forwardRef<HTMLButtonElement, ButtonIconProps>(({ className, ...props }, ref) => {
+const ButtonIcon = forwardRef<HTMLButtonElement, ButtonIconProps>(({ ...props }, ref) => {
   const { size } = useContext(ButtonContext);
 
   const iconSize = {
