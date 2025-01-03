@@ -11,6 +11,7 @@ import { getTravelThumbnail } from '@/lib/urls';
 import { TransactionList, TransactionListByDate } from './components/transaction-list';
 import MemberList from './components/MemberList';
 import InviteDialog from './components/InviteDialog';
+import { useTransactionList } from '@/APIs/transaction/list/get';
 
 const Trip = ({ fixedUid }: { fixedUid?: string }) => {
   // Hooks
@@ -23,6 +24,7 @@ const Trip = ({ fixedUid }: { fixedUid?: string }) => {
   // API Calls
   const { data: travelRes, isPending: fetchingTravel } = useTravel(TripUID);
   const travelData = useMemo(() => travelRes?.data.travel, [travelRes]);
+  const { refetch, isRefetching } = useTransactionList(TripUID);
 
   // States
   const [currentTab, setCurrentTab] = useState('all');
@@ -95,12 +97,17 @@ const Trip = ({ fixedUid }: { fixedUid?: string }) => {
           </Button>
         </div>
 
-        <Tabs className="w-full px-5 mb-4" value={currentTab} onValueChange={setCurrentTab}>
-          <TabsList>
-            <TabsTrigger value="all">전체</TabsTrigger>
-            <TabsTrigger value="per-date">날짜별</TabsTrigger>
-          </TabsList>
-        </Tabs>
+        <div className="flex flex-wrap justify-between w-full gap-3 px-5 mb-4">
+          <Tabs value={currentTab} onValueChange={setCurrentTab}>
+            <TabsList>
+              <TabsTrigger value="all">전체</TabsTrigger>
+              <TabsTrigger value="per-date">날짜별</TabsTrigger>
+            </TabsList>
+          </Tabs>
+          <Button size="small" variant="outline" className="p-2" onClick={() => refetch()} disabled={isRefetching}>
+            <ButtonIcon name="refresh-cw" className={isRefetching ? 'animate-spin' : ''} />
+          </Button>
+        </div>
 
         <main className="px-5 pb-10">
           {currentTab === 'all' && <TransactionList travelUid={TripUID} />}

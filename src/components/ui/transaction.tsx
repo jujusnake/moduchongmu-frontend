@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import { TransactionCategoryType } from '@/types/transaction';
 import { Bed, Bus, CableCar, Check, CircleEllipsis, Plane, ShoppingBag, Utensils } from 'lucide-react';
-import { ButtonHTMLAttributes, forwardRef, ReactElement, MouseEvent as ReactMouseEvent } from 'react';
+import { ButtonHTMLAttributes, forwardRef, ReactElement, MouseEvent as ReactMouseEvent, ReactNode } from 'react';
 import BetterImg from '../atoms/BetterImg';
 
 interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {}
@@ -11,7 +11,7 @@ const Label = forwardRef<HTMLLabelElement, LabelProps>(({ className, ...props },
 });
 
 interface CategoryButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onClick'> {
-  category: TransactionCategoryType;
+  category?: TransactionCategoryType;
   selected?: boolean;
   onClick?: (e: ReactMouseEvent<HTMLButtonElement, MouseEvent>, category: TransactionCategoryType) => void;
 }
@@ -51,7 +51,7 @@ const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>(
   ({ category, selected, onClick, className, ...props }, ref) => {
     // Handlers
     const handleClick = (e: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
-      if (onClick) {
+      if (onClick && category) {
         onClick(e, category);
       }
     };
@@ -69,8 +69,8 @@ const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>(
         onClick={handleClick}
         {...props}
       >
-        {CATEGORY_CONTENT[category].icon}
-        <span className="text-xs font-semibold">{CATEGORY_CONTENT[category].label}</span>
+        {category && CATEGORY_CONTENT[category]?.icon}
+        <span className="text-xs font-semibold">{category && CATEGORY_CONTENT[category]?.label}</span>
       </button>
     );
   },
@@ -78,7 +78,7 @@ const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>(
 
 interface AvatarButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   imgSrc?: string;
-  label?: string;
+  label?: ReactNode;
   selected?: boolean;
 }
 

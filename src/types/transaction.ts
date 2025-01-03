@@ -58,6 +58,7 @@ type TransactionItem = {
   paymentMethod: string;
   usedDate: string;
   createdDate: string;
+  expenseSplit: Record<string, number> | null;
 };
 
 type GetTransactionListRes = {

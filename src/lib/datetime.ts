@@ -1,8 +1,8 @@
-import { differenceInDays, format, getYear, isSameDay, isWithinInterval, parseISO } from 'date-fns';
+import { differenceInDays, format, FormatOptions, getYear, isSameDay, isWithinInterval, parseISO } from 'date-fns';
 
-const parseDateStr = (dateStr: string, formatStr: string = 'yyyy.MM.dd') => {
+const parseDateStr = (dateStr: string, formatStr: string = 'yyyy.MM.dd', options?: FormatOptions) => {
   const date = parseISO(dateStr);
-  return format(date, formatStr);
+  return format(date, formatStr, options);
 };
 
 const parseDateRange = (startStr?: string, endStr?: string) => {
