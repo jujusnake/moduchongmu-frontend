@@ -2,16 +2,17 @@ import SocialSigninButton from '@/components/atoms/SocialSigninButton';
 import TextRotation from '@/components/atoms/TextRotation';
 import { SOCIAL_SIGNIN, SocialSigninType } from '@/types/signin';
 import { detectDevice } from '@/lib/navigator';
+import { useDeviceStore } from '@/stores/deviceStore';
 
 const Signin = () => {
+  const { deviceType } = useDeviceStore();
+
   window.initContent = (parameter) => {
     window.webkit.messageHandlers.moChong.postMessage(JSON.stringify({ action: 'log', type: 'initContent' }));
     console.log('initContent parameter', parameter);
   };
 
   const loginOAuth = (type: SocialSigninType) => {
-    const deviceType = detectDevice();
-
     if (deviceType === 'ioswv') {
       if (window.webkit && window.webkit.messageHandlers) {
         window.webkit.messageHandlers.moChong.postMessage(JSON.stringify({ action: 'login', type }));
@@ -21,11 +22,8 @@ const Signin = () => {
 
     // Android Kotlin WebView
     if (deviceType === 'androidwv') {
-      // @ts-ignore
-      if (typeof window.AndroidInterface !== 'undefined' || userAgent.includes('wv')) {
-        console.log('Android Kotlin WebView');
-        return;
-      }
+      window.AndroidWV?.oAuthSignin(type);
+      return;
     }
 
     // Web Browser
@@ -35,23 +33,19 @@ const Signin = () => {
   return (
     <div className="flex flex-col min-h-svh">
       <h1 className="relative flex items-end justify-center flex-1 py-12 bg-brand-primary-dark">
-        <div className="w-[50%] aspect-square bg-black/30"></div>
-        <img
-          aria-disabled
-          alt=""
-          src="/signin/signin-round.svg"
-          className="absolute top-full -translate-y-[2px] w-full -z-10 select-none"
-        />
+        <div className="w-[60%] aspect-square bg-black/30">
+          <img aria-disabled alt="" src="/logo.svg" className="size-full" />
+        </div>
       </h1>
 
       <section className="flex flex-col items-center justify-end flex-1 gap-10 px-4 pt-12 pb-4">
         <div className="flex flex-col items-center justify-center flex-grow">
           <TextRotation
-            className="text-xl font-semibold mb-10 h-[22.5px]"
+            className="text-xl font-semibold mb-10 h-[22.5px] min-w-[220px]"
             textArr={[
               '여행을 떠나볼까요?',
               '복잡한 정산을 맡겨주세요!',
-              '스트레스 없이하는 여행',
+              '스트레스 없는 여행',
               '이번 목적지는 어디로?!',
             ]}
           />
@@ -66,7 +60,9 @@ const Signin = () => {
                 <SocialSigninButton
                   key={`social-signin-btn-${carrier}`}
                   carrier={carrier}
+                  className="data-[hide=true]:hidden"
                   onClick={() => loginOAuth(carrier)}
+                  data-hide={carrier === 'apple' && deviceType === 'androidwv'}
                 />
               ))}
             </div>

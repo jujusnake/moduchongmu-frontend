@@ -1,7 +1,6 @@
 import { useUser } from '@/APIs/user/get';
 import { getTokens, removeTokens } from '@/lib/auth';
 import { getCleanPathname } from '@/lib/utils';
-import { useUserStore } from '@/stores/userStore';
 import { PRIVATE_PATHS, PUBLIC_PATHS } from '@/types/auth';
 import { Loader2 } from 'lucide-react';
 import { ReactNode, useEffect } from 'react';
@@ -10,7 +9,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 const AuthLayout = ({ children }: { children: ReactNode }) => {
   // Hooks
   const navigate = useNavigate();
-  const { setUser } = useUserStore();
   const { pathname } = useLocation();
 
   // API Calls
@@ -42,7 +40,6 @@ const AuthLayout = ({ children }: { children: ReactNode }) => {
     } else {
       getUserData({ throwOnError: true })
         .then((res) => {
-          setUser(res.data?.data.user ?? null);
           console.log('Landing on public, and got user data, moving to private');
           navigate('/now');
         })
@@ -62,7 +59,6 @@ const AuthLayout = ({ children }: { children: ReactNode }) => {
     } else {
       getUserData({ throwOnError: true })
         .then((res) => {
-          setUser(res.data?.data.user ?? null);
           if (res.data?.data.user.userName === null) {
             console.log('Landing on private, but no username, move to signup');
             navigate('/signup');
