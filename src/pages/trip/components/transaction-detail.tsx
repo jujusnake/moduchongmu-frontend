@@ -13,6 +13,7 @@ import {
 import { Button, ButtonIcon } from '@/components/ui/buttons';
 import {
   Drawer,
+  DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
@@ -133,9 +134,14 @@ export function TransactionDetail({
             <div className="flex justify-end gap-2">
               <DeleteTransactionDialog uid={uid} travelUid={travelUid} onDelete={() => onOpenChange(false)} />
 
-              <Button size="small" variant="primary">
+              <DialogClose>
+                <Button size="small" variant="primary">
+                  닫기
+                </Button>
+              </DialogClose>
+              {/* <Button size="small" variant="primary">
                 수정
-              </Button>
+              </Button> */}
             </div>
           </DialogFooter>
         </DialogContent>
@@ -197,15 +203,17 @@ export function TransactionDetail({
             <div className="flex justify-end gap-2">
               <DeleteTransactionDialog uid={uid} travelUid={travelUid} onDelete={() => onOpenChange(false)} />
 
-              <Button
-                size="small"
-                variant="primary"
-                className="flex-[1]"
-                onClick={() => navigate(`/trip/${travelUid}/transaction/${uid}/edit`)}
-              >
-                <ButtonIcon name="pen" />
-                수정
-              </Button>
+              <DrawerClose asChild>
+                <Button
+                  size="small"
+                  variant="primary"
+                  className="flex-[1]"
+                  // onClick={() => navigate(`/trip/${travelUid}/transaction/${uid}/edit`)}
+                >
+                  {/* <ButtonIcon name="pen" /> */}
+                  닫기
+                </Button>
+              </DrawerClose>
             </div>
           </DrawerFooter>
         </div>
