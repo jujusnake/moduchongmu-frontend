@@ -15,6 +15,7 @@ import SigninRedirect from './pages/auth/SigninRedirect';
 import Invitation from './pages/invitation/Invitation';
 import EditTrip from './pages/trip/EditTrip';
 import EditTransaction from './pages/trip/EditTransaction';
+import SigninKotlin from './pages/auth/SigninKotlin';
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,7 @@ const router = createBrowserRouter([
       { path: '/trip/:tripUid/edit', element: <EditTrip /> },
       // { path: '/trip/:tripUid/transaction/:transactionUid/edit', element: <EditTransaction /> },
       { path: '/trip/:tripUid/settlement', element: <TripSettlement /> },
+      { path: '/signin/kotlin', element: <SigninKotlin /> },
       {
         path: '/',
         element: <BottomNavLayout />,

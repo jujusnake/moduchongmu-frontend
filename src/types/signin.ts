@@ -6,10 +6,21 @@ type PostSigninParams = {
   code: string;
 };
 
+type PostSigninNativeTokenParams = {
+  type: SocialSigninType;
+  token: string;
+};
+
 type PostSigninRes = {
   processType: 'signin' | 'signup' | 'signup-ing';
   accessToken: string;
   refreshToken: string;
 };
 
-export { SOCIAL_SIGNIN, type SocialSigninType, type PostSigninParams, type PostSigninRes };
+export {
+  SOCIAL_SIGNIN,
+  type SocialSigninType,
+  type PostSigninParams,
+  type PostSigninRes,
+  type PostSigninNativeTokenParams,
+};

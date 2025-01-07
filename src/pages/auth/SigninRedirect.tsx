@@ -42,7 +42,7 @@ const SigninRedirect = () => {
           const invitationUid = sessionStorage.getItem(SESSIONSTORAGE_KEYS.invitationTravelUid);
 
           if (data.data.processType === 'signin') {
-            navigate(invitationUid ? `/invitation/${invitationUid}` : '/');
+            navigate(invitationUid ? `/invitation/${invitationUid}` : '/now');
           } else {
             navigate(invitationUid ? `/signup?invitation=${invitationUid}` : '/signup');
           }
