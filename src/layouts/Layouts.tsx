@@ -8,7 +8,7 @@ const Layouts = () => {
     <KotlinFuncLayout>
       <AuthLayout>
         <Outlet />
-        <Toaster />
+        <Toaster richColors />
       </AuthLayout>
     </KotlinFuncLayout>
   );

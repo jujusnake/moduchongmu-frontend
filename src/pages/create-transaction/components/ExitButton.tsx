@@ -20,8 +20,8 @@ const ExitButton = () => {
 
   // Handler
   const handleExit = () => {
-    if (state?.from) navigate(state.from);
-    else if (tripUid) navigate(`/trip/${tripUid}`);
+    if (state?.from) navigate(state.from, { replace: true });
+    else if (tripUid) navigate(`/trip/${tripUid}`, { replace: true });
     else navigate('/trips');
   };
 
@@ -32,7 +32,7 @@ const ExitButton = () => {
           <ButtonIcon name="x" size={24} />
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-bg-back max-w-moduchongmu">
+      <DialogContent className="gap-6">
         <DialogHeader>
           <DialogTitle>기록 작성을 중단하시나요?</DialogTitle>
           <DialogDescription>작성 중인 내용은 저장되지 않습니다.</DialogDescription>

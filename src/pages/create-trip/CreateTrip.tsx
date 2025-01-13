@@ -88,7 +88,7 @@ const CreateTrip = () => {
                   {currentStep < 1 ? '나가기' : '돌아가기'}
                 </button>
               </DialogTrigger>
-              <DialogContent className="bg-bg-back max-w-moduchongmu">
+              <DialogContent>
                 <DialogHeader className="text-start">
                   <DialogTitle className="text-lg font-bold text-text-primary">여행 만들기를 그만둘까요?</DialogTitle>
                   <DialogDescription className="text-base font-medium text-text-secondary">

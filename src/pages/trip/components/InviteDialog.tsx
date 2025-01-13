@@ -125,7 +125,7 @@ const InviteDialog = ({ travelUid }: { travelUid?: string }) => {
           <UserPlus size={20} strokeWidth={2.5} />
         </button>
       </DialogTrigger>
-      <DialogContent className="bg-bg-back">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>초대</DialogTitle>
           <DialogDescription>초대하고싶은 분께 링크를 전달해주세요!</DialogDescription>

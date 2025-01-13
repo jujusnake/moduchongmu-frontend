@@ -53,10 +53,10 @@ const DeleteTrip = ({ uid, host, children }: Props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="text-text-primary bg-bg-back max-w-[calc(100vw-48px)] moduchongmu:max-w-moduchongmu rounded gap-6">
+      <DialogContent>
         <DialogHeader className="space-y-2">
-          <DialogTitle className="text-lg font-semibold">여행을 삭제할까요?</DialogTitle>
-          <DialogDescription className="text-base font-medium text-text-secondary">
+          <DialogTitle>여행을 삭제할까요?</DialogTitle>
+          <DialogDescription>
             한번 삭제된 여행은 <strong className="font-semibold underline">다시 복구할 수 없습니다</strong>.
             <br />
             신중하게 결정해주세요
