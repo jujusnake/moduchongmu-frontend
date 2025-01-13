@@ -12,6 +12,7 @@ declare global {
       sendMessage: (message: string) => void;
       shareText: (message: string) => void;
       shareImage: (base64Data: string, fileName: string) => void;
+      updateSwipeRefresher: (enabled: boolean) => void;
     };
   }
 }

@@ -84,7 +84,7 @@ export function TransactionDetail({
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogTrigger asChild>{children}</DialogTrigger>
-        <DialogContent className="pt-10 max-w-moduchongmu bg-bg-back">
+        <DialogContent>
           <DialogHeader>
             <div className="flex items-start gap-3 flex-wrap justify-between px-4 py-5 border rounded-md shadow-lg bg-bg-back border-[#f2f2f2]">
               <DialogTitle className="text-lg font-semibold">{title}</DialogTitle>
@@ -265,7 +265,7 @@ const DeleteTransactionDialog = ({
           삭제
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-bg-back">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>기록 삭제</DialogTitle>
           <DialogDescription>이 기록를 삭제하시겠습니까?</DialogDescription>

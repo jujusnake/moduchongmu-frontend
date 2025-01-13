@@ -95,19 +95,19 @@ const CreateTransaction = () => {
 
   const handleCreateTransaction = () => {
     if (formState.travelUid === null) {
-      alert('어느 여행에서 쓴 기록인가요?');
+      toast.warning('어느 여행에서 쓴 기록인가요?', { duration: 2000 });
     } else if (formState.date === undefined) {
-      alert('날짜를 선택해주세요');
+      toast.warning('날짜를 선택해주세요', { duration: 2000 });
     } else if (formState.amount === '') {
-      alert('금액을 입력해주세요');
+      toast.warning('금액을 입력해주세요', { duration: 2000 });
     } else if (formState.category === null) {
-      alert('카테고리를 선택해주세요');
+      toast.warning('카테고리를 선택해주세요', { duration: 2000 });
     } else if (formState.payer === null) {
-      alert('지불자를 선택해주세요');
+      toast.warning('지불자를 선택해주세요', { duration: 2000 });
     } else if (formState.spenders.length === 0) {
-      alert('지출자를 선택해주세요');
+      toast.warning('지출자를 선택해주세요', { duration: 2000 });
     } else if (formState.splitEven === false && formState.expenseSplit.size !== formState.spenders.length) {
-      alert('지출자별 금액을 입력해주세요');
+      toast.warning('지출자별 금액을 입력해주세요', { duration: 2000 });
     } else {
       createTransaction(
         {
@@ -126,7 +126,7 @@ const CreateTransaction = () => {
         {
           onSuccess: () => {
             toast.success('기록이 성공적으로 저장되었습니다.', { duration: 3000 });
-            navigate(`/trip/${formState.travelUid}`);
+            navigate(`/trip/${formState.travelUid}`, { replace: true });
             queryClient.refetchQueries({
               queryKey: [queryKeys.transaction, { type: 'list', uid: formState.travelUid }],
             });

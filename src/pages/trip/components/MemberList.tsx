@@ -113,7 +113,7 @@ const MemberList = ({ memberArray, host, travelUid, children }: Props) => {
       </Drawer>
 
       <Dialog open={!!showKickoutDialog} onOpenChange={(open) => !open && setShowKickoutDialog(false)}>
-        <DialogContent className="bg-bg-back">
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>멤버 강퇴</DialogTitle>
             <DialogDescription>이 멤버를 강제퇴장 시키시나요?</DialogDescription>

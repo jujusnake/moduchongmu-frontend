@@ -19,6 +19,25 @@ const KotlinFuncLayout = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
+  useEffect(() => {
+    if (deviceType !== 'androidwv') return;
+
+    const mo = new MutationObserver((mutationsList) => {
+      for (const mutation of mutationsList) {
+        if (mutation.type === 'attributes' && mutation.target === document.body) {
+          const enableRefresh = document.body.hasAttribute('data-scroll-locked') === false;
+          window.AndroidWV?.updateSwipeRefresher(enableRefresh);
+        }
+      }
+    });
+
+    mo.observe(document.body, { attributes: true, attributeFilter: ['data-scroll-locked'] });
+
+    return () => {
+      mo.disconnect();
+    };
+  }, []);
+
   return <>{children}</>;
 };
 

@@ -143,7 +143,7 @@ const MyEditMode = ({ onUpdate }: Props) => {
           <DialogTrigger asChild>
             <button className="px-1.5 py-2 text-sm font-medium text-text-tertiary">회원탈퇴</button>
           </DialogTrigger>
-          <DialogContent className="bg-bg-back max-w-moduchongmu">
+          <DialogContent>
             <DialogHeader className="mb-2">
               <DialogTitle className="mb-2">회원 탈퇴하기</DialogTitle>
               <DialogDescription className="text-base text-pretty">

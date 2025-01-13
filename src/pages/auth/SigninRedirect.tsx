@@ -66,7 +66,7 @@ const SigninRedirect = () => {
       </div>
 
       <Dialog open={isError}>
-        <DialogContent className="bg-bg-back max-w-moduchongmu">
+        <DialogContent>
           <DialogHeader className="text-start">
             <DialogTitle className="text-lg font-bold text-text-primary">로그인 정보가 만료되었습니다</DialogTitle>
             <DialogDescription className="text-base font-medium text-text-secondary">
