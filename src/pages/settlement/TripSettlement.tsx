@@ -1,14 +1,14 @@
 import { Button, ButtonIcon } from '@/components/ui/buttons';
 import { SettlementContainer, SettlementReceiver, SettlementSender } from '@/pages/settlement/components/settlement';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { toBlob } from 'html-to-image';
+import { toBlob, toJpeg } from 'html-to-image';
 import { useSettlement } from '@/APIs/travel/settlement/get';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { isAxiosError } from 'axios';
 import { Loader2 } from 'lucide-react';
-import { detectDevice } from '@/lib/navigator';
 import EmptyIcon from '@/components/atoms/EmptyIcon';
+import { useDeviceStore } from '@/stores/deviceStore';
 
 type SettlementItem = {
   sender: { idx: string | number; userName: string; userEmail: string };
@@ -31,6 +31,8 @@ const TripSettlement = () => {
 
   // States
   const [currencyMode, setCurrencyMode] = useState<'each' | 'krw'>('krw');
+  const { deviceType } = useDeviceStore();
+  const [isCreatingImage, setIsCreatingImage] = useState<boolean>(false);
 
   // Hooks
   const { tripUid: travelUid } = useParams();
@@ -41,47 +43,26 @@ const TripSettlement = () => {
   const handleShare = () => {
     if (htmlToPngRef.current === null) return;
 
-    toBlob(htmlToPngRef.current, { quality: 1 })
-      .then((dataUrl) => {
-        if (dataUrl === null) return;
-
-        const fileName = '정산결과.jpeg';
-
-        if (detectDevice() === 'pc') {
+    try {
+      if (deviceType === 'androidwv') {
+        setIsCreatingImage(true);
+        toJpeg(htmlToPngRef.current, { quality: 1, cacheBust: true, type: 'image/jpeg' }).then((dataUrl) => {
+          const base64String = dataUrl.split(',')[1];
+          window.AndroidWV?.shareImage(base64String, '정산결과.jpg');
+          setIsCreatingImage(false);
+        });
+      } else {
+        toBlob(htmlToPngRef.current, { quality: 1, cacheBust: true, type: 'image/jpeg' }).then((blob) => {
+          if (blob === null) return;
           const a = document.createElement('a');
-          a.href = URL.createObjectURL(dataUrl);
-          a.download = fileName;
+          a.href = URL.createObjectURL(blob);
+          a.download = '정산결과.jpg';
           a.click();
-          return;
-        }
-
-        // TODO: 쉐어 분기쳐야함
-
-        if (!navigator.share) {
-          const a = document.createElement('a');
-          a.href = URL.createObjectURL(dataUrl);
-          a.download = fileName;
-          a.click();
-        } else {
-          const data = {
-            files: [new File([dataUrl], fileName, { type: 'image/jpeg' })],
-            title: '타이틀이라네',
-            text: '텍스트? 이게 뭐임',
-          };
-
-          navigator
-            .share(data)
-            .then(() => {
-              //
-            })
-            .catch((error) => {
-              //
-            });
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   useEffect(() => {
@@ -258,9 +239,9 @@ const TripSettlement = () => {
 
       {/* 공유하기 버튼 */}
       <div className="fixed bottom-0 w-full px-6 py-6 left-1/2 -translate-x-1/2 bg-bg-back max-w-[500px]">
-        <Button size="large" className="w-full" onClick={handleShare}>
-          <ButtonIcon name="share" />
-          공유하기
+        <Button size="large" className="w-full" onClick={handleShare} disabled={isCreatingImage}>
+          {isCreatingImage ? <ButtonIcon name="loader" /> : <ButtonIcon name="share" />}
+          {isCreatingImage ? '이미지 생성 중' : '공유하기'}
         </Button>
       </div>
     </>

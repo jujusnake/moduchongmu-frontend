@@ -7,7 +7,7 @@ import { useCurrentTravel } from '@/APIs/travel/current/get';
 const Now = () => {
   const { data: travel, isLoading } = useCurrentTravel();
 
-  if (isLoading) {
+  if (travel === undefined || isLoading) {
     return (
       <main className="min-h-[calc(100dvh-80px)] flex flex-col justify-center p-6 items-center animate-pulse text-text-secondary">
         <div className="relative">

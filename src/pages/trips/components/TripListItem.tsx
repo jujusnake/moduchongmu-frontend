@@ -25,7 +25,7 @@ const TripListItem = ({
   ...props
 }: TripListItemProps) => {
   return (
-    <button className={cn('px-6 py-3 flex gap-4 items-center', className)} {...props}>
+    <button className={cn('px-6 py-3 flex gap-4 items-center w-full', className)} {...props}>
       <div className="w-[60px] h-[60px] rounded-[4px] bg-[#D9D9D9] overflow-hidden isolate">
         <TripThumbnailImg src={imgSrc} city={city} />
       </div>

@@ -5,7 +5,7 @@ import ProfileImgButton from '@/components/ProfileImgButton';
 import { Button } from '@/components/ui/buttons';
 import { Checkbox, CheckboxLabel, CheckboxLabelDesc } from '@/components/ui/checkbox';
 import { Input, InputLabel } from '@/components/ui/input';
-import axios from 'axios';
+import { uploadImageToS3 } from '@/lib/image';
 import { PartyPopper } from 'lucide-react';
 import { FormEvent, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -40,7 +40,7 @@ const Signup = () => {
         onSuccess: async (data) => {
           queryClient.invalidateQueries({ queryKey: ['user'] });
           if (data.data.profileImageUrl) {
-            await axios.put(data.data.profileImageUrl, profileImg);
+            await uploadImageToS3(data.data.profileImageUrl, profileImg);
           }
           const invitationUid = searchParam.get('invitation');
           navigate(invitationUid ? `/invitation/${invitationUid}` : '/');

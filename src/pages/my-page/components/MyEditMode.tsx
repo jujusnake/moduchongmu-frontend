@@ -17,9 +17,8 @@ import {
 } from '@/components/ui/dialog';
 import { Input, InputLabel } from '@/components/ui/input';
 import { removeTokens } from '@/lib/auth';
+import { uploadImageToS3 } from '@/lib/image';
 import { getUserThumbnail } from '@/lib/urls';
-import axios from 'axios';
-import { profile } from 'console';
 import { Check } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -50,7 +49,7 @@ const MyEditMode = ({ onUpdate }: Props) => {
           console.log(res.data);
 
           if (res.data.profileImageUrl && profileImg) {
-            await axios.put(res.data.profileImageUrl, profileImg);
+            await uploadImageToS3(res.data.profileImageUrl, profileImg);
           }
 
           toast(

@@ -17,6 +17,7 @@ const ProfileImgButton = ({ className, selectedImg, onChangeImg, disabled, ...pr
   const imgCropperRef = useRef<CropperRef>(null);
 
   // States
+  const [isCropping, setIsCropping] = useState<boolean>(false);
   const [tempProfileImg, setTempProfileImg] = useState<File | null>(null);
   const profileImgUrl = useMemo(() => {
     if (typeof selectedImg === 'string') return selectedImg;
@@ -48,12 +49,24 @@ const ProfileImgButton = ({ className, selectedImg, onChangeImg, disabled, ...pr
   };
 
   const handleCrop = () => {
-    if (!imgCropperRef.current) return;
-    const canvas = imgCropperRef.current.getCanvas();
+    setIsCropping(true);
+    if (!imgCropperRef.current) {
+      setIsCropping(false);
+      return;
+    }
 
-    if (!canvas) return;
+    const canvas = imgCropperRef.current.getCanvas();
+    if (!canvas) {
+      setIsCropping(false);
+      return;
+    }
+
     canvas.toBlob((blob) => {
-      if (!blob) return;
+      if (!blob) {
+        setIsCropping(false);
+        return;
+      }
+
       const file = new File([blob], tempProfileImg?.name ?? 'profile-image.png', {
         type: tempProfileImg?.type ?? 'image/png',
         lastModified: Date.now(),
@@ -61,6 +74,7 @@ const ProfileImgButton = ({ className, selectedImg, onChangeImg, disabled, ...pr
 
       onChangeImg?.(file);
       setTempProfileImg(null);
+      setIsCropping(false);
     });
   };
 
@@ -117,20 +131,27 @@ const ProfileImgButton = ({ className, selectedImg, onChangeImg, disabled, ...pr
             stencilComponent={CircleStencil}
           />
           <div className="absolute flex items-center gap-4 top-6 right-6">
-            <Button
-              size="large"
-              onClick={() => {
-                setTempProfileImg(null);
-                if (imgInputRef.current) {
-                  imgInputRef.current.value = '';
-                }
-              }}
-            >
-              취소
-            </Button>
-            <Button size="large" onClick={handleCrop}>
-              확인
-            </Button>
+            {isCropping ? (
+              <Button disabled>자르는 중...</Button>
+            ) : (
+              <>
+                <Button
+                  size="large"
+                  variant="secondary"
+                  onClick={() => {
+                    setTempProfileImg(null);
+                    if (imgInputRef.current) {
+                      imgInputRef.current.value = '';
+                    }
+                  }}
+                >
+                  취소
+                </Button>
+                <Button size="large" onClick={handleCrop}>
+                  확인
+                </Button>
+              </>
+            )}
           </div>
         </div>
       )}
