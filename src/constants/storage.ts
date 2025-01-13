@@ -4,6 +4,8 @@ const LOCALSTORAGE_KEYS = {
   refreshToken: 'refreshToken',
   currencySetting: 'currency-setting',
   currencyHistory: 'currency-history',
+  userThumbnailVersion: 'usr-thmbnl-v',
+  travelThumbnailVersion: 'trv-thmbnl-v',
 };
 
 const SESSIONSTORAGE_KEYS = {

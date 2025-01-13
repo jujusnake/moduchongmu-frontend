@@ -2,7 +2,7 @@ import { useTravel } from '@/APIs/travel/get';
 import { Button } from '@/components/ui/buttons';
 import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
-import { ChevronLeft, Image, Trash2, Users } from 'lucide-react';
+import { ChevronLeft, Image, Loader2, Trash2, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -10,13 +10,13 @@ import TripThumbnailImg from '@/components/atoms/TripThumbnailImg';
 import { getTravelThumbnail } from '@/lib/urls';
 import { useUpdateTravel } from '@/APIs/travel/put';
 import { format } from 'date-fns';
-import axios from 'axios';
 import { queryKeys } from '@/APIs/react-query';
 import { toast } from 'sonner';
 import MemberList from './components/MemberList';
 import { LocationSelector } from '@/components/organism/location';
 import { useQueryClient } from '@tanstack/react-query';
 import DeleteTrip from './components/DeleteTrip';
+import { uploadImageToS3 } from '@/lib/image';
 
 const EditTrip = () => {
   // Hooks
@@ -30,10 +30,11 @@ const EditTrip = () => {
   const [date, setDate] = useState<DateRange | undefined>({ from: undefined, to: undefined });
   const [location, setLocation] = useState<string[]>([]);
   const [thumbnailImg, setThumbnailImg] = useState<File | undefined>();
+  const [isUploadingImage, setIsUploadingImage] = useState<boolean>(false);
 
   // API Calls
-  const { data: travelRes, isError, isPending: fetchingTravel } = useTravel(tripUid ?? '');
-  const { mutate: updateTravel } = useUpdateTravel();
+  const { data: travelRes, isError } = useTravel(tripUid ?? '');
+  const { mutate: updateTravel, isPending: updatingTravel } = useUpdateTravel();
 
   // Handlers
   const handleUpdateTravel = () => {
@@ -74,11 +75,13 @@ const EditTrip = () => {
       },
       {
         onSuccess: async (data) => {
-          if (data.postingImageUrl) {
-            await axios.put(data.postingImageUrl, thumbnailImg);
+          if (data.postingImageUrl && thumbnailImg) {
+            setIsUploadingImage(true);
+            await uploadImageToS3(data.postingImageUrl, thumbnailImg);
+            setIsUploadingImage(false);
           }
           queryClient.invalidateQueries({ queryKey: [queryKeys.travel] });
-          navigate(state?.from ?? `/trip/${tripUid}`);
+          navigate(state?.from ?? `/trip/${tripUid}`, { replace: true });
           toast.success('여행 정보를 수정했습니다', { duration: 3000 });
         },
         onError: (error) => {
@@ -218,9 +221,14 @@ const EditTrip = () => {
         </div>
       </main>
 
-      <div className="fixed bottom-0 left-0 w-full p-6 pointer-events-none">
-        <Button variant="primary" className="w-full shadow-md pointer-events-auto" onClick={handleUpdateTravel}>
-          수정사항 저장
+      <div className="fixed bottom-0 left-0 flex justify-center w-full p-6 pointer-events-none">
+        <Button
+          variant="primary"
+          className="w-full shadow-md pointer-events-auto max-w-moduchongmu-padding"
+          onClick={handleUpdateTravel}
+          disabled={updatingTravel || isUploadingImage}
+        >
+          {updatingTravel || isUploadingImage ? <Loader2 size={16} className="animate-spin" /> : '수정사항 저장'}
         </Button>
       </div>
     </>

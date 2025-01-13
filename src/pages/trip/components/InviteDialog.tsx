@@ -1,4 +1,6 @@
-import { Button } from '@/components/ui/buttons';
+import { useTravel } from '@/APIs/travel/get';
+import { useUser } from '@/APIs/user/get';
+import { Button, ButtonIcon } from '@/components/ui/buttons';
 import {
   Dialog,
   DialogContent,
@@ -8,23 +10,30 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { detectDevice } from '@/lib/navigator';
 import { copyToClipboard } from '@/lib/utils';
-import { set } from 'date-fns';
+import { useDeviceStore } from '@/stores/deviceStore';
 import { UserPlus } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 const InviteDialog = ({ travelUid }: { travelUid?: string }) => {
+  const { deviceType } = useDeviceStore();
   const timer = useRef<NodeJS.Timeout | null>(null);
   const [copied, setCopied] = useState(false);
   const [showWebShareBtn, setShowWebShareBtn] = useState(false);
 
+  // API Calls
+  const { data: user } = useUser();
+  const { data: travelData } = useTravel(travelUid ?? '');
+
   // Values
-  const shareData = {
-    title: '[초대장] 모두의 총무',
-    text: 'Join my trip!',
-    url: `https://moduchongmu.com/invitation/${travelUid ?? 'unknown'}`,
-  };
+  const shareData = useMemo(
+    () => ({
+      title: `[모두의총무] ${user?.data.user.userName ? user?.data.user.userName + '님으로부터 ' : ''}초대장이 도착했습니다.`,
+      text: `${travelData?.data.travel.travelName}에 함께 떠나요! 🏝`,
+      url: `참여 링크:\nhttps://moduchongmu.com/invitation/${travelUid ?? 'unknown'}`,
+    }),
+    [travelUid, user, travelData],
+  );
 
   // Handlers
   const handleCopy = () => {
@@ -152,6 +161,21 @@ const InviteDialog = ({ travelUid }: { travelUid?: string }) => {
         </div>
 
         {/* {showWebShareBtn && <button onClick={handleShare}>Share</button>} */}
+
+        {deviceType === 'androidwv' && (
+          <div>
+            <Button
+              variant="secondary"
+              className="w-full"
+              onClick={() => {
+                window.AndroidWV?.shareText(`${shareData.title}\n\n${shareData.text}\n\n${shareData.url}`);
+              }}
+            >
+              <ButtonIcon name="send" size={14} />
+              바로 공유하기
+            </Button>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );

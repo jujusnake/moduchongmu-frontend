@@ -1,11 +1,23 @@
+import { LOCALSTORAGE_KEYS } from '@/constants/storage';
+
+const updateUserThumbnailQuery = () => {
+  localStorage.setItem(LOCALSTORAGE_KEYS.userThumbnailVersion, `${new Date().getTime()}`);
+};
+
+const updateTravelThumbnailQuery = () => {
+  localStorage.setItem(LOCALSTORAGE_KEYS.travelThumbnailVersion, `${new Date().getTime()}`);
+};
+
 const getUserThumbnail = (userEmail?: string) => {
   if (!userEmail) return;
-  return `https://moduchongmu-dev-bucket.s3.ap-northeast-2.amazonaws.com/user/${userEmail}/profile.png`;
+  const v = localStorage.getItem(LOCALSTORAGE_KEYS.userThumbnailVersion);
+  return `https://moduchongmu-dev-bucket.s3.ap-northeast-2.amazonaws.com/user/${userEmail}/profile.png?${v ?? ''}`;
 };
 
 const getTravelThumbnail = (travelId?: string) => {
   if (!travelId) return;
-  return `https://moduchongmu-dev-bucket.s3.ap-northeast-2.amazonaws.com/travel/${travelId}/cover.png`;
+  const v = localStorage.getItem(LOCALSTORAGE_KEYS.travelThumbnailVersion);
+  return `https://moduchongmu-dev-bucket.s3.ap-northeast-2.amazonaws.com/travel/${travelId}/cover.png?${v ?? ''}`;
 };
 
 const getCityThumbnail = (cityName?: string) => {
@@ -13,4 +25,4 @@ const getCityThumbnail = (cityName?: string) => {
   return `https://moduchongmu-dev-bucket.s3.ap-northeast-2.amazonaws.com/city/${encodeURIComponent(cityName)}/cover`;
 };
 
-export { getUserThumbnail, getTravelThumbnail, getCityThumbnail };
+export { updateUserThumbnailQuery, updateTravelThumbnailQuery, getUserThumbnail, getTravelThumbnail, getCityThumbnail };

@@ -10,6 +10,8 @@ declare global {
     AndroidWV?: {
       oAuthSignin: (type: SocialSigninType) => void;
       sendMessage: (message: string) => void;
+      shareText: (message: string) => void;
+      shareImage: (base64Data: string, fileName: string) => void;
     };
   }
 }

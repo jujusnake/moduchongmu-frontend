@@ -6,6 +6,7 @@ import { queryKeys } from '../react-query';
 import { ErrorResponse } from '@/types/axios';
 
 const getTravel = async (uid: string) => {
+  if (uid.length < 1) return;
   const res = await axiosPrivateInstance.get(`/travel`, {
     params: {
       uid,
@@ -16,9 +17,10 @@ const getTravel = async (uid: string) => {
 };
 
 const useTravel = (uid: string) => {
-  const query = useQuery<AxiosResponse<GetTravelRes>, AxiosError<ErrorResponse<GetTravelErrorCodes>>>({
+  const query = useQuery<AxiosResponse<GetTravelRes> | undefined, AxiosError<ErrorResponse<GetTravelErrorCodes>>>({
     queryKey: [queryKeys.travel, uid],
     queryFn: () => getTravel(uid),
+    enabled: uid.length > 0,
   });
 
   return query;

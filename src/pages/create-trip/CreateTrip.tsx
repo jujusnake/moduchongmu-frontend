@@ -8,11 +8,11 @@ import CreateTripThird from '@/pages/create-trip/components/CreateTripThird';
 import { Button } from '@/components/ui/buttons';
 import { Dialog, DialogTrigger, DialogContent, DialogFooter, DialogClose, DialogHeader } from '@/components/ui/dialog';
 import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
-import axios from 'axios';
 import { useMemo, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { uploadImageToS3 } from '@/lib/image';
 
 const CreateTrip = () => {
   // Hooks
@@ -55,7 +55,7 @@ const CreateTrip = () => {
         {
           onSuccess: async (data) => {
             if (data.data.postingImageUrl) {
-              await axios.put(data.data.postingImageUrl, thumbnailImg);
+              await uploadImageToS3(data.data.postingImageUrl, thumbnailImg);
             }
             queryClient.invalidateQueries({ queryKey: [queryKeys.travel] });
             navigate(`/trips`);
