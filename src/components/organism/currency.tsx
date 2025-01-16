@@ -5,13 +5,21 @@ import { Input } from '../ui/input';
 import { cn } from '@/lib/utils';
 import { useCurrencies } from '@/APIs/transaction/currency/get';
 import { CurrencyItem } from '@/types/transaction';
+import { useCurrencyStore } from '@/stores/currencyStore';
+import { Button } from '../ui/buttons';
+import { X } from 'lucide-react';
 
 const CurrencySelectDrawer = ({
   onCurrencySelect,
+  filter,
   ...props
 }: ComponentProps<typeof DrawerPrimitive.Root> & {
   onCurrencySelect?: (item: CurrencyItem) => void;
+  filter?: (item: CurrencyItem) => boolean;
 }) => {
+  // Store
+  const { history, addToHistory } = useCurrencyStore();
+
   // API Calls
   const { data: currencies } = useCurrencies();
 
@@ -19,13 +27,14 @@ const CurrencySelectDrawer = ({
   const drawerContentRef = useRef<HTMLDivElement>(null);
 
   // State
-  const [left, setLeft] = useState(0);
   const [searchValue, setSearchValue] = useState('');
 
   // Values
   const sortedFilteredCurrencies = useMemo(() => {
     if (!currencies) return [];
-    const sorted = currencies.data.currencyList.sort((a, b) => a.currency.localeCompare(b.currency));
+    const sorted = currencies.data.currencyList
+      .sort((a, b) => a.currency.localeCompare(b.currency))
+      .filter(filter || (() => true));
     const filtered = sorted.filter(
       (currency) =>
         currency.currency.toLowerCase().includes(searchValue.toLowerCase()) ||
@@ -33,27 +42,7 @@ const CurrencySelectDrawer = ({
         currency.country.includes(searchValue),
     );
     return filtered;
-  }, [currencies, searchValue]);
-
-  // Effects
-  // useEffect(() => {
-  //   const ro = new ResizeObserver((entries) => {
-  //     const entry = entries[0];
-
-  //     // set left position so that it is centered on window
-  //     if (entry.contentRect.width > 500) {
-  //       setLeft((entry.contentRect.width - 500) / 2);
-  //     } else {
-  //       setLeft(0);
-  //     }
-  //   });
-
-  //   ro.observe(document.body);
-
-  //   return () => {
-  //     ro.disconnect();
-  //   };
-  // }, []);
+  }, [currencies, searchValue, filter]);
 
   useEffect(() => {
     if (props.open && window.visualViewport) {
@@ -71,6 +60,11 @@ const CurrencySelectDrawer = ({
     drawerContentRef.current.style.height = `${visualViewportHeight * 0.8}px`;
   }
 
+  const handleSelect = (currency: CurrencyItem) => {
+    addToHistory(currency);
+    onCurrencySelect?.(currency);
+  };
+
   return (
     <Drawer {...props}>
       <DrawerContent
@@ -81,16 +75,60 @@ const CurrencySelectDrawer = ({
       >
         <DrawerHeader>
           <DrawerTitle className="mb-3">통화 선택</DrawerTitle>
-          <Input placeholder="통화 검색" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const searchInput = e.currentTarget.querySelector('#currency-drawer-search') as HTMLInputElement;
+              setSearchValue(searchInput.value);
+            }}
+            onReset={(e) => {
+              e.preventDefault();
+              const searchInput = e.currentTarget.querySelector('#currency-drawer-search') as HTMLInputElement;
+              searchInput.value = '';
+              setSearchValue('');
+            }}
+            className="relative"
+          >
+            <Input
+              id="currency-drawer-search"
+              type="search"
+              inputMode="search"
+              name="currency-drawer-search"
+              placeholder="통화 검색"
+              className="hide-clear"
+            />
+            {searchValue && (
+              <button className="absolute -translate-y-1/2 right-2 top-1/2" type="reset">
+                <X size={16} />
+              </button>
+            )}
+          </form>
         </DrawerHeader>
+
+        {history && (
+          <div className="grid items-center grid-cols-5 gap-2 px-4">
+            {history.map(({ currency, name }) => (
+              <Button
+                key={`currency-drawer-history-item-${currency}`}
+                variant="secondary"
+                size="small"
+                className="justify-start px-2.5"
+                onClick={() => handleSelect({ currency, name })}
+              >
+                <span className="truncate">
+                  {currency}({name})
+                </span>
+              </Button>
+            ))}
+          </div>
+        )}
+
         <ul className="px-4 pt-2 pb-10 overflow-auto">
           {sortedFilteredCurrencies.length > 0 ? (
             sortedFilteredCurrencies.map((currency) => (
               <CurrencyListItem
                 key={`currency-select-item-${currency.currency}`}
-                onClick={() => {
-                  onCurrencySelect?.({ currency: currency.currency, name: currency.name });
-                }}
+                onClick={() => handleSelect({ currency: currency.currency, name: currency.name })}
               >
                 {currency.currency}({currency.name})
               </CurrencyListItem>
