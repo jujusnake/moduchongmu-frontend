@@ -9,12 +9,10 @@ type TravelUser = {
 };
 
 type GetCurrencyRes = {
-  currencyList: {
+  currencyList: ({
     country: string[];
-    currency: string;
     symbol: string;
-    name: string;
-  }[];
+  } & CurrencyItem)[];
 };
 
 type GetExchangeRateRes = {
